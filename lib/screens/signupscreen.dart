@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 import '../reusable_widgets/reusable_widgets.dart';
@@ -13,10 +14,12 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
   TextEditingController _emailTextController = TextEditingController();
   TextEditingController _passwordTextController = TextEditingController();
   TextEditingController _userTextController = TextEditingController();
   TextEditingController _addressTextController = TextEditingController();
+  TextEditingController _phoneNoTextController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,6 +65,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 const SizedBox(
                   height: 20,
                 ),
+                textField("Enter Your Phone Number", Icons.phone_outlined, true,
+                    _phoneNoTextController),
+                const SizedBox(
+                  height: 20,
+                ),
                 textField("Enter Your Address", Icons.home_outlined, true,
                     _addressTextController),
                 const SizedBox(
@@ -73,23 +81,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           email: _emailTextController.text,
                           password: _passwordTextController.text)
                       .then((value) {
+                    insertData(
+                        _userTextController.text,
+                        _emailTextController.text,
+                        _phoneNoTextController.text,
+                        _addressTextController.text);
                     print("Create New Account");
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => HomeScreen()));
                   }).onError((error, stackTrace) {
                     print("Error ${error.toString()}");
                   });
-
-                  // if (_userTextController.text.isNotEmpty &&
-                  //     _emailTextController.text.isNotEmpty &&
-                  //     _passwordTextController.text.isNotEmpty &&
-                  //     _addressTextController.text.isNotEmpty) {
-                  //   insertData(
-                  //       _userTextController.text,
-                  //       _emailTextController.text,
-                  //       _passwordTextController.text,
-                  //       _addressTextController.text);
-                  // }
                 }),
               ],
             ),
@@ -97,5 +99,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
       ),
     );
+  }
+
+  void insertData(String name, String email, String phoneNo, String address) {
+    databaseReference.child('users').push();
+    databaseReference.set({
+      'name': name,
+      'email': email,
+      'phoneNo': phoneNo,
+      'address': address,
+    }).then((_) {
+      print('User data stored successfully');
+    }).catchError((error) {
+      print('Failed to store user data: $error');
+    });
   }
 }
