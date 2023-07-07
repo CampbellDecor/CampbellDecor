@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "644792580383",
+    "project_id": "campbelldecor-c2d1f",
+    "storage_bucket": "campbelldecor-c2d1f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:644792580383:android:7d98bbfa9a8de0bfdfd82a",
+        "android_client_info": {
+          "package_name": "com.example.campbelldecor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "644792580383-3d0t5lfc7pa82943safranc4m1fo43jd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGoz1UypyauJTiiz8bQt-cr4ZNH1tRSNQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "644792580383-3d0t5lfc7pa82943safranc4m1fo43jd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
