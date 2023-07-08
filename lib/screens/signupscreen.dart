@@ -1,3 +1,5 @@
+import 'package:campbelldecor/resources/auth_methods.dart';
+import 'package:campbelldecor/screens/signinscreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +24,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController _phoneNoTextController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    // void registerUser() async {
+    //   String resp = await AuthMethods().registerUser(
+    //       username: _userTextController.text,
+    //       email: _emailTextController.text,
+    //       password: _passwordTextController.text,
+    //       address: _addressTextController.text);
+    //   if (resp == 'success') {
+    //     Navigator.of(context).push(
+    //       MaterialPageRoute(
+    //         builder: (context) => SignInScreen(),
+    //       ),
+    //     );
+    //   }
+    // }
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -81,7 +98,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           email: _emailTextController.text,
                           password: _passwordTextController.text)
                       .then((value) {
-                    insertData(
+                    insertUserData(
                         _userTextController.text,
                         _emailTextController.text,
                         _phoneNoTextController.text,
@@ -101,9 +118,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  void insertData(String name, String email, String phoneNo, String address) {
-    databaseReference.child('users').push();
-    databaseReference.set({
+  void insertUserData(
+      String name, String email, String phoneNo, String address) {
+    databaseReference.child('users').push().set({
       'name': name,
       'email': email,
       'phoneNo': phoneNo,
