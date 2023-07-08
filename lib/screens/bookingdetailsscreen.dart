@@ -1,19 +1,17 @@
-import 'package:campbelldecor/screens/bookingdetailsscreen.dart';
-import 'package:campbelldecor/screens/homescreen.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 
-class BookingScreen extends StatelessWidget {
-  BookingScreen({super.key});
-  final ref = FirebaseDatabase.instance.ref('booking');
+class BookingDetailsScreen extends StatelessWidget {
+  const BookingDetailsScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
+    final ref = FirebaseDatabase.instance.ref('booking');
     return Scaffold(
       extendBodyBehindAppBar: false,
       appBar: AppBar(
-        title: Text("Fetch Data from Users"),
+        title: const Text("Fetch Data from Users"),
       ),
       body: Column(
         children: [
@@ -22,17 +20,11 @@ class BookingScreen extends StatelessWidget {
               query: ref,
               itemBuilder: (context, snapshot, animation, index) {
                 return Card(
-                  color: Color.fromARGB(50, 260, 250, 254),
+                  color: const Color.fromARGB(50, 260, 250, 254),
                   child: ListTile(
                     title: Text(snapshot.child('name').value.toString()),
                     subtitle:
                         Text(snapshot.child('bookingNo').value.toString()),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => BookingDetailsScreen()));
-                    },
                   ),
                 );
               },
