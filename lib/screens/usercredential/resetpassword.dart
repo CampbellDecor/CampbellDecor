@@ -1,8 +1,9 @@
+import 'package:campbelldecor/screens/eventScreen/eventscreen.dart';
 import 'package:campbelldecor/screens/homescreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../reusable_widgets/reusable_widgets.dart';
-import '../utils/color_util.dart';
+import '../../reusable_widgets/reusable_widgets.dart';
+import '../../utils/color_util.dart';
 
 class ResetScreen extends StatefulWidget {
   const ResetScreen({super.key});
@@ -52,7 +53,7 @@ class _ResetScreenState extends State<ResetScreen> {
                     .sendPasswordResetEmail(email: emailController.text)
                     .then((value) {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => HomeScreen()));
+                      MaterialPageRoute(builder: (context) => EventsScreen()));
                 });
               })
             ]),

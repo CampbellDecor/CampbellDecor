@@ -1,5 +1,4 @@
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class BookingDetailsScreen extends StatelessWidget {
@@ -7,30 +6,37 @@ class BookingDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ref = FirebaseDatabase.instance.ref('booking');
+    final CollectionReference ref =
+        FirebaseFirestore.instance.collection('users');
     return Scaffold(
       extendBodyBehindAppBar: false,
       appBar: AppBar(
-        title: const Text("Fetch Data from Users"),
+        title: Text("My Booking Details"),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: FirebaseAnimatedList(
-              query: ref,
-              itemBuilder: (context, snapshot, animation, index) {
-                return Card(
-                  color: const Color.fromARGB(50, 260, 250, 254),
-                  child: ListTile(
-                    title: Text(snapshot.child('name').value.toString()),
-                    subtitle:
-                        Text(snapshot.child('bookingNo').value.toString()),
-                  ),
-                );
-              },
-            ),
-          )
-        ],
+      body: StreamBuilder(
+        stream: ref.snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+          if (streamSnapshot.hasData) {
+            return ListView.builder(
+                itemCount: streamSnapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  final DocumentSnapshot documentSnapshot =
+                      streamSnapshot.data!.docs[index];
+                  return Card(
+                    margin: const EdgeInsets.all(10),
+                    color: const Color.fromARGB(50, 260, 250, 254),
+                    child: ListTile(
+                      title: Text(documentSnapshot['name']),
+                      subtitle: Text(documentSnapshot['phoneno'].toString()),
+                      onTap: () {},
+                    ),
+                  );
+                });
+          }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
       ),
     );
   }

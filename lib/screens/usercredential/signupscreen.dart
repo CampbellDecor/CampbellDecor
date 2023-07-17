@@ -1,12 +1,11 @@
-import 'package:campbelldecor/resources/auth_methods.dart';
-import 'package:campbelldecor/screens/signinscreen.dart';
+import 'package:campbelldecor/reusable_widgets/reusable_methods.dart';
+import 'package:campbelldecor/screens/eventScreen/eventscreen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
-import '../reusable_widgets/reusable_widgets.dart';
-import '../utils/color_util.dart';
-import 'homescreen.dart';
+import '../../reusable_widgets/reusable_widgets.dart';
+import '../../utils/color_util.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -16,29 +15,16 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  final DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
+  final CollectionReference collectionReference =
+      FirebaseFirestore.instance.collection('users');
   TextEditingController _emailTextController = TextEditingController();
   TextEditingController _passwordTextController = TextEditingController();
+  TextEditingController _confirmpassTextController = TextEditingController();
   TextEditingController _userTextController = TextEditingController();
   TextEditingController _addressTextController = TextEditingController();
   TextEditingController _phoneNoTextController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    // void registerUser() async {
-    //   String resp = await AuthMethods().registerUser(
-    //       username: _userTextController.text,
-    //       email: _emailTextController.text,
-    //       password: _passwordTextController.text,
-    //       address: _addressTextController.text);
-    //   if (resp == 'success') {
-    //     Navigator.of(context).push(
-    //       MaterialPageRoute(
-    //         builder: (context) => SignInScreen(),
-    //       ),
-    //     );
-    //   }
-    // }
-
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -82,12 +68,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 const SizedBox(
                   height: 20,
                 ),
-                textField("Enter Your Phone Number", Icons.phone_outlined, true,
-                    _phoneNoTextController),
+                textField("Confirm Password", Icons.lock_outlined, true,
+                    _confirmpassTextController),
                 const SizedBox(
                   height: 20,
                 ),
-                textField("Enter Your Address", Icons.home_outlined, true,
+                textField("Enter Your Phone Number", Icons.phone_outlined,
+                    false, _phoneNoTextController),
+                const SizedBox(
+                  height: 20,
+                ),
+                textField("Enter Your Address", Icons.home_outlined, false,
                     _addressTextController),
                 const SizedBox(
                   height: 20,
@@ -104,8 +95,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         _phoneNoTextController.text,
                         _addressTextController.text);
                     print("Create New Account");
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => HomeScreen()));
+                    Navication(context, EventsScreen());
                   }).onError((error, stackTrace) {
                     print("Error ${error.toString()}");
                   });
@@ -120,7 +110,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void insertUserData(
       String name, String email, String phoneNo, String address) {
-    databaseReference.child('users').push().set({
+    collectionReference.doc().set({
       'name': name,
       'email': email,
       'phoneNo': phoneNo,
