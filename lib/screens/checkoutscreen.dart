@@ -29,7 +29,11 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
             const SizedBox(
               height: 10,
             ),
-            reuseContainerList("assets/images/logo2.png", 100, 100, "Birthday"),
+            // reuseContainerList("assets/images/logo2.png", 100, 100, "Birthday"),
+            const SizedBox(
+              height: 120,
+            ),
+
             reusePaymentContainer(5000, context, () {})
           ],
         ),

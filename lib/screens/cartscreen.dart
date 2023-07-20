@@ -1,5 +1,3 @@
-import 'package:campbelldecor/reusable_widgets/reusable_methods.dart';
-import 'package:campbelldecor/screens/checkoutscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -25,12 +23,17 @@ class AddToCartScreen extends StatelessWidget {
                     final DocumentSnapshot documentSnapshot =
                         streamSnapshot.data!.docs[index];
                     return Card(
+                      margin: EdgeInsets.fromLTRB(30, 10, 30, 10),
                       color: Color.fromARGB(100, 260, 250, 254),
                       child: ListTile(
-                        onTap: () {
-                          Navication(context, CheckOutScreen());
-                        },
-                        title: Text(documentSnapshot['name'].value.toString()),
+                        title: Text(
+                          documentSnapshot['name'],
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        subtitle: Text(
+                          'Rs.' + documentSnapshot['price'].toString() + '.00',
+                          style: TextStyle(fontSize: 16),
+                        ),
                         trailing: Container(
                           child: Row(
                             mainAxisSize: MainAxisSize.min,

@@ -1,7 +1,3 @@
-import 'package:campbelldecor/resources/loader.dart';
-import 'package:campbelldecor/screens/bookingscreen.dart';
-import 'package:campbelldecor/screens/cartscreen.dart';
-import 'package:campbelldecor/screens/eventScreen/religion.dart';
 import 'package:campbelldecor/screens/usercredential/signinscreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +24,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: ReligionSelectScreen(),
+      home: SignInScreen(),
     );
   }
 }
