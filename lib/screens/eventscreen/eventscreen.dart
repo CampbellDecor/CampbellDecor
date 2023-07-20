@@ -35,7 +35,6 @@ class EventsScreen extends StatelessWidget {
                     padding: const EdgeInsets.fromLTRB(30, 0, 30, 0.0),
                     child: Card(
                       elevation: 5,
-                      // shadowColor: Colors.black,
                       margin: const EdgeInsets.all(10),
                       color: const Color.fromARGB(50, 260, 260, 254),
                       child: Padding(

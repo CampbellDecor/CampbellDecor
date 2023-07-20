@@ -22,7 +22,7 @@ Future<Set<DateTime>> getDatesFromFirestore(dynamic dates) async {
 
 class _CalendarScreenState extends State<CalendarScreen> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
-  DateTime _selectedDay = DateTime.now().add(Duration(days: 7));
+  DateTime? _selectedDay;
   DateTime _focusedDay = DateTime.now().add(Duration(days: 7));
   Set<DateTime> _disabledDates = Set();
 
@@ -56,7 +56,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         children: [
           Text(
             'Selected Day = ' + _focusedDay.toString().split(" ")[0],
-            style: TextStyle(fontSize: 26, color: Colors.lightGreen[900]),
+            style: TextStyle(fontSize: 20, color: Colors.lightGreen[900]),
           ),
           TableCalendar(
             calendarFormat: _calendarFormat,

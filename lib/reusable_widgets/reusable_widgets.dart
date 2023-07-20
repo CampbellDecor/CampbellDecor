@@ -1,14 +1,12 @@
 import 'package:campbelldecor/screens/paymentscreen.dart';
 import 'package:flutter/material.dart';
 
-Image logoWidget(String imageName) {
-  return Image.asset(
-    imageName,
-    fit: BoxFit.fitWidth,
-    width: 200,
+Container logoWidget(String imageName) {
+  return Container(
+    width: 200, // Set the desired width
     height: 200,
-
-    // color: Colors.transparent,
+    decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+    child: Image.asset(imageName),
   );
 }
 
