@@ -1,5 +1,5 @@
 import 'package:campbelldecor/reusable_widgets/reusable_methods.dart';
-import 'package:campbelldecor/screens/eventScreen/servicesscreen.dart';
+import 'package:campbelldecor/screens/events_screen/servicesscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -107,7 +107,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               ),
               onPressed: () {
                 if (_selectedDay != null) {
-                  Navication(context, ServicesScreen());
+                  Navigation(context, ServicesScreen());
                   print(_selectedDay);
                 } else {
                   showErrorAlert(context, 'Please Select One');

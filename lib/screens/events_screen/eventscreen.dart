@@ -1,6 +1,6 @@
 import 'package:campbelldecor/reusable_widgets/reusable_methods.dart';
-import 'package:campbelldecor/screens/eventScreen/religion.dart';
-import 'package:campbelldecor/screens/eventScreen/servicesscreen.dart';
+import 'package:campbelldecor/screens/events_screen/religion.dart';
+import 'package:campbelldecor/screens/events_screen/servicesscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -49,9 +49,9 @@ class EventsScreen extends StatelessWidget {
                             ),
                             onTap: () {
                               if (documentSnapshot['name'] == 'Wedding') {
-                                Navication(context, ReligionSelectScreen());
+                                Navigation(context, ReligionSelectScreen());
                               } else {
-                                Navication(context, ServicesScreen());
+                                Navigation(context, ServicesScreen());
                               }
                             },
                           ),

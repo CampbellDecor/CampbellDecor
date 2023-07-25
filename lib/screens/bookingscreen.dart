@@ -1,6 +1,6 @@
 import 'package:campbelldecor/reusable_widgets/reusable_methods.dart';
 import 'package:campbelldecor/screens/bookingdetailsscreen.dart';
-import 'package:campbelldecor/screens/eventScreen/servicesscreen.dart';
+import 'package:campbelldecor/screens/events_screen/servicesscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -48,7 +48,7 @@ class BookingScreen extends StatelessWidget {
                                   fontWeight: FontWeight.bold, fontSize: 18),
                             ),
                             onTap: () {
-                              Navication(context, ServicesScreen());
+                              Navigation(context, ServicesScreen());
                             },
                           ),
                         ),
@@ -64,11 +64,11 @@ class BookingScreen extends StatelessWidget {
       ),
       bottomNavigationBar: ElevatedButton(
           onPressed: () {
-            Navication(context, BookingDetailsScreen());
+            Navigation(context, BookingDetailsScreen());
 
             Future.delayed(Duration(seconds: 2), () {
               // Navigate to next page
-              Navication(context, BookingDetailsScreen());
+              Navigation(context, BookingDetailsScreen());
             });
           },
           child: Text('Next')),

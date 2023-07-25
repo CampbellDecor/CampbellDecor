@@ -1,5 +1,5 @@
 import 'package:campbelldecor/reusable_widgets/reusable_methods.dart';
-import 'package:campbelldecor/screens/eventScreen/eventscreen.dart';
+import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -95,7 +95,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         _phoneNoTextController.text,
                         _addressTextController.text);
                     print("Create New Account");
-                    Navication(context, EventsScreen());
+                    Navigation(context, EventsScreen());
                   }).onError((error, stackTrace) {
                     print("Error ${error.toString()}");
                   });
