@@ -15,7 +15,7 @@ Future<int> getCollectionCount(String collectionName) async {
   }
 }
 
-Future<void> Navication(BuildContext context, dynamic function) async {
+Future<void> Navigation(BuildContext context, dynamic function) async {
   Navigator.push(context, MaterialPageRoute(builder: (context) => function));
 }
 

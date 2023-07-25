@@ -1,6 +1,6 @@
 import 'package:campbelldecor/resources/loader.dart';
 import 'package:campbelldecor/reusable_widgets/reusable_methods.dart';
-import 'package:campbelldecor/screens/eventScreen/servicesscreen.dart';
+import 'package:campbelldecor/screens/events_screen/servicesscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -86,7 +86,7 @@ class _ReligionSelectScreenState extends State<ReligionSelectScreen> {
                 ),
                 // onPressed: () {
                 //   if (_selectedValue != null) {
-                //     Navication(context, ServicesScreen());
+                //     Navigation(context, ServicesScreen());
                 //   } else {
                 //     showErrorAlert(context, 'Please Select One');
                 //   }
@@ -101,7 +101,7 @@ class _ReligionSelectScreenState extends State<ReligionSelectScreen> {
                   );
                   Future.delayed(Duration(seconds: 2), () {
                     // Navigate to next page
-                    Navication(context, ServicesScreen());
+                    Navigation(context, ServicesScreen());
                   });
                 },
                 child: const Padding(

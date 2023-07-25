@@ -1,4 +1,4 @@
-import 'package:campbelldecor/screens/paymentscreen.dart';
+import 'package:campbelldecor/screens/payment_screens/paymentscreen.dart';
 import 'package:flutter/material.dart';
 
 Container logoWidget(String imageName) {
