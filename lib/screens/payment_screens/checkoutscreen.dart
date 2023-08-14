@@ -1,5 +1,6 @@
-import 'package:campbelldecor/reusable_widgets/reusable_widgets.dart';
 import 'package:flutter/material.dart';
+
+import '../../reusable/reusable_widgets.dart';
 
 class CheckOutScreen extends StatefulWidget {
   const CheckOutScreen({super.key});

@@ -1,11 +1,15 @@
-import 'package:campbelldecor/reusable_widgets/reusable_methods.dart';
-import 'package:campbelldecor/reusable_widgets/reusable_widgets.dart';
+import 'package:campbelldecor/screens/bookingscreen.dart';
 import 'package:campbelldecor/screens/dateview.dart';
 import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
+import 'package:campbelldecor/screens/homescreen.dart';
 import 'package:campbelldecor/screens/usercredential/signupscreen.dart';
 import 'package:campbelldecor/utils/color_util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../../reusable/reusable_methods.dart';
+import '../../reusable/reusable_widgets.dart';
+import '../notifications/welcomeNotification.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -57,13 +61,13 @@ class _SignInScreenState extends State<SignInScreen> {
                           email: _emailTextController.text,
                           password: _passwordTextController.text)
                       .then((value) {
-                    Navigation(context, EventsScreen());
+                    Navigation(context, HomeScreen());
                   }).onError((error, stackTrace) {
                     print("Error ${error.toString()}");
                   });
                 }),
                 signUpOption(),
-                forgetPasswordOption()
+                forgetPasswordOption(),
               ],
             ),
           ),

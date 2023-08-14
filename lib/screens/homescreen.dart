@@ -126,13 +126,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemBuilder: (BuildContext context, int index) {
                     return Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                            10), // Adding a rounded border
+                        borderRadius: BorderRadius.circular(10),
                         color: Colors.blue, // Background color
                       ),
                       width: 150,
                       margin: const EdgeInsets.all(10),
-                      // color: Colors.pink, // Removed color from here, as it's set in the BoxDecoration
                       child: Center(
                         child: Text(
                           'Item $index',
@@ -154,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ServicesScreen()),
+                    MaterialPageRoute(builder: (context) => EventsScreen()),
                   );
                 },
               ),
