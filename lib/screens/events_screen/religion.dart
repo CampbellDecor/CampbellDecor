@@ -1,8 +1,9 @@
 import 'package:campbelldecor/resources/loader.dart';
-import 'package:campbelldecor/reusable_widgets/reusable_methods.dart';
 import 'package:campbelldecor/screens/events_screen/servicesscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+import '../../reusable/reusable_methods.dart';
 
 class ReligionSelectScreen extends StatefulWidget {
   @override
@@ -101,7 +102,11 @@ class _ReligionSelectScreenState extends State<ReligionSelectScreen> {
                   );
                   Future.delayed(Duration(seconds: 2), () {
                     // Navigate to next page
-                    Navigation(context, ServicesScreen());
+                    Navigation(
+                        context,
+                        ServicesScreen(
+                          event: 'Wedding',
+                        ));
                   });
                 },
                 child: const Padding(
