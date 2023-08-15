@@ -1,3 +1,5 @@
+import 'package:campbelldecor/reusable/reusable_methods.dart';
+import 'package:campbelldecor/screens/bookingdetailsscreen.dart';
 import 'package:flutter/material.dart';
 
 class MyDrawer extends StatelessWidget {
@@ -36,10 +38,7 @@ class MyDrawer extends StatelessWidget {
             title: const Text('View Histroy'),
             leading: const Icon(Icons.history),
             onTap: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => MyHistroy()),
-              // );
+              Navigation(context, BookingDetailsScreen());
             },
           ),
           const Divider(

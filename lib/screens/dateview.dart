@@ -10,27 +10,21 @@ class CalendarScreen extends StatefulWidget {
   _CalendarScreenState createState() => _CalendarScreenState();
 }
 
-Future<Set<DateTime>> getDatesFromFirestore(dynamic dates) async {
-  CollectionReference eventsCollection =
-      FirebaseFirestore.instance.collection('bookings');
-  QuerySnapshot querySnapshot = await eventsCollection.get();
-  querySnapshot.docs.forEach((document) {
-    DateTime dateTime = document['date'].toDate();
-    dates.add(DateTime.utc(dateTime.year, dateTime.month, dateTime.day));
-  });
-  return dates;
-}
-
 class _CalendarScreenState extends State<CalendarScreen> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
-  DateTime? _selectedDay;
   DateTime _focusedDay = DateTime.now().add(Duration(days: 7));
   Set<DateTime> _disabledDates = Set();
+  DateTime? _selectedDay;
 
-  @override
-  void initState() {
-    super.initState();
-    _fetchDisabledDates();
+  Future<Set<DateTime>> getDatesFromFirestore(dynamic dates) async {
+    CollectionReference eventsCollection =
+        FirebaseFirestore.instance.collection('bookings');
+    QuerySnapshot querySnapshot = await eventsCollection.get();
+    querySnapshot.docs.forEach((document) {
+      DateTime dateTime = document['eventDate'].toDate();
+      dates.add(DateTime.utc(dateTime.year, dateTime.month, dateTime.day));
+    });
+    return dates;
   }
 
   Future<void> _fetchDisabledDates() async {
@@ -45,6 +39,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _fetchDisabledDates();
+  }
+
+  @override
   Widget build(BuildContext context) {
     DateTime _firstDay = DateTime.now().add(Duration(days: 7));
     DateTime _lastDay = DateTime.now().add(Duration(days: 90));
@@ -55,9 +55,23 @@ class _CalendarScreenState extends State<CalendarScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            'Selected Day = ' + _focusedDay.toString().split(" ")[0],
-            style: TextStyle(fontSize: 20, color: Colors.lightGreen[900]),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 30, 20, 0),
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10), color: Colors.pink),
+              child: Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: Text(
+                  'Selected Day = ' + _focusedDay.toString().split(" ")[0],
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
           ),
           TableCalendar(
             calendarFormat: _calendarFormat,
@@ -92,7 +106,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             calendarStyle: CalendarStyle(
               disabledDecoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.blueGrey[300],
+                color: Colors.redAccent[100],
               ),
               disabledTextStyle: TextStyle(
                 color: Colors.white,
@@ -108,7 +122,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
               ),
               onPressed: () {
                 if (_selectedDay != null) {
-                  // Navigation(context, ServicesScreen());
+                  Navigation(
+                      context,
+                      ServicesScreen(
+                        eventDate: _selectedDay!,
+                      ));
                   print(_selectedDay);
                 } else {
                   showErrorAlert(context, 'Please Select One');

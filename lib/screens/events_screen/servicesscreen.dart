@@ -1,4 +1,5 @@
 import 'package:campbelldecor/reusable/reusable_methods.dart';
+import 'package:campbelldecor/screens/bookingscreen.dart';
 import 'package:campbelldecor/screens/cartscreen.dart';
 import 'package:campbelldecor/screens/events_screen/serviceselectscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,8 +7,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ServicesScreen extends StatefulWidget {
-  final String event;
-  ServicesScreen({required this.event});
+  final DateTime eventDate;
+  ServicesScreen({required this.eventDate});
 
   @override
   State<ServicesScreen> createState() => _ServicesScreenState();
@@ -20,6 +21,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
   Map<String, dynamic> data = {};
   Map<String, dynamic> myMap = {};
   double? amount;
+  String? event;
   @override
   Widget build(BuildContext context) {
     print(_services.toString());
@@ -136,20 +138,19 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       await getMapData('service').then((map) {
                         setState(() {
                           myMap = map;
-                          // myMap.forEach((key, value) {
-                          //   print('Key: $key, Value: $value');
-                          // });
                         });
                       });
-                      /*---------------------insert Booking Collection---------------------*/
+                      amount = await getDoubleData('amount');
+                      event = await getData('event');
+                      /*---------------------insert Add to cart Collection---------------------*/
 
                       await insertData(
                               'addtocart',
-                              widget.event,
+                              event!,
                               FirebaseAuth.instance.currentUser!.uid,
                               DateTime.now(),
-                              'Event date',
-                              500,
+                              widget.eventDate,
+                              50000,
                               myMap)
                           .then((value) =>
                               Navigation(context, AddToCartScreen()));
@@ -170,25 +171,27 @@ class _ServicesScreenState extends State<ServicesScreen> {
                   width: 150,
                   child: ElevatedButton(
                     onPressed: () async {
+                      event = await getData('event');
+
+                      amount = await getDoubleData('amount');
                       /*--------------------- Add services into myMap ---------------------*/
-                      getMapData('service').then((map) {
+                      await getMapData('service').then((map) {
                         setState(() {
                           myMap = map;
-                          // myMap.forEach((key, value) {
-                          //   print('Key: $key, Value: $value');
-                          // });
                         });
                       });
                       /*---------------------insert Booking Collection---------------------*/
 
-                      insertData(
-                          'bookings',
-                          widget.event,
-                          FirebaseAuth.instance.currentUser!.uid,
-                          DateTime.now(),
-                          'Event date',
-                          500,
-                          myMap);
+                      await insertData(
+                              'bookings',
+                              event!,
+                              FirebaseAuth.instance.currentUser!.uid,
+                              DateTime.now(),
+                              widget.eventDate,
+                              50000,
+                              myMap)
+                          .then(
+                              (value) => Navigation(context, BookingScreen()));
                     },
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(

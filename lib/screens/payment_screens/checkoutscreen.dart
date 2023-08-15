@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../reusable/reusable_widgets.dart';
 
 class CheckOutScreen extends StatefulWidget {

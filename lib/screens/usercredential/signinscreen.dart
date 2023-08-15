@@ -56,15 +56,22 @@ class _SignInScreenState extends State<SignInScreen> {
                   height: 20,
                 ),
                 reusableButton(context, true, () {
-                  FirebaseAuth.instance
-                      .signInWithEmailAndPassword(
-                          email: _emailTextController.text,
-                          password: _passwordTextController.text)
-                      .then((value) {
-                    Navigation(context, HomeScreen());
-                  }).onError((error, stackTrace) {
-                    print("Error ${error.toString()}");
-                  });
+                  if (_emailTextController.text.isNotEmpty &&
+                      _passwordTextController.text.isNotEmpty) {
+                    FirebaseAuth.instance
+                        .signInWithEmailAndPassword(
+                            email: _emailTextController.text,
+                            password: _passwordTextController.text)
+                        .then((value) {
+                      Navigation(context, HomeScreen());
+                    }).onError((error, stackTrace) {
+                      showErrorAlert(context,
+                          'Username or Password is incorrect please try again.');
+                      print("Error ${error.toString()}");
+                    });
+                  } else {
+                    showErrorAlert(context, 'Please Fill the All feilds ');
+                  }
                 }),
                 signUpOption(),
                 forgetPasswordOption(),

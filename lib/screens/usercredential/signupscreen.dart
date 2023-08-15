@@ -1,4 +1,5 @@
 import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
+import 'package:campbelldecor/screens/homescreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -85,23 +86,42 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 const SizedBox(
                   height: 20,
                 ),
-                reusableButton(context, false, () {
-                  FirebaseAuth.instance
-                      .createUserWithEmailAndPassword(
-                          email: _emailTextController.text,
-                          password: _passwordTextController.text)
-                      .then((value) {
-                    insertUserData(
-                        _userTextController.text,
-                        _emailTextController.text,
-                        _phoneNoTextController.text,
-                        _addressTextController.text);
-                    print("Create New Account");
-                    Navigation(context, EventsScreen());
-                  }).onError((error, stackTrace) {
-                    print("Error ${error.toString()}");
-                  });
-                }),
+                reusableButton(
+                  context,
+                  false,
+                  () {
+                    if (_userTextController.text.isNotEmpty &&
+                        _emailTextController.text.isNotEmpty &&
+                        _passwordTextController.text.isNotEmpty &&
+                        _phoneNoTextController.text.isNotEmpty &&
+                        _addressTextController.text.isNotEmpty) {
+                      if (_passwordTextController.text ==
+                          _confirmpassTextController.text) {
+                        FirebaseAuth.instance
+                            .createUserWithEmailAndPassword(
+                                email: _emailTextController.text,
+                                password: _passwordTextController.text)
+                            .then((value) {
+                          insertUserData(
+                              _userTextController.text,
+                              _emailTextController.text,
+                              _phoneNoTextController.text,
+                              _addressTextController.text);
+                          print("Create New Account");
+                          Navigation(context, HomeScreen());
+                        }).onError((error, stackTrace) {
+                          print("Error ${error.toString()}");
+                        });
+                      } else {
+                        showErrorAlert(context,
+                            'Password and Confirm password not Matched ');
+                        print('Password and Confirm password not Matched ');
+                      }
+                    } else {
+                      showErrorAlert(context, 'Please Fill the All feilds ');
+                    }
+                  },
+                ),
               ],
             ),
           ),

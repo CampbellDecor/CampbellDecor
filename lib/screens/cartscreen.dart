@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class AddToCartScreen extends StatefulWidget {
   AddToCartScreen({super.key});
@@ -9,7 +11,10 @@ class AddToCartScreen extends StatefulWidget {
 }
 
 class _AddToCartScreenState extends State<AddToCartScreen> {
-  final _cart = FirebaseFirestore.instance.collection("carts");
+  final _cart = FirebaseFirestore.instance
+      .collection("addtocart")
+      .where('userID', isEqualTo: FirebaseAuth.instance.currentUser?.uid);
+
   List<bool> _isChecked = [];
   bool _selectAll = false;
 
@@ -58,13 +63,16 @@ class _AddToCartScreenState extends State<AddToCartScreen> {
                                       documentSnapshot['name'],
                                       style: TextStyle(fontSize: 18),
                                     )),
-                                    Icon(Icons.star), // Custom trailing icon
+                                    Text(
+                                      DateFormat.yMd().format(
+                                          documentSnapshot['date'].toDate()),
+                                    ), // Custom trailing icon
                                   ],
                                 ),
                                 subtitle: Padding(
                                   padding: const EdgeInsets.all(3.0),
                                   child: Text(
-                                    'Rs.${documentSnapshot['price']}.00',
+                                    'Rs.${documentSnapshot['paymentAmount']}.00',
                                     style: TextStyle(fontSize: 16),
                                   ),
                                 ),
@@ -185,8 +193,12 @@ class _AddToCartScreenState extends State<AddToCartScreen> {
     for (int i = _isChecked.length - 1; i >= 0; i--) {
       if (_isChecked[i]) {
         final documentSnapshot = (await _cart.get()).docs[i];
-        await _cart.doc(documentSnapshot.id).delete(); // Delete document
-        _isChecked.removeAt(i); // Remove checkbox status
+        await FirebaseFirestore.instance
+            .collection('addtocart')
+            .doc(documentSnapshot.id)
+            .delete();
+
+        _isChecked.removeAt(i);
       }
     }
     setState(() {});

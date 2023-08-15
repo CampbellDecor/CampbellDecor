@@ -1,3 +1,4 @@
+import 'package:campbelldecor/screens/dateview.dart';
 import 'package:campbelldecor/screens/events_screen/religion.dart';
 import 'package:campbelldecor/screens/events_screen/servicesscreen.dart';
 import 'package:campbelldecor/screens/events_screen/usereventscreation.dart';
@@ -97,17 +98,18 @@ class EventsScreen extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      onTap: () {
+                                      onTap: () async {
                                         if (documentSnapshot['name'] ==
                                             'Wedding') {
                                           Navigation(
                                               context, ReligionSelectScreen());
                                         } else {
-                                          Navigation(
-                                              context,
-                                              ServicesScreen(
-                                                event: documentSnapshot['name'],
-                                              ));
+                                          SharedPreferences preferences =
+                                              await SharedPreferences
+                                                  .getInstance();
+                                          preferences.setString('event',
+                                              documentSnapshot['name']);
+                                          Navigation(context, CalendarScreen());
                                         }
                                       },
                                     ),

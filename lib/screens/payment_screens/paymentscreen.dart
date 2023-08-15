@@ -1,4 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+// import '../../reusable/reusable_methods.dart';
 
 class PaymentScreen extends StatefulWidget {
   final double price;
@@ -10,6 +15,41 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   String? selectedPaymentMethod;
+  String userAddress = '';
+  late double amount;
+  @override
+  void initState() {
+    super.initState();
+    retrieveUserAddress();
+  }
+
+  Future<void> retrieveUserAddress() async {
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: FirebaseAuth.instance.currentUser?.email)
+          .limit(1)
+          .get();
+
+      if (querySnapshot.size > 0) {
+        DocumentSnapshot userSnapshot = querySnapshot.docs.first;
+        setState(() {
+          userAddress = userSnapshot['address'];
+        });
+      } else {
+        print('User not found');
+      }
+    } catch (e) {
+      print('Error retrieving user address: $e');
+    }
+  }
+
+  Future<double?> getDoubleData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    amount = prefs.getDouble('amount')!;
+    return amount;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,10 +71,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       color: Color.fromARGB(50, 260, 250, 254),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Padding(
+                    child: Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Text(
-                        'Billing Address : Arasady Lane, Madduvil North, Jaffna',
+                        'Billing Address : $userAddress',
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
@@ -76,7 +116,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     child: Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Text(
-                        'Total Amount : ${widget.price}',
+                        'Total Amount : ${getDoubleData().toString()}',
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
@@ -161,9 +201,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
-                      onPressed: () {
-                        // Add payment processing logic here
-                      },
+                      onPressed: () {},
                       child: const Text('Make Payment'),
                     ),
                   ),

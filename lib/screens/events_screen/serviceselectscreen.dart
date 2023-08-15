@@ -15,6 +15,7 @@ class ServiceSelectScreen extends StatefulWidget {
 
 class _ServiceSelectScreenState extends State<ServiceSelectScreen> {
   dynamic _selectedItem;
+  double amount = 0;
   int count = 1;
   double? totalPrice;
   Map<String, double> items = Map();
@@ -68,8 +69,8 @@ class _ServiceSelectScreenState extends State<ServiceSelectScreen> {
                   });
 
                   return DropdownButton(
-                    hint: const Text(
-                      'Select Service    ',
+                    hint: Text(
+                      'Select ${widget.data}     ',
                       style: TextStyle(color: Colors.black, fontSize: 18),
                     ),
                     value: _selectedItem,
@@ -78,7 +79,7 @@ class _ServiceSelectScreenState extends State<ServiceSelectScreen> {
                         value: key,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [Text(key), Text('  Rs.${items[key]}.00')],
+                          children: [Text(key), Text('  Rs.${items[key]}0')],
                         ),
                       );
                     }).toList(),
@@ -151,6 +152,11 @@ class _ServiceSelectScreenState extends State<ServiceSelectScreen> {
                         });
                         String jsonData = json.encode(widget.map);
                         preferences.setString('service', jsonData);
+                        preferences.setDouble('amount', amount);
+
+                        // print('amount');
+                        // print(amount);
+                        // print('amount');
 //---------------------------------------------------------------------------------------------
                         Navigator.pop(context);
                       },
@@ -180,5 +186,6 @@ class _ServiceSelectScreenState extends State<ServiceSelectScreen> {
   void _total(double price) {
     totalPrice = (price * count);
     priceController.text = totalPrice.toString();
+    amount = amount + totalPrice!;
   }
 }
