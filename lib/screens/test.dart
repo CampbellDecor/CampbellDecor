@@ -1,94 +1,58 @@
-// import 'package:campbelldecor/reusable_widgets/reusable_methods.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:flutter/material.dart';
-//
-// class ReligionSelectScreen extends StatefulWidget {
-//   @override
-//   _ReligionSelectScreenState createState() => _ReligionSelectScreenState();
-// }
-//
-// class _ReligionSelectScreenState extends State<ReligionSelectScreen> {
-//   List<bool> _selectedList = [];
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     _initializeSelectedList();
-//   }
-//
-//   // Initialize SelectedList()
-//   Future<void> _initializeSelectedList() async {
-//     int documentCount = await getCollectionCount('religions');
-//     setState(() {
-//       _selectedList = List<bool>.filled(documentCount, false);
-//     });
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final CollectionReference ref =
-//         FirebaseFirestore.instance.collection('religions');
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Religions'),
-//       ),
-//       body: Column(
-//         children: [
-//           Expanded(
-//             child: StreamBuilder(
-//               stream: ref.snapshots(),
-//               builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-//                 if (streamSnapshot.hasData) {
-//                   return ListView.builder(
-//                       itemCount: streamSnapshot.data!.docs.length,
-//                       itemBuilder: (context, index) {
-//                         final DocumentSnapshot documentSnapshot =
-//                             streamSnapshot.data!.docs[index];
-//                         return Padding(
-//                           padding: const EdgeInsets.fromLTRB(30, 0, 30, 0.0),
-//                           child: Card(
-//                             color: _selectedList[index]
-//                                 ? Color.fromARGB(80, 260, 260, 254)
-//                                 : Color.fromARGB(35, 260, 260, 254),
-//                             elevation: _selectedList[index] ? 5 : 8,
-//                             margin: const EdgeInsets.all(10),
-//                             // color: const Color.fromARGB(50, 260, 260, 254),
-//                             child: Padding(
-//                               padding: const EdgeInsets.all(20),
-//                               child: Container(
-//                                 height: 120,
-//                                 child: ListTile(
-//                                   title: Text(
-//                                     documentSnapshot['religion'],
-//                                     style: TextStyle(
-//                                       fontWeight: FontWeight.bold,
-//                                       fontSize: 18,
-//                                       color: _selectedList[index]
-//                                           ? Colors.white
-//                                           : Colors.black,
-//                                     ),
-//                                   ),
-//                                   onTap: () {
-//                                     setState(() {
-//                                       _selectedList[index] =
-//                                           !_selectedList[index];
-//                                     });
-//                                   },
-//                                 ),
-//                               ),
-//                             ),
-//                           ),
-//                         );
-//                       });
-//                 }
-//                 return const Center(
-//                   child: CircularProgressIndicator(),
-//                 );
-//               },
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
+import 'package:flutter/material.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+
+class FirebaseImagePage extends StatefulWidget {
+  @override
+  _FirebaseImagePageState createState() => _FirebaseImagePageState();
+}
+
+class _FirebaseImagePageState extends State<FirebaseImagePage> {
+  String imageURL = '';
+
+  // Function to retrieve the image URL from Firebase Storage
+  Future<void> getImageURL() async {
+    // String path = 'Images/img.png';
+    try {
+      final ref =
+          FirebaseStorage.instance.ref().child('Services/photography.jpeg');
+      final url = await ref.getDownloadURL();
+      setState(() {
+        imageURL = url;
+        print('Image URL is $imageURL');
+      });
+    } catch (e) {
+      print('Error getting image URL: $e');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getImageURL();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Firebase Image'),
+      ),
+      body: Center(
+        child: Column(
+          children: [
+            Container(
+              height: 300,
+              width: 500,
+              child: imageURL.isNotEmpty
+                  ? Image.network(
+                      imageURL,
+                      fit: BoxFit.cover,
+                    ) // Display the image using the URL
+                  : CircularProgressIndicator(), // Show a loading indicator if imageURL is empty
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

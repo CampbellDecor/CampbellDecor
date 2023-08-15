@@ -1,59 +1,194 @@
-import 'package:campbelldecor/reusable_widgets/reusable_methods.dart';
-import 'package:campbelldecor/screens/checkoutscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class AddToCartScreen extends StatelessWidget {
+class AddToCartScreen extends StatefulWidget {
   AddToCartScreen({super.key});
+
+  @override
+  State<AddToCartScreen> createState() => _AddToCartScreenState();
+}
+
+class _AddToCartScreenState extends State<AddToCartScreen> {
   final _cart = FirebaseFirestore.instance.collection("carts");
+  List<bool> _isChecked = [];
+  bool _selectAll = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: false,
       appBar: AppBar(
-        title: Text("My Cart"),
-      ),
-      body: Container(
-        child: StreamBuilder(
-          stream: _cart.snapshots(),
-          builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-            if (streamSnapshot.hasData) {
-              return ListView.builder(
-                  itemCount: streamSnapshot.data!.docs.length,
-                  itemBuilder: (context, index) {
-                    final DocumentSnapshot documentSnapshot =
-                        streamSnapshot.data!.docs[index];
-                    return Card(
-                      color: Color.fromARGB(100, 260, 250, 254),
-                      child: ListTile(
-                        onTap: () {
-                          Navication(context, CheckOutScreen());
-                        },
-                        title: Text(documentSnapshot['name'].value.toString()),
-                        trailing: Container(
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(
-                                    Icons.delete,
-                                    color: Colors.red,
-                                  )),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  });
-            }
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          },
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [Text("My Cart"), SelectAll()],
         ),
       ),
+      body: Column(
+        children: [
+          StreamBuilder(
+            stream: _cart.snapshots(),
+            builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+              if (streamSnapshot.hasData) {
+                return LimitedBox(
+                  maxHeight: 700,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 28, 0, 0),
+                    child: ListView.builder(
+                      itemCount: streamSnapshot.data!.docs.length,
+                      itemBuilder: (context, index) {
+                        final DocumentSnapshot documentSnapshot =
+                            streamSnapshot.data!.docs[index];
+                        _isChecked.add(false);
+
+                        return Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            elevation: 3,
+                            margin: EdgeInsets.fromLTRB(30, 10, 30, 10),
+                            color: Color.fromARGB(100, 260, 250, 254),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: CheckboxListTile(
+                                title: Row(
+                                  children: [
+                                    Expanded(
+                                        child: Text(
+                                      documentSnapshot['name'],
+                                      style: TextStyle(fontSize: 18),
+                                    )),
+                                    Icon(Icons.star), // Custom trailing icon
+                                  ],
+                                ),
+                                subtitle: Padding(
+                                  padding: const EdgeInsets.all(3.0),
+                                  child: Text(
+                                    'Rs.${documentSnapshot['price']}.00',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                ),
+                                value: _isChecked[index],
+                                onChanged: (bool? newValue) {
+                                  setState(() {
+                                    _isChecked[index] = newValue!;
+                                  });
+                                },
+                                controlAffinity:
+                                    ListTileControlAffinity.leading,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                );
+              }
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Container(
+                  height: 45,
+                  width: 130,
+                  child: ElevatedButton(
+                    onPressed: _deleteSelected,
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          Colors.redAccent), // Background color
+                      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                        EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 12), // Padding
+                      ),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(15.0), // Border radius
+                        ),
+                      ),
+                      textStyle: MaterialStateProperty.all<TextStyle>(
+                        TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold), // Text style
+                      ),
+                    ),
+                    child: Text('Delete'), // Button text
+                  )),
+              Container(
+                  height: 45,
+                  width: 130,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Add your onPressed logic here
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          Colors.blue), // Background color
+                      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                        EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 12), // Padding
+                      ),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(15.0), // Border radius
+                        ),
+                      ),
+                      textStyle: MaterialStateProperty.all<TextStyle>(
+                        TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold), // Text style
+                      ),
+                    ),
+                    child: Text('Book'), // Button text
+                  )),
+            ],
+          )
+        ],
+      ),
     );
+  }
+
+  Row SelectAll() {
+    bool value = true;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        GestureDetector(
+          onTap: () {
+            _toggleSelectAll();
+          },
+          child: Text(
+            'Select All',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+        )
+      ],
+    );
+  }
+
+  void _toggleSelectAll() {
+    setState(() {
+      _selectAll = !_selectAll;
+      for (int i = 0; i < _isChecked.length; i++) {
+        _isChecked[i] = _selectAll;
+      }
+    });
+  }
+
+  void _deleteSelected() async {
+    for (int i = _isChecked.length - 1; i >= 0; i--) {
+      if (_isChecked[i]) {
+        final documentSnapshot = (await _cart.get()).docs[i];
+        await _cart.doc(documentSnapshot.id).delete(); // Delete document
+        _isChecked.removeAt(i); // Remove checkbox status
+      }
+    }
+    setState(() {});
   }
 }

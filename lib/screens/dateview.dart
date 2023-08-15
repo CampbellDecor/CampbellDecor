@@ -1,8 +1,9 @@
-import 'package:campbelldecor/reusable_widgets/reusable_methods.dart';
-import 'package:campbelldecor/screens/eventScreen/servicesscreen.dart';
+import 'package:campbelldecor/screens/events_screen/servicesscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+
+import '../reusable/reusable_methods.dart';
 
 class CalendarScreen extends StatefulWidget {
   @override
@@ -22,7 +23,7 @@ Future<Set<DateTime>> getDatesFromFirestore(dynamic dates) async {
 
 class _CalendarScreenState extends State<CalendarScreen> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
-  DateTime _selectedDay = DateTime.now().add(Duration(days: 7));
+  DateTime? _selectedDay;
   DateTime _focusedDay = DateTime.now().add(Duration(days: 7));
   Set<DateTime> _disabledDates = Set();
 
@@ -56,7 +57,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         children: [
           Text(
             'Selected Day = ' + _focusedDay.toString().split(" ")[0],
-            style: TextStyle(fontSize: 26, color: Colors.lightGreen[900]),
+            style: TextStyle(fontSize: 20, color: Colors.lightGreen[900]),
           ),
           TableCalendar(
             calendarFormat: _calendarFormat,
@@ -107,7 +108,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               ),
               onPressed: () {
                 if (_selectedDay != null) {
-                  Navication(context, ServicesScreen());
+                  // Navigation(context, ServicesScreen());
                   print(_selectedDay);
                 } else {
                   showErrorAlert(context, 'Please Select One');

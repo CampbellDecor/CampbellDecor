@@ -1,11 +1,12 @@
-import 'package:campbelldecor/reusable_widgets/reusable_methods.dart';
-import 'package:campbelldecor/screens/eventScreen/eventscreen.dart';
+import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-
-import '../../reusable_widgets/reusable_widgets.dart';
+import '../../reusable/reusable_methods.dart';
+import '../../reusable/reusable_widgets.dart';
 import '../../utils/color_util.dart';
+import '../notifications/welcomeNotification.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -23,6 +24,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController _userTextController = TextEditingController();
   TextEditingController _addressTextController = TextEditingController();
   TextEditingController _phoneNoTextController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,7 +97,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         _phoneNoTextController.text,
                         _addressTextController.text);
                     print("Create New Account");
-                    Navication(context, EventsScreen());
+                    Navigation(context, EventsScreen());
                   }).onError((error, stackTrace) {
                     print("Error ${error.toString()}");
                   });
@@ -115,8 +117,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
       'email': email,
       'phoneNo': phoneNo,
       'address': address,
-    }).then((_) {
+    }).then((_) async {
       print('User data stored successfully');
+      NotificationService().showNotification(
+          title: 'Account Opening',
+          body: 'Wow You Success full create Account..');
+      // final _firebaseMessaging = FirebaseMessaging.instance;
+      // final fCMToken = await _firebaseMessaging.getToken();
     }).catchError((error) {
       print('Failed to store user data: $error');
     });
