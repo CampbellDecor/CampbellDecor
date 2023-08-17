@@ -84,7 +84,7 @@ Widget message(int index) {
             fontWeight: FontWeight.bold),
         children: const [
           TextSpan(
-            text: 'Notification Description',
+            // text: 'Notification Description',
             style: TextStyle(
               fontWeight: FontWeight.w400,
             ),
@@ -104,13 +104,13 @@ Widget timeAndDate(int index) {
         Text(
           '13-08-2023',
           style: TextStyle(
-            fontSize: 10,
+            fontSize: 12,
           ),
         ),
         Text(
           '10-08-2023',
           style: TextStyle(
-            fontSize: 10,
+            fontSize: 12,
           ),
         ),
       ],

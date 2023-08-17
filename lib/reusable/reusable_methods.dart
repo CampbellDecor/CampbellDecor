@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -28,8 +29,8 @@ Future<void> showErrorAlert(BuildContext context, String errorMessage) async {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        shadowColor: Colors.black87,
-        elevation: 20,
+        shadowColor: Colors.black,
+        elevation: 8,
         icon: const Icon(
           Icons.error_rounded,
           color: Colors.red,
@@ -38,6 +39,9 @@ Future<void> showErrorAlert(BuildContext context, String errorMessage) async {
         content: Text(
           errorMessage,
           style: TextStyle(color: Colors.red, fontSize: 18),
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
         ),
         actions: <Widget>[
           TextButton(
@@ -57,6 +61,11 @@ Future<String?> getData(dynamic name) async {
   return prefs.getString(name);
 }
 
+Future<double?> getDoubleData(dynamic name) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getDouble(name);
+}
+
 Future<List<String?>> getListData(String key) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   List<String>? list = prefs.getStringList(key);
@@ -70,18 +79,12 @@ Future<Map<String, dynamic>> getMapData(String service) async {
   return mapData;
 }
 
-// Future<void> saveMapData(Map<String, dynamic> data) async {
-//   SharedPreferences prefs = await SharedPreferences.getInstance();
-//   String jsonData = json.encode(data);
-//   prefs.setString('mapData', jsonData);
-// }
-
 Future<void> insertData(
     String collection,
     String name,
     String UserID,
     DateTime date,
-    String eventDate,
+    DateTime eventDate,
     double paymentAmount,
     Map<String, dynamic> myMap) async {
   try {
@@ -92,7 +95,7 @@ Future<void> insertData(
       'userID': UserID,
       'date': date,
       'eventDate': eventDate,
-      'amount': paymentAmount,
+      'paymentAmount': paymentAmount,
     });
     CollectionReference subCollection =
         await parentDocument.collection('service');

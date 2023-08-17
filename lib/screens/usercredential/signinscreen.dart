@@ -1,15 +1,11 @@
-import 'package:campbelldecor/screens/bookingscreen.dart';
-import 'package:campbelldecor/screens/dateview.dart';
-import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
+import 'package:campbelldecor/screens/bookins_screens/dateview.dart';
 import 'package:campbelldecor/screens/homescreen.dart';
 import 'package:campbelldecor/screens/usercredential/signupscreen.dart';
 import 'package:campbelldecor/utils/color_util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import '../../reusable/reusable_methods.dart';
 import '../../reusable/reusable_widgets.dart';
-import '../notifications/welcomeNotification.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -19,8 +15,8 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  TextEditingController _passwordTextController = TextEditingController();
-  TextEditingController _emailTextController = TextEditingController();
+  final TextEditingController _passwordTextController = TextEditingController();
+  final TextEditingController _emailTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -56,15 +52,22 @@ class _SignInScreenState extends State<SignInScreen> {
                   height: 20,
                 ),
                 reusableButton(context, true, () {
-                  FirebaseAuth.instance
-                      .signInWithEmailAndPassword(
-                          email: _emailTextController.text,
-                          password: _passwordTextController.text)
-                      .then((value) {
-                    Navigation(context, HomeScreen());
-                  }).onError((error, stackTrace) {
-                    print("Error ${error.toString()}");
-                  });
+                  if (_emailTextController.text.isNotEmpty &&
+                      _passwordTextController.text.isNotEmpty) {
+                    FirebaseAuth.instance
+                        .signInWithEmailAndPassword(
+                            email: _emailTextController.text,
+                            password: _passwordTextController.text)
+                        .then((value) {
+                      Navigation(context, HomeScreen());
+                    }).onError((error, stackTrace) {
+                      showErrorAlert(context,
+                          'Username or Password is incorrect please try again.');
+                      print("Error ${error.toString()}");
+                    });
+                  } else {
+                    showErrorAlert(context, 'Please Fill the All feilds ');
+                  }
                 }),
                 signUpOption(),
                 forgetPasswordOption(),
@@ -84,7 +87,7 @@ class _SignInScreenState extends State<SignInScreen> {
             style: TextStyle(color: Colors.white70)),
         GestureDetector(
           onTap: () {
-            Navigation(context, SignUpScreen());
+            Navigation(context, const SignUpScreen());
           },
           child: const Text(
             " Sign Up",

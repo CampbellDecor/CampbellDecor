@@ -1,10 +1,9 @@
-import 'package:campbelldecor/screens/bookingdetailsscreen.dart';
-import 'package:campbelldecor/screens/events_screen/servicesscreen.dart';
+import 'package:campbelldecor/screens/bookins_screens/bookingdetailsscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../reusable/reusable_methods.dart';
+import '../../reusable/reusable_methods.dart';
 
 class BookingScreen extends StatefulWidget {
   @override
@@ -157,11 +156,11 @@ class _BookingScreenState extends State<BookingScreen> {
       ),
       bottomNavigationBar: ElevatedButton(
           onPressed: () {
-            Navigation(context, const BookingDetailsScreen());
+            Navigation(context, BookingDetailsScreen());
 
             Future.delayed(const Duration(seconds: 2), () {
               // Navigate to next page
-              Navigation(context, const BookingDetailsScreen());
+              Navigation(context, BookingDetailsScreen());
             });
           },
           child: const Text('Next')),

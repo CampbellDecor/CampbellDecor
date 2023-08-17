@@ -1,5 +1,5 @@
 import 'package:campbelldecor/resources/loader.dart';
-import 'package:campbelldecor/screens/events_screen/servicesscreen.dart';
+import 'package:campbelldecor/screens/bookins_screens/dateview.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -102,11 +102,7 @@ class _ReligionSelectScreenState extends State<ReligionSelectScreen> {
                   );
                   Future.delayed(Duration(seconds: 2), () {
                     // Navigate to next page
-                    Navigation(
-                        context,
-                        ServicesScreen(
-                          event: 'Wedding',
-                        ));
+                    Navigation(context, CalendarScreen());
                   });
                 },
                 child: const Padding(
