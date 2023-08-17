@@ -1,4 +1,4 @@
-import 'package:campbelldecor/screens/dateview.dart';
+import 'package:campbelldecor/screens/bookins_screens/dateview.dart';
 import 'package:campbelldecor/screens/events_screen/religion.dart';
 import 'package:campbelldecor/screens/events_screen/servicesscreen.dart';
 import 'package:campbelldecor/screens/events_screen/usereventscreation.dart';

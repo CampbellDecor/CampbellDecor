@@ -1,6 +1,6 @@
 import 'package:campbelldecor/reusable/reusable_methods.dart';
-import 'package:campbelldecor/screens/bookingscreen.dart';
-import 'package:campbelldecor/screens/cartscreen.dart';
+import 'package:campbelldecor/screens/bookins_screens/bookingscreen.dart';
+import 'package:campbelldecor/screens/bookins_screens/cartscreen.dart';
 import 'package:campbelldecor/screens/events_screen/serviceselectscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';

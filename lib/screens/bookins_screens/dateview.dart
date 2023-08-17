@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../reusable/reusable_methods.dart';
+import '../../reusable/reusable_methods.dart';
 
 class CalendarScreen extends StatefulWidget {
   @override

@@ -1,10 +1,10 @@
-import 'package:campbelldecor/screens/bookingdetailsscreen.dart';
+import 'package:campbelldecor/screens/bookins_screens/bookingdetailsscreen.dart';
 import 'package:campbelldecor/screens/events_screen/servicesscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../reusable/reusable_methods.dart';
+import '../../reusable/reusable_methods.dart';
 
 class BookingScreen extends StatefulWidget {
   @override

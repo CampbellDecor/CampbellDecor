@@ -1,5 +1,5 @@
-import 'package:campbelldecor/screens/bookingscreen.dart';
-import 'package:campbelldecor/screens/dateview.dart';
+import 'package:campbelldecor/screens/bookins_screens/bookingscreen.dart';
+import 'package:campbelldecor/screens/bookins_screens/dateview.dart';
 import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
 import 'package:campbelldecor/screens/homescreen.dart';
 import 'package:campbelldecor/screens/usercredential/signupscreen.dart';
