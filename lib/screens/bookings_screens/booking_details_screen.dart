@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -49,6 +47,12 @@ class BookingDetailsScreen extends StatelessWidget {
                         DateFormat.yMd().format(data['eventDate'].toDate()))),
                     DataCell(
                         Text(DateFormat.yMd().format(data['date'].toDate()))),
+                    DataCell(
+                      ElevatedButton(
+                        onPressed: () {},
+                        child: Text('Cancel'),
+                      ),
+                    ),
                   ],
                 );
               }).toList();
@@ -62,6 +66,7 @@ class BookingDetailsScreen extends StatelessWidget {
                     DataColumn(label: Text('Price')),
                     DataColumn(label: Text('Event Date')),
                     DataColumn(label: Text('Booking Date')),
+                    DataColumn(label: Text('Action')),
                   ],
                   rows: rows,
                 ),

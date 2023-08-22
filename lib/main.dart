@@ -1,3 +1,4 @@
+import 'package:campbelldecor/screens/bookings_screens/booking_details_screen.dart';
 import 'package:campbelldecor/screens/bookings_screens/custom_rating.dart';
 import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
 import 'package:campbelldecor/screens/events_screen/servicesscreen.dart';
@@ -40,7 +41,7 @@ class _MyAppState extends State<MyApp> {
               theme: ThemeClass.lightTheme,
               darkTheme: ThemeClass.darkTheme,
               themeMode: themeManager.themeMode,
-              home: EventsScreen(),
+              home: BookingDetailsScreen(),
               // CustomRatingBar(
               //   maxRating: 5,
               //   initialRating: 60,
