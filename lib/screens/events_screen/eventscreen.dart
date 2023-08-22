@@ -1,4 +1,4 @@
-import 'package:campbelldecor/screens/bookins_screens/dateview.dart';
+import 'package:campbelldecor/screens/bookings_screens/date_view.dart';
 import 'package:campbelldecor/screens/events_screen/religion.dart';
 import 'package:campbelldecor/screens/events_screen/servicesscreen.dart';
 import 'package:campbelldecor/screens/events_screen/usereventscreation.dart';
@@ -48,8 +48,7 @@ class EventsScreen extends StatelessWidget {
                           padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
                           child: Card(
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  20), // Adjust the radius as needed
+                              borderRadius: BorderRadius.circular(20),
                             ),
                             elevation: 10,
                             child: Container(
@@ -69,8 +68,7 @@ class EventsScreen extends StatelessWidget {
                                   Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20),
-                                      color: Colors.black.withOpacity(
-                                          0.2), // Adjust opacity (0.0 to 1.0) to control the intensity
+                                      color: Colors.black.withOpacity(0.2),
                                     ),
                                   ),
                                   Align(
@@ -85,8 +83,7 @@ class EventsScreen extends StatelessWidget {
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(20),
-                                          color: Colors.black.withOpacity(
-                                              0.5), // Adjust opacity (0.0 to 1.0) to control the intensity
+                                          color: Colors.black.withOpacity(0.5),
                                         ),
                                         //----------------------Text Editings----------------------//
                                         child: Text(

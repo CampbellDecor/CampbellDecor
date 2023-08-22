@@ -1,4 +1,4 @@
-import 'package:campbelldecor/screens/bookins_screens/bookingdetailsscreen.dart';
+import 'package:campbelldecor/screens/bookings_screens/booking_details_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

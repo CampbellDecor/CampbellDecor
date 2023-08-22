@@ -139,9 +139,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
       'address': address,
     }).then((_) async {
       print('User data stored successfully');
-      NotificationService().showNotification(
-          title: 'Account Opening',
-          body: 'Wow You Success full create Account..');
+      // NotificationService().showNotification(
+      //     title: 'Account Opening',
+      //     body: 'Wow You Success full create Account..');
       // final _firebaseMessaging = FirebaseMessaging.instance;
       // final fCMToken = await _firebaseMessaging.getToken();
     }).catchError((error) {

@@ -1,5 +1,5 @@
 import 'package:campbelldecor/reusable/reusable_methods.dart';
-import 'package:campbelldecor/screens/bookins_screens/bookingdetailsscreen.dart';
+import 'package:campbelldecor/screens/bookings_screens/booking_details_screen.dart';
 import 'package:flutter/material.dart';
 
 class MyDrawer extends StatelessWidget {

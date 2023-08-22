@@ -1,5 +1,6 @@
-import 'package:campbelldecor/screens/bookins_screens/dateview.dart';
+import 'package:campbelldecor/screens/bookings_screens/date_view.dart';
 import 'package:campbelldecor/screens/homescreen.dart';
+import 'package:campbelldecor/screens/usercredential/resetpassword.dart';
 import 'package:campbelldecor/screens/usercredential/signupscreen.dart';
 import 'package:campbelldecor/utils/color_util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -104,7 +105,7 @@ class _SignInScreenState extends State<SignInScreen> {
       children: [
         GestureDetector(
           onTap: () {
-            Navigation(context, CalendarScreen());
+            Navigation(context, ResetScreen());
           },
           child: const Text(
             "Forget Password",

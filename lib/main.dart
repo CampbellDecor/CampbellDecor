@@ -1,8 +1,8 @@
-import 'package:campbelldecor/screens/notifications/notification_setup.dart';
-import 'package:campbelldecor/screens/notifications/notificationscreen.dart';
+import 'package:campbelldecor/screens/bookings_screens/custom_rating.dart';
+import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
+import 'package:campbelldecor/screens/events_screen/servicesscreen.dart';
 import 'package:campbelldecor/screens/theme/theme_colors.dart';
 import 'package:campbelldecor/screens/theme/theme_manager.dart';
-import 'package:campbelldecor/screens/usercredential/signinscreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +14,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await FirebaseApi().initNotification();
+  // await FirebaseApi().initNotification();
   runApp(const MyApp());
 }
 
@@ -40,12 +40,19 @@ class _MyAppState extends State<MyApp> {
               theme: ThemeClass.lightTheme,
               darkTheme: ThemeClass.darkTheme,
               themeMode: themeManager.themeMode,
-              home: const SignInScreen(),
+              home: EventsScreen(),
+              // CustomRatingBar(
+              //   maxRating: 5,
+              //   initialRating: 60,
+              //   onRatingChanged: (rating) {
+              //     print('New rating: $rating');
+              //   },
+              // ),
               navigatorKey: navigatorKey,
-              routes: {
-                NotificationScreen.route: (context) =>
-                    const NotificationScreen(),
-              },
+              // routes: {
+              //   NotificationScreen.route: (context) =>
+              //       const NotificationScreen(),
+              // },
             );
           },
         ));

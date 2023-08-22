@@ -1,5 +1,8 @@
+import 'package:campbelldecor/reusable/reusable_methods.dart';
 import 'package:campbelldecor/screens/payment_screens/paymentscreen.dart';
 import 'package:flutter/material.dart';
+
+import '../models/ratingModel.dart';
 
 Container logoWidget(String imageName) {
   return Container(
@@ -10,7 +13,7 @@ Container logoWidget(String imageName) {
   );
 }
 
-// Image for Container List view
+/*----------------------- Image for Container List view ----------------------------------*/
 ClipRRect IconImageWidget(String imageName, double height, double width) {
   return ClipRRect(
     borderRadius: BorderRadius.circular(10),
@@ -112,7 +115,7 @@ Container reuseButton(BuildContext context, String text, Function onTap) {
   );
 }
 
-// Data show as Container List
+/*----------------------- Data show as Container List ---------------------------------*/
 Widget reuseContainerList(
     String imgName, double height, double width, String name) {
   return Padding(
@@ -142,7 +145,7 @@ Widget reuseContainerList(
   );
 }
 
-// Data show as Container List
+/*----------------------- Data show as Container List ---------------------------------*/
 Widget reusePaymentContainer(
     double price, BuildContext context, Function onTap) {
   double bondmoney = (price / 100) * 10;
@@ -223,6 +226,15 @@ Widget reusePaymentContainer(
       ),
     ],
   );
+}
+
+Future<void> getRating() async {
+  FirestoreService firestoreService = FirestoreService();
+  List<String> fieldNames = ['packageName', 'rating_count', 'avg_rating'];
+  List<Package> packages =
+      await firestoreService.retriveFromCollection('packages', fieldNames);
+  print(packages.length);
+  print(packages[0].name);
 }
 
 // Column res(Function onTap) {
