@@ -24,6 +24,46 @@ Future<void> Navigation(BuildContext context, dynamic function) async {
   Navigator.push(context, MaterialPageRoute(builder: (context) => function));
 }
 
+Future<void> showInformationAlert(
+    BuildContext context, String inform, dynamic function) async {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        shadowColor: Colors.black,
+        elevation: 8,
+        icon: const Icon(
+          Icons.info_outline_rounded,
+          color: Colors.blue,
+        ),
+        title: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('Information'),
+          ),
+        ),
+        content: Text(
+          inform,
+          style: TextStyle(color: Colors.blue, fontSize: 18),
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text('OK'),
+            onPressed: () {
+              Navigator.of(context).pop();
+              Navigation(context, function);
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
 Future<void> showErrorAlert(BuildContext context, String errorMessage) async {
   showDialog(
     context: context,
