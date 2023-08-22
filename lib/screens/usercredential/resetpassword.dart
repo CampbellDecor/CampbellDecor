@@ -1,9 +1,9 @@
-import 'package:campbelldecor/reusable/reusable_methods.dart';
-import 'package:campbelldecor/screens/usercredential/signinscreen.dart';
+import 'package:campbelldecor/screens/homescreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../reusable/reusable_widgets.dart';
 import '../../utils/color_util.dart';
+import '../events_screen/eventscreen.dart';
 
 class ResetScreen extends StatefulWidget {
   const ResetScreen({super.key});
@@ -43,37 +43,18 @@ class _ResetScreenState extends State<ResetScreen> {
               const SizedBox(
                 height: 20,
               ),
-              textField("Enter Your Email", Icons.email_outlined, false,
+              textField("Enter Your Email", Icons.person_outlined, false,
                   emailController),
               const SizedBox(
                 height: 20,
               ),
-              resetButton(context, () async {
-                if (emailController.text.isNotEmpty) {
-                  try {
-                    var userCheck = await FirebaseAuth.instance
-                        .fetchSignInMethodsForEmail(emailController.text);
-                    if (userCheck.isEmpty) {
-                      // ignore: use_build_context_synchronously
-                      showErrorAlert(
-                          context, 'No user found with this email address.');
-                    } else {
-                      // Send password reset email
-                      await FirebaseAuth.instance
-                          .sendPasswordResetEmail(email: emailController.text);
-                      // ignore: use_build_context_synchronously
-                      showInformationAlert(
-                        context,
-                        'Password reset email sent. Check your inbox.',
-                        SignInScreen(),
-                      );
-                    }
-                  } catch (e) {
-                    showErrorAlert(context, 'An error occurred: $e');
-                  }
-                } else {
-                  showErrorAlert(context, 'please enter your email address');
-                }
+              reButton(context, () {
+                FirebaseAuth.instance
+                    .sendPasswordResetEmail(email: emailController.text)
+                    .then((value) {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => EventsScreen()));
+                });
               })
             ]),
           ),
@@ -82,7 +63,7 @@ class _ResetScreenState extends State<ResetScreen> {
     );
   }
 
-  Container resetButton(BuildContext context, Function onTap) {
+  Container reButton(BuildContext context, Function onTap) {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: 50,
@@ -92,6 +73,11 @@ class _ResetScreenState extends State<ResetScreen> {
         onPressed: () {
           onTap();
         },
+        child: const Text(
+          "RESET",
+          style: TextStyle(
+              color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 16),
+        ),
         style: ButtonStyle(
             backgroundColor: MaterialStateProperty.resolveWith((states) {
               if (states.contains(MaterialState.pressed)) {
@@ -102,11 +88,6 @@ class _ResetScreenState extends State<ResetScreen> {
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular((30))),
             )),
-        child: const Text(
-          "RESET",
-          style: TextStyle(
-              color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 16),
-        ),
       ),
     );
   }
