@@ -228,14 +228,14 @@ Widget reusePaymentContainer(
   );
 }
 
-Future<void> getRating() async {
-  FirestoreService firestoreService = FirestoreService();
-  List<String> fieldNames = ['packageName', 'rating_count', 'avg_rating'];
-  List<Package> packages =
-      await firestoreService.retriveFromCollection('packages', fieldNames);
-  print(packages.length);
-  print(packages[0].name);
-}
+// Future<void> getRating() async {
+//   FirestoreService firestoreService = FirestoreService();
+//   List<String> fieldNames = ['packageName', 'rating_count', 'avg_rating'];
+//   List<Package> packages =
+//       await firestoreService.retriveFromCollection('packages', fieldNames);
+//   print(packages.length);
+//   print(packages[0].name);
+// }
 
 // Column res(Function onTap) {
 //   return Column(
