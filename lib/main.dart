@@ -1,13 +1,19 @@
 import 'package:campbelldecor/screens/bookings_screens/booking_details_screen.dart';
-import 'package:campbelldecor/screens/bookings_screens/custom_rating.dart';
 import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
-import 'package:campbelldecor/screens/events_screen/servicesscreen.dart';
+import 'package:campbelldecor/screens/homescreen.dart';
+import 'package:campbelldecor/screens/notifications/notification_setup.dart';
+import 'package:campbelldecor/screens/notifications/notificationscreen.dart';
+import 'package:campbelldecor/screens/notifications/send_notification.dart';
+import 'package:campbelldecor/screens/notifications/welcomeNotification.dart';
 import 'package:campbelldecor/screens/theme/theme_colors.dart';
 import 'package:campbelldecor/screens/theme/theme_manager.dart';
+import 'package:campbelldecor/screens/usercredential/signinscreen.dart';
+import 'package:campbelldecor/screens/usercredential/signupscreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
+import 'screens/bookings_screens/booking_details.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
@@ -15,7 +21,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  // await FirebaseApi().initNotification();
+  await FirebaseApi().initNotification();
   runApp(const MyApp());
 }
 
@@ -41,7 +47,7 @@ class _MyAppState extends State<MyApp> {
               theme: ThemeClass.lightTheme,
               darkTheme: ThemeClass.darkTheme,
               themeMode: themeManager.themeMode,
-              home: BookingDetailsScreen(),
+              home: BookingScreen(),
               // CustomRatingBar(
               //   maxRating: 5,
               //   initialRating: 60,
@@ -50,10 +56,10 @@ class _MyAppState extends State<MyApp> {
               //   },
               // ),
               navigatorKey: navigatorKey,
-              // routes: {
-              //   NotificationScreen.route: (context) =>
-              //       const NotificationScreen(),
-              // },
+              routes: {
+                NotificationScreen.route: (context) =>
+                    const NotificationScreen(),
+              },
             );
           },
         ));
