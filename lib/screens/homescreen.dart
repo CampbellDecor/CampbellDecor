@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:campbelldecor/reusable/reusable_methods.dart';
 import 'package:campbelldecor/screens/bookings_screens/cart_screen.dart';
 import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
@@ -16,6 +18,7 @@ import 'bookings_screens/show_rating.dart';
 import 'events_screen/religion.dart';
 import 'events_screen/usereventscreation.dart';
 import 'header_nav.dart';
+import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -24,10 +27,17 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   NotificationServices notificationServices = NotificationServices();
+
   @override
   void initState() {
-    notificationServices.requestNotificationPermission();
     super.initState();
+    notificationServices.requestNotificationPermission();
+    notificationServices.firebaseInit(context);
+    notificationServices.setupIneractMessage(context);
+    notificationServices.getDeviceToken().then((value) {
+      print('device Token');
+      print(value);
+    });
   }
 
   @override
@@ -252,6 +262,33 @@ class _HomeScreenState extends State<HomeScreen> {
                     'Events',
                     style: TextStyle(fontSize: 20, color: Colors.green),
                   ),
+                  ElevatedButton(
+                      onPressed: () {
+                        notificationServices
+                            .getDeviceToken()
+                            .then((value) async {
+                          var data = {
+                            'to':
+                                'emHO-ms5RxqdWIxch_QGsJ:APA91bFVXTHvikBswj9E8Ug2HyLN8kbcStQ5bmCrER1DTxrBN87kbezlAi2vtDbxwR4iXx5lhd7Ni3c1AOW8tsnGZFwHyXha3LKsmCAGqMBA3byzsyV7aX63Vy-ECyMbpm6pjfkiomtJ',
+                            'priority': 'high',
+                            'notification': {
+                              'title': 'Pinthushan',
+                              'body': 'Subscripe to my Channel',
+                            },
+                            'data': {'type': 'msj', 'id': 'pinthu07'}
+                          };
+                          await http.post(
+                              Uri.parse('https://fcm.googleapis.com/fcm/send'),
+                              body: jsonEncode(data),
+                              headers: {
+                                'Content-Type':
+                                    'application/json; charset=UTF-8',
+                                'Authorization':
+                                    'key=AAAAliCh-R8:APA91bGSDvwcL3obmsYq7k3A3ueBbHm-SNDdKt8Y9RMqA7Ywi2U4o72j6WRZMiEQF4GPhuYsNlqwH6-RMgvigiQbuXTq42sjuG4zySquDBk0gN-zyHbCeIwHMHNXhHxrfLDKG02tgrKt'
+                              });
+                        });
+                      },
+                      child: Text('SendNotification')),
                   const SizedBox(height: 10),
                   Container(
                     height: 160,
