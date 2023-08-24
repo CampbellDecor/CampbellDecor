@@ -6,8 +6,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
-// Get Collection Rows Count
 Future<int> getCollectionCount(String collectionName) async {
   try {
     CollectionReference collectionRef =
@@ -24,6 +24,83 @@ Future<void> Navigation(BuildContext context, dynamic function) async {
   Navigator.push(context, MaterialPageRoute(builder: (context) => function));
 }
 
+/**********************************************************************************/
+Future<void> requestCancellation(String bookingId) async {
+  try {
+    await FirebaseFirestore.instance
+        .collection('bookings')
+        .doc(bookingId)
+        .update({'status': 'pending_cancellation'});
+    print('Cancellation requested');
+  } catch (e) {
+    print('Error requesting cancellation: $e');
+  }
+}
+
+Future<void> confirmCancellation(String bookingId) async {
+  try {
+    await FirebaseFirestore.instance
+        .collection('bookings')
+        .doc(bookingId)
+        .update({'status': 'cancelled'});
+    print('Cancellation confirmed');
+  } catch (e) {
+    print('Error confirming cancellation: $e');
+  }
+}
+
+// Future<void> sendPushNotification(String requestId) async {
+//   FirebaseMessaging messaging = FirebaseMessaging.instance;
+//   String adminFCMToken =
+//       'elSu8tgKT4ukN2q6UFrecA:APA91bHVoX9x2OixUCP7ua5S33xLDL_TMhTaK8FLFRc3Ydc2GJPdmK9AwBPM4DZ-dIdj3xuVlF-vrx0xzuakGGRUUYk9dT41NKbc0apHPxrHYLw4WWnKpASs3Vat1J5adjAERjcd3c4a';
+//   Map<String, String> notificationData = {
+//     'requestId': requestId,
+//     'title': 'New Cancellation Request',
+//     'body': 'A new cancellation request has been made.',
+//   };
+//
+//   if (messaging == null) {
+//     print('FirebaseMessaging instance is null.');
+//     return;
+//   } else {
+//     try {
+//       await messaging.sendMessage(
+//         to: 'elSu8tgKT4ukN2q6UFrecA:APA91bHVoX9x2OixUCP7ua5S33xLDL_TMhTaK8FLFRc3Ydc2GJPdmK9AwBPM4DZ-dIdj3xuVlF-vrx0xzuakGGRUUYk9dT41NKbc0apHPxrHYLw4WWnKpASs3Vat1J5adjAERjcd3c4a',
+//         data: notificationData,
+//       );
+//       print('Push notification sent successfully');
+//     } catch (e) {
+//       print('Error sending push notification: ${e.toString()}');
+//     }
+//   }
+// }
+Future<void> sendPushNotification(String requestId) async {
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  String adminFCMToken =
+      'elSu8tgKT4ukN2q6UFrecA:APA91bHVoX9x2OixUCP7ua5S33xLDL_TMhTaK8FLFRc3Ydc2GJPdmK9AwBPM4DZ-dIdj3xuVlF-vrx0xzuakGGRUUYk9dT41NKbc0apHPxrHYLw4WWnKpASs3Vat1J5adjAERjcd3c4a'; // Replace with your FCM token
+  Map<String, String> notificationData = {
+    'requestId': requestId,
+    'title': 'New Cancellation Request',
+    'body': 'A new cancellation request has been made.',
+  };
+
+  if (messaging == null) {
+    print('FirebaseMessaging instance is null.');
+    return;
+  } else {
+    try {
+      await messaging.sendMessage(
+        to: adminFCMToken,
+        data: notificationData,
+      );
+      print('Push notification sent successfully');
+    } catch (e) {
+      print('Error sending push notification: ${e.toString()}');
+    }
+  }
+}
+
+/*********************************************************************************/
 Future<void> showInformationAlert(
     BuildContext context, String inform, dynamic function) async {
   showDialog(
@@ -36,23 +113,29 @@ Future<void> showInformationAlert(
           Icons.info_outline_rounded,
           color: Colors.blue,
         ),
-        title: Padding(
-          padding: const EdgeInsets.all(8.0),
+        title: const Padding(
+          padding: EdgeInsets.all(8.0),
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(8.0),
             child: Text('Information'),
           ),
         ),
         content: Text(
           inform,
-          style: TextStyle(color: Colors.blue, fontSize: 18),
+          style: const TextStyle(color: Colors.blue, fontSize: 18),
         ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0),
         ),
         actions: <Widget>[
           TextButton(
-            child: Text('OK'),
+            child: const Text('Cancel', style: TextStyle(fontSize: 16)),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: const Text('OK', style: TextStyle(fontSize: 16)),
             onPressed: () {
               Navigator.of(context).pop();
               Navigation(context, function);
@@ -75,17 +158,17 @@ Future<void> showErrorAlert(BuildContext context, String errorMessage) async {
           Icons.error_rounded,
           color: Colors.red,
         ),
-        title: Text('Error'),
+        title: const Text('Error'),
         content: Text(
           errorMessage,
-          style: TextStyle(color: Colors.red, fontSize: 18),
+          style: const TextStyle(color: Colors.red, fontSize: 18),
         ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0),
         ),
         actions: <Widget>[
           TextButton(
-            child: Text('OK'),
+            child: const Text('OK'),
             onPressed: () {
               Navigator.of(context).pop();
             },

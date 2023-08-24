@@ -1,3 +1,4 @@
+import 'package:campbelldecor/reusable/reusable_methods.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,7 @@ class BookingDetailsScreen extends StatelessWidget {
 
               List<DataRow> rows =
                   snapshot.data!.docs.asMap().entries.map((entry) {
+                DocumentSnapshot documentSnapshot = entry.value;
                 int rowIndex = entry.key;
                 Map<String, dynamic> data =
                     entry.value.data() as Map<String, dynamic>;
@@ -46,11 +48,43 @@ class BookingDetailsScreen extends StatelessWidget {
                     DataCell(Text(
                         DateFormat.yMd().format(data['eventDate'].toDate()))),
                     DataCell(
-                        Text(DateFormat.yMd().format(data['date'].toDate()))),
+                      Text(DateFormat.yMd().format(data['date'].toDate())),
+                    ),
                     DataCell(
+                      // ElevatedButton(
+                      //   onPressed: () {
+                      //     if (data['eventDate'].toDate().isAfter(
+                      //         DateTime.now().add(Duration(days: 14)))) {
+                      //       print('Cancel');
+                      //     } else {
+                      //       showInformationAlert(
+                      //           context,
+                      //           'You are not eligible to get full refund',
+                      //           BookingDetailsScreen());
+                      //       print('Not Cancel');
+                      //     }
+                      //   },
+                      //   child: const Text('Cancel'),
+                      // ),
                       ElevatedButton(
-                        onPressed: () {},
-                        child: Text('Cancel'),
+                        onPressed: () async {
+                          if (data['eventDate'].toDate().isAfter(
+                              DateTime.now().add(Duration(days: 14)))) {
+                            String bookingId = documentSnapshot.id;
+
+                            try {
+                              requestCancellation(bookingId);
+                            } catch (error) {
+                              print('Error deleting booking: $error');
+                            }
+                          } else {
+                            showInformationAlert(
+                                context,
+                                'You are not eligible to get a full refund',
+                                BookingDetailsScreen());
+                          }
+                        },
+                        child: const Text('Cancel'),
                       ),
                     ),
                   ],
@@ -76,7 +110,6 @@ class BookingDetailsScreen extends StatelessWidget {
           const SizedBox(
             height: 50,
           ),
-          // Divider(),
           const Text('Old Programms'),
           const SizedBox(
             height: 50,
@@ -132,6 +165,11 @@ class BookingDetailsScreen extends StatelessWidget {
               );
             },
           ),
+          ElevatedButton(
+              onPressed: () {
+                sendPushNotification('ppppppppiiiiinnnnnnnnthhh');
+              },
+              child: Text('Send')),
         ],
       ),
     );

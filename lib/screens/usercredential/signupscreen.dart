@@ -108,7 +108,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               _phoneNoTextController.text,
                               _addressTextController.text);
                           print("Create New Account");
-                          Navigation(context, HomeScreen());
+                          Navigation(context, HomeScreen()).then((value) {
+                            NotificationService notificationService =
+                                NotificationService();
+                            notificationService.showNotification(
+                                title: 'Create Account',
+                                body: 'Welcome ${_userTextController.text}');
+                          });
                         }).onError((error, stackTrace) {
                           print("Error ${error.toString()}");
                         });

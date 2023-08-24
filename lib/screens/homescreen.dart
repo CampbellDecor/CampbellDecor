@@ -4,6 +4,7 @@ import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
 import 'package:campbelldecor/screens/notifications/notificationView.dart';
 import 'package:campbelldecor/screens/notifications/notification_services.dart';
 import 'package:campbelldecor/screens/theme/theme_manager.dart';
+import 'package:campbelldecor/screens/usercredential/signinscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -71,6 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: const Icon(Icons.logout),
             onPressed: () {
               Navigator.pop(context);
+              Navigation(context, SignInScreen());
             },
           ),
         ],
@@ -78,10 +80,10 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset(
-            'assets/images/back2.png', // Replace with your image path
-            fit: BoxFit.cover, // Adjust how the image fits the screen
-          ),
+          // Image.asset(
+          //   'assets/images/back2.png', // Replace with your image path
+          //   fit: BoxFit.cover, // Adjust how the image fits the screen
+          // ),
           SingleChildScrollView(
             child: Center(
               child: Column(
