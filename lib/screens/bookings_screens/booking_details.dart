@@ -4,35 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../reusable/reusable_methods.dart';
-import 'booking_details_screen.dart';
 
 class BookingScreen extends StatelessWidget {
-  // Stream<List<Booking>> getUpcomingBookings() {
-  //   FirebaseFirestore.instance
-  //       .collection('bookings')
-  //       .where('userID',
-  //       isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-  //       .where('eventDate', isLessThan: DateTime.now())
-  //       .snapshots();
-  //
-  // }
-  //
-  // Stream<List<Booking>> getExpiredBookings() {
-  //   // Replace this with your actual stream of expired bookings
-  //   // This stream should emit a list of expired bookings.
-  // }
-
   @override
   Widget build(BuildContext context) {
     print('userID is : ${FirebaseAuth.instance.currentUser?.uid}');
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bookings'),
+        title: const Text('Bookings'),
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
             child: Text(
               'Active Bookings',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -45,6 +29,7 @@ class BookingScreen extends StatelessWidget {
                   .where('userID',
                       isEqualTo: FirebaseAuth.instance.currentUser?.uid)
                   .where('eventDate', isGreaterThanOrEqualTo: DateTime.now())
+                  .where('status', isEqualTo: 'active')
                   .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
                 if (streamSnapshot.connectionState == ConnectionState.waiting) {
@@ -63,8 +48,8 @@ class BookingScreen extends StatelessWidget {
                       padding: const EdgeInsets.fromLTRB(58, 30, 58, 30),
                       child: Container(
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          gradient: LinearGradient(
+                          borderRadius: BorderRadius.circular(50),
+                          gradient: const LinearGradient(
                             colors: [
                               Colors.blue,
                               Colors.pink
@@ -91,7 +76,7 @@ class BookingScreen extends StatelessWidget {
                                           58, 10, 58, 0),
                                       child: Text(
                                         documentSnapshot['name'],
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontSize: 20,
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold),
@@ -108,7 +93,7 @@ class BookingScreen extends StatelessWidget {
                                       child: Text(
                                         DateFormat.yMd().format(
                                             documentSnapshot['date'].toDate()),
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold),
                                       ),
@@ -116,7 +101,7 @@ class BookingScreen extends StatelessWidget {
                                     // subtitle: Text('Upcoming on ${documentSnapshot.data[index].date.toString()}'),
                                   ),
                                 ),
-                                Divider(
+                                const Divider(
                                   thickness: 5,
                                 ),
                                 Padding(
@@ -128,22 +113,30 @@ class BookingScreen extends StatelessWidget {
                                       onPressed: () async {
                                         if (documentSnapshot['eventDate']
                                             .toDate()
-                                            .isAfter(DateTime.now()
-                                                .add(Duration(days: 14)))) {
+                                            .isAfter(DateTime.now().add(
+                                                const Duration(days: 14)))) {
                                           String bookingId =
                                               documentSnapshot.id;
 
                                           try {
-                                            requestCancellation(bookingId);
+                                            cancelInformationAlert(
+                                                context,
+                                                'Are you Confirm cancel',
+                                                BookingScreen(),
+                                                bookingId);
                                           } catch (error) {
                                             print(
                                                 'Error deleting booking: $error');
                                           }
                                         } else {
-                                          showInformationAlert(
+                                          String bookingId =
+                                              documentSnapshot.id;
+
+                                          cancelInformationAlert(
                                               context,
                                               'You are not eligible to get a full refund',
-                                              BookingScreen());
+                                              BookingScreen(),
+                                              bookingId);
                                         }
                                       },
                                       child: const Text('Cancel'),
@@ -173,8 +166,8 @@ class BookingScreen extends StatelessWidget {
               },
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
             child: Text(
               'Expird Bookings',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -186,8 +179,8 @@ class BookingScreen extends StatelessWidget {
                   .collection('bookings')
                   .where('userID',
                       isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-                  .where('eventDate', isLessThan: DateTime.now())
-                  .snapshots(),
+                  .where('status',
+                      whereIn: ['cancelled', 'expired']).snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
                 if (streamSnapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
@@ -206,8 +199,8 @@ class BookingScreen extends StatelessWidget {
                       padding: const EdgeInsets.fromLTRB(58, 30, 58, 30),
                       child: Container(
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          gradient: LinearGradient(
+                          borderRadius: BorderRadius.circular(50),
+                          gradient: const LinearGradient(
                             colors: [
                               Colors.lightBlue,
                               Colors.black45
@@ -234,7 +227,7 @@ class BookingScreen extends StatelessWidget {
                                           58, 0, 58, 0),
                                       child: Text(
                                         documentSnapshot['name'],
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white),
@@ -247,14 +240,18 @@ class BookingScreen extends StatelessWidget {
                                   child: ListTile(
                                     title: Padding(
                                       padding: const EdgeInsets.fromLTRB(
-                                          58, 0, 58, 0),
+                                          58, 0, 8, 0),
                                       child: Text(
                                         DateFormat.yMd().format(
                                             documentSnapshot['date'].toDate()),
-                                        style: TextStyle(color: Colors.white),
+                                        style: const TextStyle(
+                                            color: Colors.white),
                                       ),
                                     ),
-                                    // subtitle: Text('Upcoming on ${documentSnapshot.data[index].date.toString()}'),
+                                    trailing: Text(
+                                      documentSnapshot['status'],
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   ),
                                 ),
                               ],

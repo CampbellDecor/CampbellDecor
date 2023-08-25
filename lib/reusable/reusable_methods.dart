@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -49,6 +48,26 @@ Future<void> confirmCancellation(String bookingId) async {
   }
 }
 
+/*-------------------------- Function to update booking statuses ----------------------------*/
+void updateBookingStatus() async {
+  final CollectionReference bookingsRef =
+      FirebaseFirestore.instance.collection('bookings');
+  final DateTime currentDate = DateTime.now();
+
+  QuerySnapshot querySnapshot = await bookingsRef.get();
+  querySnapshot.docs.forEach((bookingDoc) {
+    Map<String, dynamic> bookingData =
+        bookingDoc.data() as Map<String, dynamic>;
+
+    String bookingDateString = bookingData['eventDate'];
+    DateTime bookingDate = DateTime.parse(bookingDateString);
+    if (currentDate.isAfter(bookingDate)) {
+      // Update the booking status to "expired"
+      bookingDoc.reference.update({'status': 'expired'});
+    }
+  });
+}
+
 // Future<void> sendPushNotification(String requestId) async {
 //   FirebaseMessaging messaging = FirebaseMessaging.instance;
 //   String adminFCMToken =
@@ -74,31 +93,6 @@ Future<void> confirmCancellation(String bookingId) async {
 //     }
 //   }
 // }
-Future<void> sendPushNotification(String requestId) async {
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
-  String adminFCMToken =
-      'elSu8tgKT4ukN2q6UFrecA:APA91bHVoX9x2OixUCP7ua5S33xLDL_TMhTaK8FLFRc3Ydc2GJPdmK9AwBPM4DZ-dIdj3xuVlF-vrx0xzuakGGRUUYk9dT41NKbc0apHPxrHYLw4WWnKpASs3Vat1J5adjAERjcd3c4a'; // Replace with your FCM token
-  Map<String, String> notificationData = {
-    'requestId': requestId,
-    'title': 'New Cancellation Request',
-    'body': 'A new cancellation request has been made.',
-  };
-
-  if (messaging == null) {
-    print('FirebaseMessaging instance is null.');
-    return;
-  } else {
-    try {
-      await messaging.sendMessage(
-        to: adminFCMToken,
-        data: notificationData,
-      );
-      print('Push notification sent successfully');
-    } catch (e) {
-      print('Error sending push notification: ${e.toString()}');
-    }
-  }
-}
 
 /*********************************************************************************/
 Future<void> showInformationAlert(
@@ -139,6 +133,53 @@ Future<void> showInformationAlert(
             onPressed: () {
               Navigator.of(context).pop();
               Navigation(context, function);
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+Future<void> cancelInformationAlert(BuildContext context, String inform,
+    dynamic navigate, String bookingId) async {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        shadowColor: Colors.black,
+        elevation: 8,
+        icon: const Icon(
+          Icons.info_outline_rounded,
+          color: Colors.blue,
+        ),
+        title: const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text('Information'),
+          ),
+        ),
+        content: Text(
+          inform,
+          style: const TextStyle(color: Colors.blue, fontSize: 18),
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Cancel', style: TextStyle(fontSize: 16)),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: const Text('Confirm', style: TextStyle(fontSize: 16)),
+            onPressed: () async {
+              await confirmCancellation(bookingId);
+              Navigator.of(context).pop();
+              Navigation(context, navigate);
             },
           ),
         ],

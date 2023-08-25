@@ -1,10 +1,12 @@
 import 'package:campbelldecor/screens/bookings_screens/booking_details_screen.dart';
 import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
 import 'package:campbelldecor/screens/homescreen.dart';
+// import 'package:campbelldecor/screens/homescreen.dart';
 import 'package:campbelldecor/screens/notifications/notification_setup.dart';
 import 'package:campbelldecor/screens/notifications/notificationscreen.dart';
 import 'package:campbelldecor/screens/notifications/send_notification.dart';
 import 'package:campbelldecor/screens/notifications/welcomeNotification.dart';
+import 'package:campbelldecor/screens/searchbar/searchbar_widget.dart';
 import 'package:campbelldecor/screens/theme/theme_colors.dart';
 import 'package:campbelldecor/screens/theme/theme_manager.dart';
 import 'package:campbelldecor/screens/usercredential/signinscreen.dart';
