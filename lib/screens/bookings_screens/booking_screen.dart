@@ -156,11 +156,11 @@ class _BookingScreenState extends State<BookingScreen> {
       ),
       bottomNavigationBar: ElevatedButton(
           onPressed: () {
-            Navigation(context, BookingDetailsScreen());
+            Navigation(context, BookingScreen());
 
             Future.delayed(const Duration(seconds: 2), () {
               // Navigate to next page
-              Navigation(context, BookingDetailsScreen());
+              Navigation(context, BookingScreen());
             });
           },
           child: const Text('Next')),
