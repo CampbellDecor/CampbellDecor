@@ -2,8 +2,9 @@ import 'package:campbelldecor/screens/homescreen.dart';
 import 'package:flutter/material.dart';
 import 'package:campbelldecor/screens/homescreen.dart';
 import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
-import 'package:campbelldecor/screens/cartscreen.dart';
 import 'package:campbelldecor/screens/Chat.dart';
+
+import 'bookings_screens/cart_screen.dart';
 
 void main() {
   runApp(new MaterialApp(
