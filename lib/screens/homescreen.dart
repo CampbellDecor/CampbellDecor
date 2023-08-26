@@ -1,23 +1,14 @@
-import 'dart:convert';
 import 'package:campbelldecor/reusable/reusable_methods.dart';
 import 'package:campbelldecor/screens/bookings_screens/cart_screen.dart';
 import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
-import 'package:campbelldecor/screens/notifications/notificationView.dart';
 import 'package:campbelldecor/screens/notifications/notification_services.dart';
 import 'package:campbelldecor/screens/theme/theme_manager.dart';
 import 'package:campbelldecor/screens/usercredential/signinscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../models/ratingModel.dart';
-import 'bookings_screens/date_view.dart';
 import 'bookings_screens/show_rating.dart';
-import 'events_screen/religion.dart';
-import 'events_screen/usereventscreation.dart';
 import 'header_nav.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 
 class HomeScreen extends StatefulWidget {

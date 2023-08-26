@@ -3,18 +3,12 @@ import 'package:campbelldecor/screens/homescreen.dart';
 import 'package:flutter/material.dart';
 import 'package:campbelldecor/screens/Chat.dart';
 
-void main() {
-  runApp(new MaterialApp(
-    home: new MyAboutUs(),
-  ));
-}
-
-class MyAboutUs extends StatefulWidget {
+class AboutUs extends StatefulWidget {
   @override
-  _MyAboutUsState createState() => _MyAboutUsState();
+  _AboutUsState createState() => _AboutUsState();
 }
 
-class _MyAboutUsState extends State<MyAboutUs> {
+class _AboutUsState extends State<AboutUs> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;

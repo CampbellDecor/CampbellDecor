@@ -1,10 +1,20 @@
 import 'package:campbelldecor/reusable/reusable_methods.dart';
+import 'package:campbelldecor/screens/ContactUs.dart';
 import 'package:campbelldecor/screens/bookings_screens/booking_details_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-class MyDrawer extends StatelessWidget {
+import 'AboutUs.dart';
+
+class MyDrawer extends StatefulWidget {
   const MyDrawer({super.key});
 
+  @override
+  State<MyDrawer> createState() => _MyDrawerState();
+}
+
+class _MyDrawerState extends State<MyDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -61,10 +71,7 @@ class MyDrawer extends StatelessWidget {
             title: const Text('About Us'),
             leading: const Icon(Icons.people),
             onTap: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => MyAboutUs()),
-              // );
+              Navigation(context, AboutUs());
             },
           ),
           const Divider(
@@ -74,10 +81,7 @@ class MyDrawer extends StatelessWidget {
             title: const Text('Contact Us'),
             leading: const Icon(Icons.mail),
             onTap: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => MyContact()),
-              // );
+              Navigation(context, ContactUs());
             },
           ),
           const Divider(
