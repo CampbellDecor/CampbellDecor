@@ -49,7 +49,6 @@ class _HomeScreenState extends State<HomeScreen> {
     final themeManager = Provider.of<ThemeManager>(context);
     return Scaffold(
       drawer: const MyDrawer(),
-      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Campbell Decor'),
         backgroundColor: Colors.purple[700],
@@ -241,11 +240,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
                   OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      primary: Colors.blue,
+                      side: BorderSide(color: Colors.blue),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                    ),
                     child: const Text(
                       "More",
                       style: TextStyle(
-                        color: Colors.green,
-                      ),
+                          color: Colors.green,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18),
                     ),
                     onPressed: () {
                       // Navigator.push(
@@ -345,17 +352,22 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
                   OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      primary: Colors.blue,
+                      side: BorderSide(color: Colors.blue),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                    ),
                     child: const Text(
                       "More",
                       style: TextStyle(
-                        color: Colors.green,
-                      ),
+                          color: Colors.green,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18),
                     ),
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => EventsScreen()),
-                      );
+                      Navigation(context, EventsScreen());
                     },
                   ),
                   const SizedBox(height: 20),
@@ -449,11 +461,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 10),
                   OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      primary: Colors.blue,
+                      side: BorderSide(color: Colors.blue),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                    ),
                     child: const Text(
                       "More",
                       style: TextStyle(
-                        color: Colors.green,
-                      ),
+                          color: Colors.green,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18),
                     ),
                     onPressed: () {
                       Navigation(context, EventsScreen());
