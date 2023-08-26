@@ -5,6 +5,7 @@ import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
 import 'package:campbelldecor/screens/Chat.dart';
 
 import '../reusable/reusable_methods.dart';
+import '../reusable/reusable_widgets.dart';
 import 'bookings_screens/cart_screen.dart';
 
 class ContactUs extends StatefulWidget {
@@ -19,53 +20,7 @@ class _ContactUsState extends State<ContactUs> {
         appBar: AppBar(
           title: const Text('ContactUs'),
         ),
-        bottomNavigationBar: Theme(
-          data: Theme.of(context).copyWith(
-            canvasColor: Colors.white,
-            primaryColor: Colors.purple, // Selected icon color
-            textTheme: Theme.of(context).textTheme.copyWith(
-                  bodySmall: const TextStyle(
-                      color: Colors.grey), // Unselected icon color
-                ),
-          ),
-          child: CupertinoTabBar(
-              items: const <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(CupertinoIcons.home),
-                  label: 'Home',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(CupertinoIcons.chat_bubble_text_fill),
-                  label: 'Chat',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(CupertinoIcons.add),
-                  label: 'Add',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(CupertinoIcons.cart_badge_plus),
-                  label: 'Add',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(CupertinoIcons.search),
-                  label: 'Search',
-                ),
-              ],
-              // currentIndex: _selectedIndex,
-              onTap: (index) {
-                if (index == 0) {
-                  Navigation(context, HomeScreen());
-                } else if (index == 1) {
-                  // _navigateToChat(context);
-                } else if (index == 2) {
-                  Navigation(context, EventsScreen());
-                } else if (index == 3) {
-                  Navigation(context, AddToCartScreen());
-                } else {
-                  // _navigateToSearch(context);
-                }
-              }),
-        ),
+        bottomNavigationBar: bottom_Bar(context),
         body: Container(
             padding: const EdgeInsets.all(8),
             child: Column(

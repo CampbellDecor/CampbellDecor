@@ -7,6 +7,7 @@ import 'package:campbelldecor/screens/usercredential/signinscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../reusable/reusable_widgets.dart';
 import 'bookings_screens/show_rating.dart';
 import 'header_nav.dart';
 import 'package:flutter/cupertino.dart';
@@ -485,53 +486,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: Theme(
-        data: Theme.of(context).copyWith(
-          canvasColor: Colors.white,
-          primaryColor: Colors.purple, // Selected icon color
-          textTheme: Theme.of(context).textTheme.copyWith(
-                bodySmall: const TextStyle(
-                    color: Colors.grey), // Unselected icon color
-              ),
-        ),
-        child: CupertinoTabBar(
-            items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.home),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.chat_bubble_text_fill),
-                label: 'Chat',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.add),
-                label: 'Add',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.cart_badge_plus),
-                label: 'Add',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.search),
-                label: 'Search',
-              ),
-            ],
-            // currentIndex: _selectedIndex,
-            onTap: (index) {
-              if (index == 0) {
-                Navigation(context, HomeScreen());
-              } else if (index == 1) {
-                // _navigateToChat(context);
-              } else if (index == 2) {
-                Navigation(context, EventsScreen());
-              } else if (index == 3) {
-                Navigation(context, AddToCartScreen());
-              } else {
-                // _navigateToSearch(context);
-              }
-            }),
-      ),
+      bottomNavigationBar: bottom_Bar(context),
     );
   }
 }
