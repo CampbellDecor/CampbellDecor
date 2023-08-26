@@ -1,7 +1,11 @@
 import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
 import 'package:campbelldecor/screens/homescreen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:campbelldecor/screens/Chat.dart';
+
+import '../reusable/reusable_methods.dart';
+import 'bookings_screens/cart_screen.dart';
 
 class AboutUs extends StatefulWidget {
   @override
@@ -13,70 +17,55 @@ class _AboutUsState extends State<AboutUs> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-        appBar: new AppBar(
+        appBar: AppBar(
           title: new Text('AboutUs'),
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          selectedItemColor: Colors.blue,
-          unselectedItemColor: Colors.grey,
-          backgroundColor: Colors.black,
-          elevation: 20,
-
-          //currentIndex: ,
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home, // Replace this with the desired icon for the route
-                size: 40,
-              ),
-              label: 'Home', // The label for accessibility (optional)
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.chat, // Replace this with the desired icon for the route
-                size: 30,
-              ),
-              label: 'Chat', // The label for accessibility (optional)
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons
-                    .add_circle_outline, // Replace this with the desired icon for the route
-                size: 40,
-              ),
-              label: 'Events', // The label for accessibility (optional)
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons
-                    .shopping_cart, // Replace this with the desired icon for the route
-                size: 40,
-              ),
-              label: 'Settings', // The label for accessibility (optional)
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons
-                    .search, // Replace this with the desired icon for the route
-                size: 40,
-              ),
-              label: 'Settings', // The label for accessibility (optional)
-            ),
-          ],
-          onTap: (index) {
-            // Handle navigation here based on the selected index
-            if (index == 0) {
-              _navigateToHome(context);
-            } else if (index == 1) {
-              _navigateToChat(context);
-            } else if (index == 2) {
-              _navigateToEvents(context);
-            } else if (index == 3) {
-              _navigateToCart(context);
-            } else {
-              _navigateToSearch(context);
-            }
-          },
+        bottomNavigationBar: Theme(
+          data: Theme.of(context).copyWith(
+            canvasColor: Colors.white,
+            primaryColor: Colors.purple, // Selected icon color
+            textTheme: Theme.of(context).textTheme.copyWith(
+                  bodySmall: const TextStyle(
+                      color: Colors.grey), // Unselected icon color
+                ),
+          ),
+          child: CupertinoTabBar(
+              items: const <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Icon(CupertinoIcons.home),
+                  label: 'Home',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(CupertinoIcons.chat_bubble_text_fill),
+                  label: 'Chat',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(CupertinoIcons.add),
+                  label: 'Add',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(CupertinoIcons.cart_badge_plus),
+                  label: 'Add',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(CupertinoIcons.search),
+                  label: 'Search',
+                ),
+              ],
+              // currentIndex: _selectedIndex,
+              onTap: (index) {
+                if (index == 0) {
+                  Navigation(context, HomeScreen());
+                } else if (index == 1) {
+                  // _navigateToChat(context);
+                } else if (index == 2) {
+                  Navigation(context, EventsScreen());
+                } else if (index == 3) {
+                  Navigation(context, AddToCartScreen());
+                } else {
+                  // _navigateToSearch(context);
+                }
+              }),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -95,9 +84,10 @@ class _AboutUsState extends State<AboutUs> {
                     ),
                     SizedBox(height: 8),
                     Image.asset(
-                      'assets/images/user_1.jpeg',
-                      width: 100,
-                      height: 100,
+                      'assets/images/logo2.png',
+                      width: 300,
+                      height: 170,
+                      fit: BoxFit.cover,
                     ),
                   ],
                 ),
@@ -217,39 +207,4 @@ class _AboutUsState extends State<AboutUs> {
           ),
         ));
   }
-}
-
-void _navigateToEvents(BuildContext context) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => EventsScreen()),
-  );
-}
-
-void _navigateToChat(BuildContext context) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => ChatPage()),
-  );
-}
-
-void _navigateToHome(BuildContext context) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => HomeScreen()),
-  );
-}
-
-void _navigateToCart(BuildContext context) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => ChatPage()),
-  );
-}
-
-void _navigateToSearch(BuildContext context) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => ChatPage()),
-  );
 }
