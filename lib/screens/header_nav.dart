@@ -2,6 +2,7 @@ import 'package:campbelldecor/reusable/reusable_methods.dart';
 import 'package:campbelldecor/screens/ContactUs.dart';
 import 'package:campbelldecor/screens/bookings_screens/booking_details_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -15,18 +16,26 @@ class MyDrawer extends StatefulWidget {
 }
 
 class _MyDrawerState extends State<MyDrawer> {
+  String? email = FirebaseAuth.instance.currentUser?.email;
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
       child: ListView(
         children: [
+          ElevatedButton(
+              onPressed: () {
+                ;
+                print(email!);
+              },
+              child: Text('Click')),
           UserAccountsDrawerHeader(
-            accountName: const Text('CampBell Decor'),
-            accountEmail: const Text('campbelldecor@gmail.com'),
+            accountName: Text('name'!),
+            accountEmail: Text(email!),
             currentAccountPicture: CircleAvatar(
               backgroundColor: Colors.white,
               child: ClipOval(
-                child: Image.asset('images/logo.png'),
+                child: Image.asset('assets/images/logo2.png'),
               ),
             ),
             otherAccountsPictures: [],

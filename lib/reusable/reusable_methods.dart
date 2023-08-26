@@ -243,6 +243,25 @@ Future<Map<String, dynamic>> getMapData(String service) async {
   return mapData;
 }
 
+Future<String?> getUserNameByEmail(String email) async {
+  String? userName;
+
+  try {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('email', isEqualTo: email)
+        .limit(1)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      userName = querySnapshot.docs.first['name'];
+    }
+  } catch (e) {
+    print('Error getting user data: $e');
+  }
+  return userName;
+}
+
 Future<void> insertData(
     String collection,
     String name,
