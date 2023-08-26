@@ -1,28 +1,21 @@
 import 'package:campbelldecor/screens/homescreen.dart';
 import 'package:flutter/material.dart';
-import 'package:campbelldecor/screens/homescreen.dart';
 import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
 import 'package:campbelldecor/screens/Chat.dart';
 
 import 'bookings_screens/cart_screen.dart';
 
-void main() {
-  runApp(new MaterialApp(
-    home: new MyContact(),
-  ));
-}
-
-class MyContact extends StatefulWidget {
+class ContactUs extends StatefulWidget {
   @override
-  _MyContactState createState() => _MyContactState();
+  _ContactUsState createState() => _ContactUsState();
 }
 
-class _MyContactState extends State<MyContact> {
+class _ContactUsState extends State<ContactUs> {
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-        appBar: new AppBar(
-          title: new Text('ContactUs'),
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('ContactUs'),
         ),
         bottomNavigationBar: BottomNavigationBar(
           selectedItemColor: Colors.blue,
@@ -31,44 +24,41 @@ class _MyContactState extends State<MyContact> {
           elevation: 20,
 
           //currentIndex: ,
-          items: [
+          items: const [
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.home, // Replace this with the desired icon for the route
+                Icons.home,
                 size: 40,
               ),
-              label: 'Home', // The label for accessibility (optional)
+              label: 'Home',
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.chat, // Replace this with the desired icon for the route
+                Icons.chat,
                 size: 30,
               ),
-              label: 'Chat', // The label for accessibility (optional)
+              label: 'Chat',
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons
-                    .add_circle_outline, // Replace this with the desired icon for the route
+                Icons.add_circle_outline,
                 size: 40,
               ),
-              label: 'Events', // The label for accessibility (optional)
+              label: 'Events',
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons
-                    .shopping_cart, // Replace this with the desired icon for the route
+                Icons.shopping_cart,
                 size: 40,
               ),
-              label: 'Settings', // The label for accessibility (optional)
+              label: 'Settings',
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons
-                    .search, // Replace this with the desired icon for the route
+                Icons.search,
                 size: 40,
               ),
-              label: 'Settings', // The label for accessibility (optional)
+              label: 'Settings',
             ),
           ],
           onTap: (index) {
@@ -87,7 +77,7 @@ class _MyContactState extends State<MyContact> {
           },
         ),
         body: Container(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -95,23 +85,23 @@ class _MyContactState extends State<MyContact> {
                   'Contact Us:',
                   style: Theme.of(context).textTheme.headline6,
                 ),
-                SizedBox(height: 8),
-                ListTile(
+                const SizedBox(height: 8),
+                const ListTile(
                   leading: Icon(Icons.location_on),
                   title: Text('Campbell Town,NSW,Australia,2560'),
                   subtitle: Text('Address'),
                 ),
-                ListTile(
+                const ListTile(
                   leading: Icon(Icons.phone),
                   title: Text('+61 410 734 436'),
                   subtitle: Text('Mobile'),
                 ),
-                ListTile(
+                const ListTile(
                   leading: Icon(Icons.email),
                   title: Text('campbelldecorau@gmail.com'),
                   subtitle: Text('Email'),
                 ),
-                ListTile(
+                const ListTile(
                   leading: Icon(Icons.web),
                   title: Text('http://www.campbelldecor.com.au/'),
                   subtitle: Text('Website'),
