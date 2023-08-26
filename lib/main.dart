@@ -1,22 +1,13 @@
-import 'package:campbelldecor/screens/bookings_screens/booking_details_screen.dart';
-import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
 import 'package:campbelldecor/screens/homescreen.dart';
-// import 'package:campbelldecor/screens/homescreen.dart';
 import 'package:campbelldecor/screens/notifications/notification_setup.dart';
 import 'package:campbelldecor/screens/notifications/notificationscreen.dart';
-import 'package:campbelldecor/screens/notifications/send_notification.dart';
-import 'package:campbelldecor/screens/notifications/welcomeNotification.dart';
-import 'package:campbelldecor/screens/searchbar/searchbar_widget.dart';
 import 'package:campbelldecor/screens/theme/theme_colors.dart';
 import 'package:campbelldecor/screens/theme/theme_manager.dart';
-import 'package:campbelldecor/screens/usercredential/signinscreen.dart';
-import 'package:campbelldecor/screens/usercredential/signupscreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
-import 'screens/bookings_screens/booking_details.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 void main() async {

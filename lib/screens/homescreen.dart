@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:campbelldecor/reusable/reusable_methods.dart';
 import 'package:campbelldecor/screens/bookings_screens/cart_screen.dart';
 import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
@@ -19,6 +18,7 @@ import 'events_screen/religion.dart';
 import 'events_screen/usereventscreation.dart';
 import 'header_nav.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/cupertino.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
     notificationServices.setupIneractMessage(context);
     notificationServices.getDeviceToken().then((value) {
       print('device Token');
-      print(value);
+      print('Device Token $value');
     });
   }
 
@@ -50,11 +50,17 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final CollectionReference _packages =
         FirebaseFirestore.instance.collection('packages');
+    final CollectionReference _events =
+        FirebaseFirestore.instance.collection('events');
+    final CollectionReference _services =
+        FirebaseFirestore.instance.collection('services');
+
     final themeManager = Provider.of<ThemeManager>(context);
     return Scaffold(
       drawer: const MyDrawer(),
       appBar: AppBar(
         title: const Text('Campbell Decor'),
+        backgroundColor: Colors.purple[700],
         /* Dark mood and Light mode button */
         actions: [
           Switch(
@@ -64,13 +70,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 themeManager.toggleTheme(newValue);
               });
             },
-
             inactiveTrackColor: Colors.yellow[200],
             activeColor: Colors.blue[900],
             inactiveThumbColor: Colors.yellow,
             inactiveThumbImage: const AssetImage('assets/images/sun1.png'),
-            activeThumbImage: const AssetImage(
-                'assets/images/moon.png'), // Custom image for the ON state
+            activeThumbImage: const AssetImage('assets/images/moon.png'),
           ),
           IconButton(
             icon: const Icon(Icons.notifications_active_rounded),
@@ -82,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: const Icon(Icons.logout),
             onPressed: () {
               Navigator.pop(context);
-              Navigation(context, SignInScreen());
+              Navigation(context, const SignInScreen());
             },
           ),
         ],
@@ -110,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
                       if (streamSnapshot.hasData) {
                         return LimitedBox(
-                          maxHeight: 250,
+                          maxHeight: 240,
                           child: ListView.builder(
                               scrollDirection: Axis.horizontal,
                               itemCount: 3,
@@ -206,7 +210,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                       'avg_rating']
                                                                   .toDouble(),
                                                         ),
-                                                        SizedBox(
+                                                        const SizedBox(
                                                           width: 16,
                                                         ),
                                                         Padding(
@@ -217,9 +221,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                             documentSnapshot[
                                                                     'rating_count']
                                                                 .toString(),
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .grey),
+                                                            style:
+                                                                const TextStyle(
+                                                                    color: Colors
+                                                                        .grey),
                                                           ),
                                                         ),
                                                       ],
@@ -262,57 +267,90 @@ class _HomeScreenState extends State<HomeScreen> {
                     'Events',
                     style: TextStyle(fontSize: 20, color: Colors.green),
                   ),
-                  ElevatedButton(
-                      onPressed: () {
-                        notificationServices
-                            .getDeviceToken()
-                            .then((value) async {
-                          var data = {
-                            'to':
-                                'emHO-ms5RxqdWIxch_QGsJ:APA91bFVXTHvikBswj9E8Ug2HyLN8kbcStQ5bmCrER1DTxrBN87kbezlAi2vtDbxwR4iXx5lhd7Ni3c1AOW8tsnGZFwHyXha3LKsmCAGqMBA3byzsyV7aX63Vy-ECyMbpm6pjfkiomtJ',
-                            'priority': 'high',
-                            'notification': {
-                              'title': 'Pinthushan',
-                              'body': 'Subscripe to my Channel',
-                            },
-                            'data': {'type': 'msj', 'id': 'pinthu07'}
-                          };
-                          await http.post(
-                              Uri.parse('https://fcm.googleapis.com/fcm/send'),
-                              body: jsonEncode(data),
-                              headers: {
-                                'Content-Type':
-                                    'application/json; charset=UTF-8',
-                                'Authorization':
-                                    'key=AAAAliCh-R8:APA91bGSDvwcL3obmsYq7k3A3ueBbHm-SNDdKt8Y9RMqA7Ywi2U4o72j6WRZMiEQF4GPhuYsNlqwH6-RMgvigiQbuXTq42sjuG4zySquDBk0gN-zyHbCeIwHMHNXhHxrfLDKG02tgrKt'
-                              });
-                        });
-                      },
-                      child: Text('SendNotification')),
                   const SizedBox(height: 10),
-                  Container(
-                    height: 160,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 5,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.green, // Background color
-                          ),
-                          width: 150,
-                          margin: const EdgeInsets.all(10),
-                          child: Center(
-                            child: Text(
-                              'Item $index',
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 16),
-                            ),
-                          ),
+                  StreamBuilder<QuerySnapshot>(
+                    stream: _events.snapshots(),
+                    builder:
+                        (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                      if (streamSnapshot.hasData) {
+                        return LimitedBox(
+                          maxHeight: 240,
+                          child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: 3,
+                              itemBuilder: (context, index) {
+                                final DocumentSnapshot documentSnapshot =
+                                    streamSnapshot.data!.docs[index];
+                                return Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(30, 10, 30, 10),
+                                  child: Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    elevation: 10,
+                                    child: Container(
+                                      height: 200,
+                                      width: 350,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        image: DecorationImage(
+                                          image: NetworkImage(
+                                            documentSnapshot['imgURL'],
+                                          ),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      child: Stack(
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              color:
+                                                  Colors.black.withOpacity(0.4),
+                                            ),
+                                          ),
+                                          Align(
+                                            alignment: Alignment.center,
+                                            child: ListTile(
+                                              //----------------------Text Container background ----------------------//
+
+                                              title: Container(
+                                                height: 70,
+                                                width: 300,
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  color: Colors.black
+                                                      .withOpacity(0.5),
+                                                ),
+                                                //----------------------Text Editings----------------------//
+                                                child: Text(
+                                                  documentSnapshot['name'],
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 28,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  // ),
+                                );
+                              }),
                         );
-                      },
-                    ),
+                      }
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    },
                   ),
                   OutlinedButton(
                     child: const Text(
@@ -333,31 +371,91 @@ class _HomeScreenState extends State<HomeScreen> {
                     'Services',
                     style: TextStyle(fontSize: 20, color: Colors.blue),
                   ),
-                  const SizedBox(height: 10),
-                  Container(
-                    height: 160,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 5,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.blue, // Background color
-                          ),
-                          width: 150,
-                          margin: const EdgeInsets.all(10),
-                          child: Center(
-                            child: Text(
-                              'Item $index',
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 16),
-                            ),
-                          ),
+                  StreamBuilder<QuerySnapshot>(
+                    stream: _services.snapshots(),
+                    builder:
+                        (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                      if (streamSnapshot.hasData) {
+                        return LimitedBox(
+                          maxHeight: 240,
+                          child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: 3,
+                              itemBuilder: (context, index) {
+                                final DocumentSnapshot documentSnapshot =
+                                    streamSnapshot.data!.docs[index];
+                                return Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(30, 10, 30, 10),
+                                  child: Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    elevation: 10,
+                                    child: Container(
+                                      height: 200,
+                                      width: 350,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        image: DecorationImage(
+                                          image: NetworkImage(
+                                            documentSnapshot['imgURL'],
+                                          ),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      child: Stack(
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              color:
+                                                  Colors.black.withOpacity(0.5),
+                                            ),
+                                          ),
+                                          Align(
+                                            alignment: Alignment.center,
+                                            child: ListTile(
+                                              //----------------------Text Container background ----------------------//
+
+                                              title: Container(
+                                                height: 70,
+                                                width: 300,
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  color: Colors.black
+                                                      .withOpacity(0.5),
+                                                ),
+                                                //----------------------Text Editings----------------------//
+                                                child: Text(
+                                                  documentSnapshot['name'],
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 28,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  // ),
+                                );
+                              }),
                         );
-                      },
-                    ),
+                      }
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    },
                   ),
+                  const SizedBox(height: 10),
                   OutlinedButton(
                     child: const Text(
                       "More",
@@ -378,66 +476,110 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey[500],
-        elevation: 20,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(
-              LineAwesomeIcons
-                  .home, // Replace this with the desired icon for the route
-              size: 30,
-            ),
-            label: 'Home', // The label for accessibility (optional)
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons
-                  .chat_outlined, // Replace this with the desired icon for the route
-              size: 30,
-            ),
-            label: 'Chat', // The label for accessibility (optional)
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons
-                  .add_circle_outline, // Replace this with the desired icon for the route
-              size: 40,
-            ),
-            label: 'Events', // The label for accessibility (optional)
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons
-                  .add_shopping_cart_outlined, // Replace this with the desired icon for the route
-              size: 30,
-            ),
-            label: 'Settings', // The label for accessibility (optional)
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons
-                  .search_sharp, // Replace this with the desired icon for the route
-              size: 35,
-            ),
-            label: 'Settings', // The label for accessibility (optional)
-          ),
-        ],
-        onTap: (index) {
-          // Handle navigation here based on the selected index
-          if (index == 0) {
-            Navigation(context, HomeScreen());
-          } else if (index == 1) {
-            // _navigateToChat(context);
-          } else if (index == 2) {
-            Navigation(context, EventsScreen());
-          } else if (index == 3) {
-            Navigation(context, AddToCartScreen());
-          } else {
-            // _navigateToSearch(context);
-          }
-        },
+      // bottomNavigationBar: BottomNavigationBar(
+      //   backgroundColor: Colors.purple,
+      //   selectedItemColor: Colors.blue,
+      //   unselectedItemColor: Colors.grey[600],
+      //   mouseCursor: SystemMouseCursors.click,
+      //   elevation: 5,
+      //   items: const [
+      //     BottomNavigationBarItem(
+      //       icon: Icon(
+      //         LineAwesomeIcons.home,
+      //         size: 30,
+      //       ),
+      //       label: 'Home',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(
+      //         Icons.chat_outlined,
+      //         size: 30,
+      //       ),
+      //       label: 'Chat',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(
+      //         Icons.add_circle_outline,
+      //         size: 40,
+      //       ),
+      //       label: 'Events',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(
+      //         Icons.add_shopping_cart_outlined,
+      //         size: 30,
+      //       ),
+      //       label: 'Settings',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(
+      //         Icons.search_sharp,
+      //         size: 35,
+      //       ),
+      //       label: 'Settings',
+      //     ),
+      //   ],
+      //   onTap: (index) {
+      //     if (index == 0) {
+      //       Navigation(context, HomeScreen());
+      //     } else if (index == 1) {
+      //       // _navigateToChat(context);
+      //     } else if (index == 2) {
+      //       Navigation(context, EventsScreen());
+      //     } else if (index == 3) {
+      //       Navigation(context, AddToCartScreen());
+      //     } else {
+      //       // _navigateToSearch(context);
+      //     }
+      //   },
+      // ),
+
+      bottomNavigationBar: Theme(
+        data: Theme.of(context).copyWith(
+          canvasColor: Colors.white,
+          primaryColor: Colors.purple, // Selected icon color
+          textTheme: Theme.of(context).textTheme.copyWith(
+                bodySmall: const TextStyle(
+                    color: Colors.grey), // Unselected icon color
+              ),
+        ),
+        child: CupertinoTabBar(
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.home),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.chat_bubble_text_fill),
+                label: 'Chat',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.add),
+                label: 'Add',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.cart_badge_plus),
+                label: 'Add',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.search),
+                label: 'Search',
+              ),
+            ],
+            // currentIndex: _selectedIndex,
+            onTap: (index) {
+              if (index == 0) {
+                Navigation(context, HomeScreen());
+              } else if (index == 1) {
+                // _navigateToChat(context);
+              } else if (index == 2) {
+                Navigation(context, EventsScreen());
+              } else if (index == 3) {
+                Navigation(context, AddToCartScreen());
+              } else {
+                // _navigateToSearch(context);
+              }
+            }),
       ),
     );
   }
