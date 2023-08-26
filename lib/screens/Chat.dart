@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
-import 'package:campbelldecor/screens/cartscreen.dart';
 import 'package:campbelldecor/screens/homescreen.dart';
+
+import 'bookings_screens/cart_screen.dart';
 
 final String uid = FirebaseAuth.instance.currentUser!.uid;
 final User? user = FirebaseAuth.instance.currentUser;
