@@ -49,6 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final themeManager = Provider.of<ThemeManager>(context);
     return Scaffold(
       drawer: const MyDrawer(),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Campbell Decor'),
         backgroundColor: Colors.purple[700],
@@ -455,10 +456,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => EventsScreen()),
-                      );
+                      Navigation(context, EventsScreen());
                     },
                   ),
                 ],
@@ -467,64 +465,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   backgroundColor: Colors.purple,
-      //   selectedItemColor: Colors.blue,
-      //   unselectedItemColor: Colors.grey[600],
-      //   mouseCursor: SystemMouseCursors.click,
-      //   elevation: 5,
-      //   items: const [
-      //     BottomNavigationBarItem(
-      //       icon: Icon(
-      //         LineAwesomeIcons.home,
-      //         size: 30,
-      //       ),
-      //       label: 'Home',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(
-      //         Icons.chat_outlined,
-      //         size: 30,
-      //       ),
-      //       label: 'Chat',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(
-      //         Icons.add_circle_outline,
-      //         size: 40,
-      //       ),
-      //       label: 'Events',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(
-      //         Icons.add_shopping_cart_outlined,
-      //         size: 30,
-      //       ),
-      //       label: 'Settings',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(
-      //         Icons.search_sharp,
-      //         size: 35,
-      //       ),
-      //       label: 'Settings',
-      //     ),
-      //   ],
-      //   onTap: (index) {
-      //     if (index == 0) {
-      //       Navigation(context, HomeScreen());
-      //     } else if (index == 1) {
-      //       // _navigateToChat(context);
-      //     } else if (index == 2) {
-      //       Navigation(context, EventsScreen());
-      //     } else if (index == 3) {
-      //       Navigation(context, AddToCartScreen());
-      //     } else {
-      //       // _navigateToSearch(context);
-      //     }
-      //   },
-      // ),
-
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
           canvasColor: Colors.white,
