@@ -1,5 +1,4 @@
 import 'package:campbelldecor/reusable/reusable_methods.dart';
-import 'package:campbelldecor/screens/bookings_screens/cart_screen.dart';
 import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
 import 'package:campbelldecor/screens/notifications/notification_services.dart';
 import 'package:campbelldecor/screens/theme/theme_manager.dart';

@@ -303,6 +303,7 @@ Future<String?> getUserNameByEmail(String email) async {
 Future<void> insertData(
     String collection,
     String name,
+    String status,
     String UserID,
     DateTime date,
     DateTime eventDate,
@@ -317,6 +318,7 @@ Future<void> insertData(
       'date': date,
       'eventDate': eventDate,
       'paymentAmount': paymentAmount,
+      'status': status
     });
     CollectionReference subCollection =
         await parentDocument.collection('service');
@@ -364,6 +366,7 @@ Future<void> insertData(
 //                       },
 //                       child: Text('SendNotification')),
 
+/****************************/
 // void insertData() async {
 //   try {
 //     CollectionReference parentCollection =

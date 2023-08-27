@@ -151,8 +151,9 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       /*---------------------insert Add to cart Collection---------------------*/
                       if (amount != null && amount! > 0) {
                         await insertData(
-                                'addtocart',
+                                'bookings',
                                 event!,
+                                'cart',
                                 FirebaseAuth.instance.currentUser!.uid,
                                 DateTime.now(),
                                 widget.eventDate,
@@ -194,6 +195,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                         await insertData(
                                 'bookings',
                                 event!,
+                                'pending',
                                 FirebaseAuth.instance.currentUser!.uid,
                                 DateTime.now(),
                                 widget.eventDate,
