@@ -23,12 +23,6 @@ class _MyDrawerState extends State<MyDrawer> {
     return Drawer(
       child: ListView(
         children: [
-          ElevatedButton(
-              onPressed: () {
-                ;
-                print(email!);
-              },
-              child: Text('Click')),
           UserAccountsDrawerHeader(
             accountName: Text('name'!),
             accountEmail: Text(email!),

@@ -1,8 +1,13 @@
 import 'package:campbelldecor/reusable/reusable_methods.dart';
 import 'package:campbelldecor/screens/payment_screens/paymentscreen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../models/ratingModel.dart';
+import '../screens/bookings_screens/cart_screen.dart';
+import '../screens/events_screen/eventscreen.dart';
+import '../screens/homescreen.dart';
+import '../screens/searchbar/searchbar_widget.dart';
 
 Container logoWidget(String imageName) {
   return Container(
@@ -260,3 +265,55 @@ Widget reusePaymentContainer(
 //     ],
 //   );
 // }
+
+Widget bottom_Bar(BuildContext context) {
+  return Theme(
+    data: Theme.of(context).copyWith(
+      canvasColor: Colors.white,
+      primaryColor: Colors.purple, // Selected icon color
+      textTheme: Theme.of(context).textTheme.copyWith(
+            bodySmall:
+                const TextStyle(color: Colors.grey), // Unselected icon color
+          ),
+    ),
+    child: CupertinoTabBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.chat_bubble_text_fill),
+            label: 'Chat',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.add),
+            label: 'Add',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.cart_badge_plus),
+            label: 'Add',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.search),
+            label: 'Search',
+          ),
+        ],
+        // currentIndex: _selectedIndex,
+        onTap: (index) {
+          if (index == 0) {
+            Navigation(context, HomeScreen());
+          } else if (index == 1) {
+            Navigation(context, HomeScreen());
+          } else if (index == 2) {
+            Navigation(context, EventsScreen());
+          } else if (index == 3) {
+            Navigation(context, AddToCartScreen());
+          } else if (index == 4) {
+            Navigation(context, SearchScreen());
+          } else {
+            // _navigateToSearch(context);
+          }
+        }),
+  );
+}

@@ -7,6 +7,7 @@ import 'package:campbelldecor/screens/usercredential/signinscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../reusable/reusable_widgets.dart';
 import 'bookings_screens/show_rating.dart';
 import 'header_nav.dart';
 import 'package:flutter/cupertino.dart';
@@ -240,11 +241,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
                   OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      primary: Colors.blue,
+                      side: BorderSide(color: Colors.blue),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                    ),
                     child: const Text(
                       "More",
                       style: TextStyle(
-                        color: Colors.green,
-                      ),
+                          color: Colors.green,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18),
                     ),
                     onPressed: () {
                       // Navigator.push(
@@ -344,17 +353,22 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
                   OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      primary: Colors.blue,
+                      side: BorderSide(color: Colors.blue),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                    ),
                     child: const Text(
                       "More",
                       style: TextStyle(
-                        color: Colors.green,
-                      ),
+                          color: Colors.green,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18),
                     ),
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => EventsScreen()),
-                      );
+                      Navigation(context, EventsScreen());
                     },
                   ),
                   const SizedBox(height: 20),
@@ -448,17 +462,22 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 10),
                   OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      primary: Colors.blue,
+                      side: BorderSide(color: Colors.blue),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                    ),
                     child: const Text(
                       "More",
                       style: TextStyle(
-                        color: Colors.green,
-                      ),
+                          color: Colors.green,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18),
                     ),
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => EventsScreen()),
-                      );
+                      Navigation(context, EventsScreen());
                     },
                   ),
                 ],
@@ -467,111 +486,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   backgroundColor: Colors.purple,
-      //   selectedItemColor: Colors.blue,
-      //   unselectedItemColor: Colors.grey[600],
-      //   mouseCursor: SystemMouseCursors.click,
-      //   elevation: 5,
-      //   items: const [
-      //     BottomNavigationBarItem(
-      //       icon: Icon(
-      //         LineAwesomeIcons.home,
-      //         size: 30,
-      //       ),
-      //       label: 'Home',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(
-      //         Icons.chat_outlined,
-      //         size: 30,
-      //       ),
-      //       label: 'Chat',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(
-      //         Icons.add_circle_outline,
-      //         size: 40,
-      //       ),
-      //       label: 'Events',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(
-      //         Icons.add_shopping_cart_outlined,
-      //         size: 30,
-      //       ),
-      //       label: 'Settings',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(
-      //         Icons.search_sharp,
-      //         size: 35,
-      //       ),
-      //       label: 'Settings',
-      //     ),
-      //   ],
-      //   onTap: (index) {
-      //     if (index == 0) {
-      //       Navigation(context, HomeScreen());
-      //     } else if (index == 1) {
-      //       // _navigateToChat(context);
-      //     } else if (index == 2) {
-      //       Navigation(context, EventsScreen());
-      //     } else if (index == 3) {
-      //       Navigation(context, AddToCartScreen());
-      //     } else {
-      //       // _navigateToSearch(context);
-      //     }
-      //   },
-      // ),
-
-      bottomNavigationBar: Theme(
-        data: Theme.of(context).copyWith(
-          canvasColor: Colors.white,
-          primaryColor: Colors.purple, // Selected icon color
-          textTheme: Theme.of(context).textTheme.copyWith(
-                bodySmall: const TextStyle(
-                    color: Colors.grey), // Unselected icon color
-              ),
-        ),
-        child: CupertinoTabBar(
-            items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.home),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.chat_bubble_text_fill),
-                label: 'Chat',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.add),
-                label: 'Add',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.cart_badge_plus),
-                label: 'Add',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.search),
-                label: 'Search',
-              ),
-            ],
-            // currentIndex: _selectedIndex,
-            onTap: (index) {
-              if (index == 0) {
-                Navigation(context, HomeScreen());
-              } else if (index == 1) {
-                // _navigateToChat(context);
-              } else if (index == 2) {
-                Navigation(context, EventsScreen());
-              } else if (index == 3) {
-                Navigation(context, AddToCartScreen());
-              } else {
-                // _navigateToSearch(context);
-              }
-            }),
-      ),
+      bottomNavigationBar: bottom_Bar(context),
     );
   }
 }
