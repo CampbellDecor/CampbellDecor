@@ -141,6 +141,44 @@ Future<void> showInformationAlert(
   );
 }
 
+Future<void> showInformation(BuildContext context, String inform) async {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        shadowColor: Colors.black,
+        elevation: 8,
+        icon: const Icon(
+          Icons.info_outline_rounded,
+          color: Colors.blue,
+        ),
+        title: const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text('Information'),
+          ),
+        ),
+        content: Text(
+          inform,
+          style: const TextStyle(color: Colors.blue, fontSize: 18),
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('OK', style: TextStyle(fontSize: 16)),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
 Future<void> cancelInformationAlert(BuildContext context, String inform,
     dynamic navigate, String bookingId) async {
   showDialog(

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:campbelldecor/reusable/reusable_methods.dart';
 import 'package:campbelldecor/screens/bookings_screens/booking_screen.dart';
 import 'package:campbelldecor/screens/bookings_screens/cart_screen.dart';
@@ -5,6 +7,7 @@ import 'package:campbelldecor/screens/events_screen/serviceselectscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ServicesScreen extends StatefulWidget {
   final DateTime eventDate;
@@ -22,19 +25,22 @@ class _ServicesScreenState extends State<ServicesScreen> {
   Map<String, dynamic> myMap = {};
   double? amount;
   String? event;
+
+  _resetAndNavigateBack() async {
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     print(_services.toString());
     return Scaffold(
       extendBodyBehindAppBar: false,
       appBar: AppBar(
-        title: const Text(
-          "Services",
-          style: TextStyle(
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
-          ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: _resetAndNavigateBack,
         ),
+        title: Text('Our Services'),
       ),
       body: Column(
         children: [
@@ -43,7 +49,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
             builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
               if (streamSnapshot.hasData) {
                 return LimitedBox(
-                  maxHeight: 700,
+                  maxHeight: 680,
                   child: ListView.builder(
                       itemCount: streamSnapshot.data!.docs.length,
                       itemBuilder: (context, index) {
@@ -143,17 +149,21 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       amount = await getDoubleData('amount');
                       event = await getData('event');
                       /*---------------------insert Add to cart Collection---------------------*/
-
-                      await insertData(
-                              'addtocart',
-                              event!,
-                              FirebaseAuth.instance.currentUser!.uid,
-                              DateTime.now(),
-                              widget.eventDate,
-                              50000,
-                              myMap)
-                          .then((value) =>
-                              Navigation(context, AddToCartScreen()));
+                      if (amount != null && amount! > 0) {
+                        await insertData(
+                                'addtocart',
+                                event!,
+                                FirebaseAuth.instance.currentUser!.uid,
+                                DateTime.now(),
+                                widget.eventDate,
+                                amount!,
+                                myMap)
+                            .then((value) async {
+                          Navigation(context, AddToCartScreen());
+                        });
+                      } else {
+                        showInformation(context, 'Please Select Services');
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
@@ -171,27 +181,30 @@ class _ServicesScreenState extends State<ServicesScreen> {
                   width: 150,
                   child: ElevatedButton(
                     onPressed: () async {
-                      event = await getData('event');
-
-                      amount = await getDoubleData('amount');
                       /*--------------------- Add services into myMap ---------------------*/
                       await getMapData('service').then((map) {
                         setState(() {
                           myMap = map;
                         });
                       });
+                      event = await getData('event');
+                      amount = await getDoubleData('amount');
                       /*---------------------insert Booking Collection---------------------*/
-
-                      await insertData(
-                              'bookings',
-                              event!,
-                              FirebaseAuth.instance.currentUser!.uid,
-                              DateTime.now(),
-                              widget.eventDate,
-                              50000,
-                              myMap)
-                          .then(
-                              (value) => Navigation(context, BookingScreen()));
+                      if (amount != null && amount! > 0) {
+                        await insertData(
+                                'bookings',
+                                event!,
+                                FirebaseAuth.instance.currentUser!.uid,
+                                DateTime.now(),
+                                widget.eventDate,
+                                amount!,
+                                myMap)
+                            .then((value) async {
+                          Navigation(context, BookingScreen());
+                        });
+                      } else {
+                        showInformation(context, 'Please Select Services');
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(

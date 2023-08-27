@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddToCartScreen extends StatefulWidget {
   AddToCartScreen({super.key});
@@ -17,15 +18,23 @@ class _AddToCartScreenState extends State<AddToCartScreen> {
 
   List<bool> _isChecked = [];
   bool _selectAll = false;
+  _resetAndNavigateBack() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('amount');
+    await prefs.remove('amount');
+
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [Text("My Cart"), SelectAll()],
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: _resetAndNavigateBack,
         ),
+        title: Text('My Carts'),
       ),
       body: Column(
         children: [
@@ -72,7 +81,7 @@ class _AddToCartScreenState extends State<AddToCartScreen> {
                                 subtitle: Padding(
                                   padding: const EdgeInsets.all(3.0),
                                   child: Text(
-                                    'Rs.${documentSnapshot['paymentAmount']}.00',
+                                    'Rs.${documentSnapshot['paymentAmount']}0',
                                     style: TextStyle(fontSize: 16),
                                   ),
                                 ),

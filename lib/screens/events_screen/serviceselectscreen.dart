@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:campbelldecor/reusable/reusable_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,13 +17,15 @@ class ServiceSelectScreen extends StatefulWidget {
 class _ServiceSelectScreenState extends State<ServiceSelectScreen> {
   dynamic _selectedItem;
   double amount = 0;
-  int count = 1;
+  int count = 0;
   double? totalPrice;
   Map<String, double> items = Map();
-  TextEditingController countController = TextEditingController(text: '1');
+  TextEditingController countController = TextEditingController(text: '0');
   TextEditingController priceController = TextEditingController(text: '0');
   @override
   Widget build(BuildContext context) {
+    print('Amount is $amount');
+    print(totalPrice);
     return Scaffold(
       extendBodyBehindAppBar: false,
       appBar: AppBar(
@@ -39,7 +42,7 @@ class _ServiceSelectScreenState extends State<ServiceSelectScreen> {
         child: Column(
           children: [
             Container(
-              width: 200,
+              width: 300,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25),
               ),
@@ -79,7 +82,7 @@ class _ServiceSelectScreenState extends State<ServiceSelectScreen> {
                         value: key,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [Text(key), Text('  Rs.${items[key]}0')],
+                          children: [Text(key), Text('     Rs.${items[key]}0')],
                         ),
                       );
                     }).toList(),
@@ -133,7 +136,9 @@ class _ServiceSelectScreenState extends State<ServiceSelectScreen> {
                   ElevatedButton(
                       onPressed: () {
                         setState(() {
-                          countController.text = '1';
+                          _selectedItem = null;
+                          countController.text = '0';
+                          priceController.text = '0';
                         });
                       },
                       child: const Text('Clear')),
@@ -142,23 +147,28 @@ class _ServiceSelectScreenState extends State<ServiceSelectScreen> {
                   ),
                   ElevatedButton(
                       onPressed: () async {
+                        amount = totalPrice!;
                         //---------------------------------------
-                        SharedPreferences preferences =
-                            await SharedPreferences.getInstance();
-                        widget.map.addAll({
-                          '${widget.data} service': _selectedItem,
-                          '${_selectedItem} count': count,
-                          '${_selectedItem} total price': 'Rs.${totalPrice}0'
-                        });
-                        String jsonData = json.encode(widget.map);
-                        preferences.setString('service', jsonData);
-                        preferences.setDouble('amount', amount);
-
-                        // print('amount');
-                        // print(amount);
-                        // print('amount');
+                        if (amount > 0) {
+                          SharedPreferences preferences =
+                              await SharedPreferences.getInstance();
+                          widget.map.addAll({
+                            '${widget.data} service': _selectedItem,
+                            '${_selectedItem} count': count,
+                            '${_selectedItem} total price': 'Rs.${totalPrice}0'
+                          });
+                          String jsonData = json.encode(widget.map);
+                          preferences.setString('service', jsonData);
+                          preferences.setDouble('amount', amount);
+                          print(totalPrice);
+                          print('amount');
+                          print(amount);
+                          print('amount');
 //---------------------------------------------------------------------------------------------
-                        Navigator.pop(context);
+                          Navigator.pop(context);
+                        } else {
+                          showInformation(context, 'Please Select Service');
+                        }
                       },
                       child: const Text('Confirm')),
                 ],
@@ -186,6 +196,5 @@ class _ServiceSelectScreenState extends State<ServiceSelectScreen> {
   void _total(double price) {
     totalPrice = (price * count);
     priceController.text = totalPrice.toString();
-    amount = amount + totalPrice!;
   }
 }
