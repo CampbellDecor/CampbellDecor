@@ -89,7 +89,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 reusableButton(
                   context,
                   false,
-                  () {
+                  () async {
                     if (_userTextController.text.isNotEmpty &&
                         _emailTextController.text.isNotEmpty &&
                         _passwordTextController.text.isNotEmpty &&
@@ -97,7 +97,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         _addressTextController.text.isNotEmpty) {
                       if (_passwordTextController.text ==
                           _confirmpassTextController.text) {
-                        FirebaseAuth.instance
+                        await FirebaseAuth.instance
                             .createUserWithEmailAndPassword(
                                 email: _emailTextController.text,
                                 password: _passwordTextController.text)
@@ -106,11 +106,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               _userTextController.text,
                               _emailTextController.text,
                               _phoneNoTextController.text,
-                              _addressTextController.text);
+                              _addressTextController.text,
+                              FirebaseAuth.instance.currentUser!.uid);
                           print("Create New Account");
                           Navigation(context, HomeScreen()).then((value) {
-                            NotificationService notificationService =
-                                NotificationService();
+                            CreationNotificationService notificationService =
+                                CreationNotificationService();
                             notificationService.showNotification(
                                 title: 'Create Account',
                                 body: 'Welcome ${_userTextController.text}');
@@ -137,8 +138,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void insertUserData(
-      String name, String email, String phoneNo, String address) {
-    collectionReference.doc().set({
+      String name, String email, String phoneNo, String address, String id) {
+    collectionReference.doc(id).set({
       'name': name,
       'email': email,
       'phoneNo': phoneNo,

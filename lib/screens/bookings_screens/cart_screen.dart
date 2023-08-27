@@ -13,7 +13,8 @@ class AddToCartScreen extends StatefulWidget {
 
 class _AddToCartScreenState extends State<AddToCartScreen> {
   final _cart = FirebaseFirestore.instance
-      .collection("addtocart")
+      .collection("bookings")
+      .where('status', isEqualTo: 'cart')
       .where('userID', isEqualTo: FirebaseAuth.instance.currentUser?.uid);
 
   List<bool> _isChecked = [];
@@ -140,9 +141,7 @@ class _AddToCartScreenState extends State<AddToCartScreen> {
                   height: 45,
                   width: 130,
                   child: ElevatedButton(
-                    onPressed: () {
-                      // Add your onPressed logic here
-                    },
+                    onPressed: _addBooking,
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(
                           Colors.blue), // Background color
@@ -203,10 +202,24 @@ class _AddToCartScreenState extends State<AddToCartScreen> {
       if (_isChecked[i]) {
         final documentSnapshot = (await _cart.get()).docs[i];
         await FirebaseFirestore.instance
-            .collection('addtocart')
+            .collection('bookings')
             .doc(documentSnapshot.id)
             .delete();
 
+        _isChecked.removeAt(i);
+      }
+    }
+    setState(() {});
+  }
+
+  void _addBooking() async {
+    for (int i = _isChecked.length - 1; i >= 0; i--) {
+      if (_isChecked[i]) {
+        final documentSnapshot = (await _cart.get()).docs[i];
+        await FirebaseFirestore.instance
+            .collection('bookings')
+            .doc(documentSnapshot.id)
+            .update({'status': 'pending'});
         _isChecked.removeAt(i);
       }
     }

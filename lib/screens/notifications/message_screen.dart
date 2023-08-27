@@ -16,7 +16,14 @@ class _MessageScreenState extends State<MessageScreen> {
         title: Text('Message Screen' + widget.id),
       ),
       body: Column(
-        children: [ElevatedButton(onPressed: () {}, child: Text('Cancel'))],
+        children: [
+          ElevatedButton(onPressed: () {}, child: Text('Okay')),
+          ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Cancel')),
+        ],
       ),
     );
   }
