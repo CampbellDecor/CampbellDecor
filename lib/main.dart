@@ -1,3 +1,4 @@
+import 'package:campbelldecor/screens/events_screen/packagesscreen.dart';
 import 'package:campbelldecor/screens/homescreen.dart';
 import 'package:campbelldecor/screens/notifications/notification_setup.dart';
 import 'package:campbelldecor/screens/notifications/notificationscreen.dart';
@@ -51,7 +52,7 @@ class _MyAppState extends State<MyApp> {
               theme: ThemeClass.lightTheme,
               darkTheme: ThemeClass.darkTheme,
               themeMode: themeManager.themeMode,
-              home: test(),
+              home: PackageScreen(),
               // CustomRatingBar(
               //   maxRating: 5,
               //   initialRating: 60,
