@@ -25,8 +25,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
   Map<String, dynamic> myMap = {};
   double? amount;
   String? event;
-  final uid = 'AxlSnuQWsQQ73IVY4YxB0d0Ispx2';
-  // FirebaseAuth.instance.currentUser!.uid;
+  final uid = FirebaseAuth.instance.currentUser!.uid;
   _resetAndNavigateBack() async {
     Navigator.pop(context);
   }
