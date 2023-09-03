@@ -217,7 +217,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                           await insertData(
                                   'bookings',
                                   event!,
-                                  'pending',
+                                  'cart',
                                   uid,
                                   DateTime.now(),
                                   widget.eventDate,
@@ -226,13 +226,13 @@ class _ServicesScreenState extends State<ServicesScreen> {
                               .then((value) async {
                             final _book = FirebaseFirestore.instance
                                 .collection("bookings")
-                                .where('status', isEqualTo: 'pending')
+                                .where('status', isEqualTo: 'cart')
                                 .where('eventDate', isEqualTo: widget.eventDate)
                                 .where('userID',
                                     isEqualTo:
                                         FirebaseAuth.instance.currentUser?.uid);
                             DocumentSnapshot documentSnapshot =
-                                (await _book.get()).docs[1];
+                                (await _book.get()).docs[0];
                             Navigation(context,
                                 CheckOutScreen(id: documentSnapshot.id));
                           });
@@ -240,22 +240,22 @@ class _ServicesScreenState extends State<ServicesScreen> {
                           await insertData(
                                   'bookings',
                                   'Service Only',
-                                  'pending',
+                                  'cart',
                                   uid,
                                   DateTime.now(),
                                   widget.eventDate,
                                   amount!,
                                   myMap)
                               .then((value) async {
-                            final _book = FirebaseFirestore.instance
+                            final _book = await FirebaseFirestore.instance
                                 .collection("bookings")
-                                .where('status', isEqualTo: 'pending')
+                                .where('status', isEqualTo: 'cart')
                                 .where('eventDate', isEqualTo: widget.eventDate)
                                 .where('userID',
                                     isEqualTo:
                                         FirebaseAuth.instance.currentUser?.uid);
                             DocumentSnapshot documentSnapshot =
-                                (await _book.get()).docs[1];
+                                (await _book.get()).docs[0];
                             Navigation(context,
                                 CheckOutScreen(id: documentSnapshot.id));
                           });

@@ -238,7 +238,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                               .collection('bookings')
                                               .doc(message.data.values.first
                                                   .toString())
-                                              .update({'status': 'active'});
+                                              .update({
+                                            'status': 'active'
+                                          }).then((value) {
+                                            Navigator.pop(context);
+                                          });
                                         },
                                         child: const Text('Confirm')),
                                     ElevatedButton(
