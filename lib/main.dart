@@ -1,3 +1,4 @@
+import 'package:campbelldecor/screens/bookings_screens/booking_details_screen.dart';
 import 'package:campbelldecor/screens/notifications/notification_setup.dart';
 import 'package:campbelldecor/screens/notifications/notificationscreen.dart';
 import 'package:campbelldecor/screens/theme/theme_colors.dart';
@@ -47,7 +48,7 @@ class _MyAppState extends State<MyApp> {
               theme: ThemeClass.lightTheme,
               darkTheme: ThemeClass.darkTheme,
               themeMode: themeManager.themeMode,
-              home: SignInScreen(),
+              home: BookingScreen(),
               // PaymentScreen(id: 'xnMYtquVxbWl7MdlllDn', price: 10),
               // CustomRatingBar(
               //   maxRating: 5,

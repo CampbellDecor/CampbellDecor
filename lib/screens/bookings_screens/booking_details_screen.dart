@@ -27,6 +27,7 @@ class BookingScreen extends StatelessWidget {
           }
 
           final activeBookings = <DocumentSnapshot>[];
+          final pendingBookings = <DocumentSnapshot>[];
           final expiredBookings = <DocumentSnapshot>[];
           final now = DateTime.now();
 
@@ -36,13 +37,18 @@ class BookingScreen extends StatelessWidget {
 
             if (status == 'active' && eventDate.isBefore(now)) {
               activeBookings.add(doc);
+            } else if (status == 'pending') {
+              pendingBookings.add(doc);
             } else if (status == 'cancelled' || status == 'expired') {
               expiredBookings.add(doc);
             }
           }
 
           return ListView.builder(
-            itemCount: activeBookings.length + expiredBookings.length + 2,
+            itemCount: activeBookings.length +
+                pendingBookings.length +
+                expiredBookings.length +
+                3,
             itemBuilder: (context, index) {
               if (index == 0) {
                 return const Padding(
@@ -60,14 +66,29 @@ class BookingScreen extends StatelessWidget {
                 return const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
-                    'Expired Bookings',
+                    'Request Bookings',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                );
+              } else if (index > activeBookings.length + 1 &&
+                  index <= pendingBookings.length + activeBookings.length + 1) {
+                final doc = pendingBookings[index - activeBookings.length - 2];
+                return buildBookingCard2(
+                    context, doc, Colors.lightBlue, Colors.pinkAccent);
+              } else if (index <=
+                  (activeBookings.length + pendingBookings.length + 2)) {
+                return const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    'Cancelled Bookings',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 );
               } else {
-                final doc = expiredBookings[index - activeBookings.length - 2];
-                return buildBookingCard(
-                    context, doc, Colors.lightBlue, Colors.black45);
+                final doc = expiredBookings[
+                    index - activeBookings.length - pendingBookings.length - 3];
+                return buildBookingCard3(
+                    context, doc, Colors.deepPurpleAccent, Colors.pinkAccent);
               }
             },
           );
@@ -185,7 +206,71 @@ class BookingScreen extends StatelessWidget {
     );
   }
 
-  Widget buildBookingCard(BuildContext context,
+  Widget buildBookingCard2(BuildContext context,
+      DocumentSnapshot documentSnapshot, Color startColor, Color endColor) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(58, 10, 58, 10),
+      child: Container(
+        height: 150,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(50),
+          gradient: LinearGradient(
+            colors: [startColor, endColor],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Card(
+          color: Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          elevation: 10,
+          child: Container(
+            height: 150,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: ListTile(
+                    title: Padding(
+                      padding: const EdgeInsets.fromLTRB(58, 0, 8, 0),
+                      child: Text(
+                        documentSnapshot['name'],
+                        style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      ),
+                    ),
+                    // subtitle: Text('Upcoming on ${documentSnapshot.data[index].date.toString()}'),
+                  ),
+                ),
+                Center(
+                  child: ListTile(
+                    title: Padding(
+                      padding: const EdgeInsets.fromLTRB(58, 0, 8, 0),
+                      child: Text(
+                        DateFormat.yMd()
+                            .format(documentSnapshot['date'].toDate()),
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    trailing: Text(
+                      documentSnapshot['status'],
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildBookingCard3(BuildContext context,
       DocumentSnapshot documentSnapshot, Color startColor, Color endColor) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(58, 10, 58, 10),
