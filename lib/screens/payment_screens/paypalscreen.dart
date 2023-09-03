@@ -2,14 +2,14 @@ import 'package:campbelldecor/reusable/reusable_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_paypal/flutter_paypal.dart';
 
-class PaybalPayScreen extends StatefulWidget {
-  const PaybalPayScreen({super.key});
+class PaypalPayScreen extends StatefulWidget {
+  const PaypalPayScreen({super.key});
 
   @override
-  State<PaybalPayScreen> createState() => _PaybalPayScreenState();
+  State<PaypalPayScreen> createState() => _PaypalPayScreenState();
 }
 
-class _PaybalPayScreenState extends State<PaybalPayScreen> {
+class _PaypalPayScreenState extends State<PaypalPayScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,10 +33,10 @@ class _PaybalPayScreenState extends State<PaybalPayScreen> {
                       transactions: const [
                         {
                           "amount": {
-                            "total": '100',
+                            "total": 10,
                             "currency": "USD",
                             "details": {
-                              "subtotal": '100',
+                              "subtotal": 10,
                               "shipping": '0',
                               "shipping_discount": 0
                             }
@@ -51,7 +51,7 @@ class _PaybalPayScreenState extends State<PaybalPayScreen> {
                               {
                                 "name": "A demo product",
                                 "quantity": 1,
-                                "price": '100',
+                                "price": 10,
                                 "currency": "USD"
                               }
                             ],

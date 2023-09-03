@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'message_screen.dart';
+import 'notificationscreen.dart';
 
 class NotificationServices {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -121,12 +122,8 @@ class NotificationServices {
 
   void handleMessage(BuildContext context, RemoteMessage message) {
     if (message.data['type'] == 'msj') {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => MessageScreen(
-                    id: message.data['id'],
-                  )));
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => NotificationScreen()));
     }
   }
 }

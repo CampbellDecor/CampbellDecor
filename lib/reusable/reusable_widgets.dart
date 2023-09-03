@@ -2,7 +2,7 @@ import 'package:campbelldecor/reusable/reusable_methods.dart';
 import 'package:campbelldecor/screens/payment_screens/paymentscreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:intl/intl.dart';
 import '../models/ratingModel.dart';
 import '../screens/bookings_screens/cart_screen.dart';
 import '../screens/events_screen/eventscreen.dart';
@@ -122,29 +122,46 @@ Container reuseButton(BuildContext context, String text, Function onTap) {
 
 /*----------------------- Data show as Container List ---------------------------------*/
 Widget reuseContainerList(
-    String imgName, double height, double width, String name) {
+    String imgName, double height, double width, String name, DateTime date) {
   return Padding(
     padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-    child: Container(
-      height: 120,
-      width: 360,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: Color.fromARGB(50, 200, 20, 25),
-      ),
-      child: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: IconImageWidget(imgName, height, width),
+    child: SingleChildScrollView(
+      child: Container(
+        height: 120,
+        width: 450,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          gradient: const LinearGradient(
+            colors: [Colors.blue, Colors.pink],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
-          Padding(
-              padding: const EdgeInsets.all(20),
-              child: Text(
-                name,
-                style: const TextStyle(fontSize: 16),
-              )),
-        ],
+          // color: Color.fromARGB(50, 200, 20, 25),
+        ),
+        child: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: IconImageWidget(imgName, height, width),
+            ),
+            Column(
+              children: [
+                Padding(
+                    padding: const EdgeInsets.fromLTRB(15, 30, 15, 15),
+                    child: Text(
+                      name,
+                      style: const TextStyle(fontSize: 20, color: Colors.white),
+                    )),
+                Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: Text(
+                      DateFormat.yMd().format(date),
+                      style: const TextStyle(fontSize: 16, color: Colors.white),
+                    )),
+              ],
+            ),
+          ],
+        ),
       ),
     ),
   );
@@ -152,7 +169,7 @@ Widget reuseContainerList(
 
 /*----------------------- Data show as Container List ---------------------------------*/
 Widget reusePaymentContainer(
-    double price, BuildContext context, Function onTap) {
+    String id, double price, BuildContext context, Function onTap) {
   double bondmoney = (price / 100) * 10;
   double total = price + bondmoney;
 
@@ -176,7 +193,7 @@ Widget reusePaymentContainer(
                   Padding(
                       padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                       child: Text(
-                        "Price Amount : Rs${price.toStringAsFixed(2)}",
+                        "Price Amount : Rs.${price.toStringAsFixed(2)}",
                         style: const TextStyle(
                           fontSize: 14,
                         ),
@@ -184,13 +201,13 @@ Widget reusePaymentContainer(
                   Padding(
                       padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                       child: Text(
-                        "Bond Money : Rs${bondmoney.toStringAsFixed(2)}",
+                        "Bond Money : Rs.${bondmoney.toStringAsFixed(2)}",
                         style: const TextStyle(fontSize: 14),
                       )),
                   Padding(
                       padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                       child: Text(
-                        "Total Amount : Rs ${total.toStringAsFixed(2)}",
+                        "Total Amount : Rs.${total.toStringAsFixed(2)}",
                         style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       )),
@@ -210,6 +227,7 @@ Widget reusePaymentContainer(
                             MaterialPageRoute(
                                 builder: (context) => PaymentScreen(
                                       price: total,
+                                      id: id,
                                     )));
                       },
                       style: ElevatedButton.styleFrom(

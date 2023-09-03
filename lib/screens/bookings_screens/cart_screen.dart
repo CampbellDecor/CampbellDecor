@@ -1,3 +1,5 @@
+import 'package:campbelldecor/reusable/reusable_methods.dart';
+import 'package:campbelldecor/screens/payment_screens/checkoutscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -19,11 +21,11 @@ class _AddToCartScreenState extends State<AddToCartScreen> {
 
   List<bool> _isChecked = [];
   bool _selectAll = false;
+
   _resetAndNavigateBack() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('amount');
     await prefs.remove('amount');
-
     Navigator.pop(context);
   }
 
@@ -32,10 +34,10 @@ class _AddToCartScreenState extends State<AddToCartScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: _resetAndNavigateBack,
         ),
-        title: Text('My Carts'),
+        title: const Text('My Carts'),
       ),
       body: Column(
         children: [
@@ -61,8 +63,8 @@ class _AddToCartScreenState extends State<AddToCartScreen> {
                               borderRadius: BorderRadius.circular(10.0),
                             ),
                             elevation: 3,
-                            margin: EdgeInsets.fromLTRB(30, 10, 30, 10),
-                            color: Color.fromARGB(100, 260, 250, 254),
+                            margin: const EdgeInsets.fromLTRB(30, 10, 30, 10),
+                            color: const Color.fromARGB(100, 260, 250, 254),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: CheckboxListTile(
@@ -71,7 +73,7 @@ class _AddToCartScreenState extends State<AddToCartScreen> {
                                     Expanded(
                                         child: Text(
                                       documentSnapshot['name'],
-                                      style: TextStyle(fontSize: 18),
+                                      style: const TextStyle(fontSize: 18),
                                     )),
                                     Text(
                                       DateFormat.yMd().format(
@@ -83,7 +85,7 @@ class _AddToCartScreenState extends State<AddToCartScreen> {
                                   padding: const EdgeInsets.all(3.0),
                                   child: Text(
                                     'Rs.${documentSnapshot['paymentAmount']}0',
-                                    style: TextStyle(fontSize: 16),
+                                    style: const TextStyle(fontSize: 16),
                                   ),
                                 ),
                                 value: _isChecked[index],
@@ -103,68 +105,80 @@ class _AddToCartScreenState extends State<AddToCartScreen> {
                   ),
                 );
               }
-              return Center(
+              return const Center(
                 child: CircularProgressIndicator(),
               );
             },
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Container(
-                  height: 45,
-                  width: 130,
-                  child: ElevatedButton(
-                    onPressed: _deleteSelected,
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                          Colors.redAccent), // Background color
-                      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                        EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 12), // Padding
-                      ),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(15.0), // Border radius
+          if (_isChecked.length > 0)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                    height: 45,
+                    width: 130,
+                    child: ElevatedButton(
+                      onPressed: _deleteSelected,
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Colors.redAccent), // Background color
+                        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                          const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 12), // Padding
+                        ),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(15.0), // Border radius
+                          ),
+                        ),
+                        textStyle: MaterialStateProperty.all<TextStyle>(
+                          const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold), // Text style
                         ),
                       ),
-                      textStyle: MaterialStateProperty.all<TextStyle>(
-                        TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold), // Text style
-                      ),
-                    ),
-                    child: Text('Delete'), // Button text
-                  )),
-              Container(
-                  height: 45,
-                  width: 130,
-                  child: ElevatedButton(
-                    onPressed: _addBooking,
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                          Colors.blue), // Background color
-                      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                        EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 12), // Padding
-                      ),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(15.0), // Border radius
+                      child: const Text('Delete'), // Button text
+                    )),
+                Container(
+                    height: 45,
+                    width: 130,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        for (int i = _isChecked.length - 1; i >= 0; i--) {
+                          if (_isChecked[i]) {
+                            final documentSnapshot =
+                                (await _cart.get()).docs[i];
+                            Navigation(context,
+                                CheckOutScreen(id: documentSnapshot.id));
+                          }
+                        }
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Colors.blue), // Background color
+                        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                          const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 12), // Padding
+                        ),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(15.0), // Border radius
+                          ),
+                        ),
+                        textStyle: MaterialStateProperty.all<TextStyle>(
+                          const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold), // Text style
                         ),
                       ),
-                      textStyle: MaterialStateProperty.all<TextStyle>(
-                        TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold), // Text style
-                      ),
-                    ),
-                    child: Text('Book'), // Button text
-                  )),
-            ],
-          )
+                      child: const Text('Book'), // Button text
+                    )),
+              ],
+            )
         ],
       ),
     );
@@ -179,7 +193,7 @@ class _AddToCartScreenState extends State<AddToCartScreen> {
           onTap: () {
             _toggleSelectAll();
           },
-          child: Text(
+          child: const Text(
             'Select All',
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
@@ -221,6 +235,7 @@ class _AddToCartScreenState extends State<AddToCartScreen> {
             .doc(documentSnapshot.id)
             .update({'status': 'pending'});
         _isChecked.removeAt(i);
+        sendNotification(documentSnapshot.id);
       }
     }
     setState(() {});

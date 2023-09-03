@@ -6,6 +6,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:http/http.dart' as http;
+
+import '../screens/notifications/notification_services.dart';
 
 Future<int> getCollectionCount(String collectionName) async {
   try {
@@ -337,6 +340,30 @@ Future<void> insertData(
   //   print('Failed to Add User Event: $error');
   // });
 }
+
+void sendNotification(String id) {
+  final NotificationServices notificationServices = NotificationServices();
+  notificationServices.getDeviceToken().then((value) async {
+    var data = {
+      'to':
+          'ecpxq0aGR8q8wtnuwJwek1:APA91bGhsQT9PzhXipWTeM5NiwRu_exYgRssB-bdIVX08bOpMRoEO0D8s2404yUBRwqTfPsvnhndeBBHx739bChA-9rAouj2Cpkkau6TiAGsm5hVkWvAGk0EsKUEaKIO575mGZXT5QyR',
+      'priority': 'high',
+      'notification': {
+        'title': 'Booking Confirmation',
+        'body': 'Update My Booking',
+      },
+      'data': {'id': id}
+    };
+    await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+        body: jsonEncode(data),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization':
+              'key=AAAAliCh-R8:APA91bGSDvwcL3obmsYq7k3A3ueBbHm-SNDdKt8Y9RMqA7Ywi2U4o72j6WRZMiEQF4GPhuYsNlqwH6-RMgvigiQbuXTq42sjuG4zySquDBk0gN-zyHbCeIwHMHNXhHxrfLDKG02tgrKt'
+        });
+  });
+}
+
 /*---------------------- Send Notifications Devic to Another Device ---------------------------*/
 // ElevatedButton(
 //                       onPressed: () {

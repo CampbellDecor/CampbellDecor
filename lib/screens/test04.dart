@@ -5,6 +5,8 @@ import 'package:campbelldecor/screens/notifications/welcomeNotification.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../reusable/reusable_methods.dart';
+
 class test extends StatefulWidget {
   const test({super.key});
 
@@ -19,33 +21,33 @@ class _testState extends State<test> {
       body: Center(
         child: ElevatedButton(
             onPressed: () {
-              sendNotification();
+              sendNotification('1r2DkrsQw1OsaMqw8BU8');
             },
             child: Text('SendNotification')),
       ),
     );
   }
-
-  void sendNotification() {
-    final NotificationServices notificationServices = NotificationServices();
-    notificationServices.getDeviceToken().then((value) async {
-      var data = {
-        'to':
-            'emHO-ms5RxqdWIxch_QGsJ:APA91bFVXTHvikBswj9E8Ug2HyLN8kbcStQ5bmCrER1DTxrBN87kbezlAi2vtDbxwR4iXx5lhd7Ni3c1AOW8tsnGZFwHyXha3LKsmCAGqMBA3byzsyV7aX63Vy-ECyMbpm6pjfkiomtJ',
-        'priority': 'high',
-        'notification': {
-          'title': 'Pinthushan',
-          'body': 'Subscripe to my Channel',
-        },
-        'data': {'type': 'msj', 'id': 'pinthu07'}
-      };
-      await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
-          body: jsonEncode(data),
-          headers: {
-            'Content-Type': 'application/json; charset=UTF-8',
-            'Authorization':
-                'key=AAAAliCh-R8:APA91bGSDvwcL3obmsYq7k3A3ueBbHm-SNDdKt8Y9RMqA7Ywi2U4o72j6WRZMiEQF4GPhuYsNlqwH6-RMgvigiQbuXTq42sjuG4zySquDBk0gN-zyHbCeIwHMHNXhHxrfLDKG02tgrKt'
-          });
-    });
-  }
+  //
+  // void sendNotification(String id) {
+  //   final NotificationServices notificationServices = NotificationServices();
+  //   notificationServices.getDeviceToken().then((value) async {
+  //     var data = {
+  //       'to':
+  //           'cvrV5c-5RtqsP7FPHCVzPT:APA91bGTcrOBac4dY3cUuDuC1nz83674veRvnAWpifQ6m74ZHAd3Fm5DMi2leYEEWf7Cnps9sFC7KHEBFZ-hIq4e2OQtcxB2IZ2xnv6zwYmS5CTTsAELyghwzq6UvrWCyGj6OOXapl3E',
+  //       'priority': 'high',
+  //       'notification': {
+  //         'title': 'Booking Confirmation',
+  //         'body': 'Update My Booking',
+  //       },
+  //       'data': {'id': id}
+  //     };
+  //     await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+  //         body: jsonEncode(data),
+  //         headers: {
+  //           'Content-Type': 'application/json; charset=UTF-8',
+  //           'Authorization':
+  //               'key=AAAAliCh-R8:APA91bGSDvwcL3obmsYq7k3A3ueBbHm-SNDdKt8Y9RMqA7Ywi2U4o72j6WRZMiEQF4GPhuYsNlqwH6-RMgvigiQbuXTq42sjuG4zySquDBk0gN-zyHbCeIwHMHNXhHxrfLDKG02tgrKt'
+  //         });
+  //   });
+  // }
 }
