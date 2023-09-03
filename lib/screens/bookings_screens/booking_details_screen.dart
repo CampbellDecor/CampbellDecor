@@ -76,70 +76,6 @@ class BookingScreen extends StatelessWidget {
     );
   }
 
-  Widget buildBookingCard(BuildContext context,
-      DocumentSnapshot documentSnapshot, Color startColor, Color endColor) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(58, 10, 58, 10),
-      child: Container(
-        height: 150,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(50),
-          gradient: LinearGradient(
-            colors: [startColor, endColor],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: Card(
-          color: Colors.transparent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          elevation: 10,
-          child: Container(
-            height: 150,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.fromLTRB(58, 0, 8, 0),
-                      child: Text(
-                        documentSnapshot['name'],
-                        style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                      ),
-                    ),
-                    // subtitle: Text('Upcoming on ${documentSnapshot.data[index].date.toString()}'),
-                  ),
-                ),
-                Center(
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.fromLTRB(58, 0, 8, 0),
-                      child: Text(
-                        DateFormat.yMd()
-                            .format(documentSnapshot['date'].toDate()),
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    trailing: Text(
-                      documentSnapshot['status'],
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget buildBookingCard1(BuildContext context,
       DocumentSnapshot documentSnapshot, Color startColor, Color endColor) {
     return Padding(
@@ -241,6 +177,70 @@ class BookingScreen extends StatelessWidget {
                     ),
                   ),
                 )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildBookingCard(BuildContext context,
+      DocumentSnapshot documentSnapshot, Color startColor, Color endColor) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(58, 10, 58, 10),
+      child: Container(
+        height: 150,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(50),
+          gradient: LinearGradient(
+            colors: [startColor, endColor],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Card(
+          color: Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          elevation: 10,
+          child: Container(
+            height: 150,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: ListTile(
+                    title: Padding(
+                      padding: const EdgeInsets.fromLTRB(58, 0, 8, 0),
+                      child: Text(
+                        documentSnapshot['name'],
+                        style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      ),
+                    ),
+                    // subtitle: Text('Upcoming on ${documentSnapshot.data[index].date.toString()}'),
+                  ),
+                ),
+                Center(
+                  child: ListTile(
+                    title: Padding(
+                      padding: const EdgeInsets.fromLTRB(58, 0, 8, 0),
+                      child: Text(
+                        DateFormat.yMd()
+                            .format(documentSnapshot['date'].toDate()),
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    trailing: Text(
+                      documentSnapshot['status'],
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

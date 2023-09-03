@@ -1,13 +1,14 @@
+import 'package:campbelldecor/reusable/reusable_methods.dart';
+import 'package:campbelldecor/screens/homescreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-// import '../../reusable/reusable_methods.dart';
+import 'package:flutter_paypal/flutter_paypal.dart';
 
 class PaymentScreen extends StatefulWidget {
   final double price;
-  PaymentScreen({required this.price});
+  final String id;
+  PaymentScreen({required this.id, required this.price});
 
   @override
   _PaymentScreenState createState() => _PaymentScreenState();
@@ -16,7 +17,7 @@ class PaymentScreen extends StatefulWidget {
 class _PaymentScreenState extends State<PaymentScreen> {
   String? selectedPaymentMethod;
   String userAddress = '';
-  late double amount;
+
   @override
   void initState() {
     super.initState();
@@ -44,11 +45,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
     }
   }
 
-  Future<double?> getDoubleData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    amount = prefs.getDouble('amount')!;
-    return amount;
-  }
+  // Future<double?> getDoubleData() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   amount = prefs.getDouble('amount')!;
+  //   return amount;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -58,11 +59,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.fromLTRB(0, 18, 0, 0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.end,
+            // crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
                     width: 350,
@@ -82,29 +85,31 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: [
+              //     Container(
+              //       width: 350,
+              //       height: MediaQuery.of(context).size.height * 0.1,
+              //       decoration: BoxDecoration(
+              //         color: Color.fromARGB(50, 26, 200, 25),
+              //         borderRadius: BorderRadius.circular(10),
+              //       ),
+              //       // child: const Padding(
+              //       //   padding: EdgeInsets.all(8.0),
+              //       //   child: Text(
+              //       //     'Offers : not Available ',
+              //       //     style: TextStyle(
+              //       //         fontSize: 18, fontWeight: FontWeight.bold),
+              //       //   ),
+              //       // ),
+              //     ),
+              //   ],
+              // ),
+              // SizedBox(height: 16),
               Row(
-                children: [
-                  Container(
-                    width: 350,
-                    height: MediaQuery.of(context).size.height * 0.1,
-                    decoration: BoxDecoration(
-                      color: Color.fromARGB(50, 26, 200, 25),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        'Offers : not Available ',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
                     width: 350,
@@ -116,7 +121,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     child: Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Text(
-                        'Total Amount : ${getDoubleData().toString()}',
+                        'Total Amount : ${widget.price}',
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
@@ -124,7 +129,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 130),
               Container(
                 width: 350,
                 height: 200,
@@ -137,7 +142,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
+                      const Column(
                         children: [
                           Text('Select Your Payments Method :',
                               style: TextStyle(
@@ -153,9 +158,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: ListTile(
-                              title: const Text('Pay here'),
+                              title: const Text('PayPal'),
                               leading: Radio<String>(
-                                value: 'Pay Here',
+                                value: 'paypal',
                                 groupValue: selectedPaymentMethod,
                                 onChanged: (value) {
                                   setState(() {
@@ -178,7 +183,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             child: ListTile(
                               title: const Text('Cash On Hand'),
                               leading: Radio<String>(
-                                value: 'Cash On Hand',
+                                value: 'cash_on_hand',
                                 groupValue: selectedPaymentMethod,
                                 onChanged: (value) {
                                   setState(() {
@@ -194,23 +199,122 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              // SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(18.0),
                     child: ElevatedButton(
-                      onPressed: () {},
-                      child: const Text('Make Payment'),
-                    ),
-                  ),
+                        onPressed: () {
+                          double advance =
+                              ((widget.price.toDouble()) / 100) * 10;
+                          if (selectedPaymentMethod == 'paypal') {
+                            Navigation(
+                              context,
+                              UsePaypal(
+                                  sandboxMode: true,
+                                  clientId:
+                                      "AfzAtOt2yh5xa4AElQ2bj3QroOPekqjVd5fpMotR4og9IY3NrW4h1UXyrMnSzLvj19TpGBUDH_AMcTIt",
+                                  secretKey:
+                                      "EArmmUGnSt4w6OBXCptMWmw7I6bxDbZigkync-WoQ7hNldWs2xvWsjrLiNWQQFY-eyLB0mqoS4CJyoRq",
+                                  returnURL: "https://samplesite.com/return",
+                                  cancelURL: "https://samplesite.com/cancel",
+                                  transactions: [
+                                    {
+                                      "amount": {
+                                        "total": advance,
+                                        "currency": "USD",
+                                        "details": {
+                                          "subtotal": advance,
+                                          "shipping": '0',
+                                          "shipping_discount": 0
+                                        }
+                                      },
+                                      "description":
+                                          "The payment transaction description.",
+                                      // "payment_options": {
+                                      //   "allowed_payment_method":
+                                      //       "INSTANT_FUNDING_SOURCE"
+                                      // },
+                                      "item_list": {
+                                        "items": [
+                                          {
+                                            "name": "A demo product",
+                                            "quantity": 1,
+                                            "price": advance,
+                                            "currency": "USD"
+                                          }
+                                        ],
+
+                                        // shipping address is not required though
+                                        // "shipping_address": {
+                                        //   "recipient_name": "Jane Foster",
+                                        //   "line1": "Travis County",
+                                        //   "line2": "",
+                                        //   "city": "Austin",
+                                        //   "country_code": "US",
+                                        //   "postal_code": "73301",
+                                        //   "phone": "+00000000",
+                                        //   "state": "Texas"
+                                        // },
+                                      }
+                                    }
+                                  ],
+                                  note:
+                                      "Contact us for any questions on your order.",
+                                  onSuccess: (Map params) async {
+                                    sendNotification(widget.id);
+                                    print("onSuccess: $params");
+                                    _addBooking();
+                                  },
+                                  onError: (error) {
+                                    print("onError: $error");
+                                  },
+                                  onCancel: (params) {
+                                    print('cancelled: $params');
+                                  }),
+                            ).then((value) {
+                              Navigation(context, HomeScreen());
+                            });
+                          } else if (selectedPaymentMethod == 'cash_on_hand') {
+                            _addBooking();
+                            sendNotification(widget.id);
+                            print('Id is : ${widget.id}');
+                            Navigation(context, HomeScreen());
+                            print('Cash on hand is Selected');
+                          } else {
+                            showInformation(
+                                context, "Please select prefer method");
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.red[400],
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50)),
+                          minimumSize: Size(150, 55),
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.fromLTRB(10, 8, 10, 8),
+                          child: Text(
+                            "Pay",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        )),
+                  )
                 ],
-              ),
+              )
             ],
           ),
         ),
       ),
     );
+  }
+
+  void _addBooking() async {
+    await FirebaseFirestore.instance
+        .collection('bookings')
+        .doc(widget.id)
+        .update({'status': 'pending'});
   }
 }

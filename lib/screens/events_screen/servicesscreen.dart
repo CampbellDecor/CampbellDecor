@@ -25,7 +25,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
   Map<String, dynamic> myMap = {};
   double? amount;
   String? event;
-
+  final uid = 'AxlSnuQWsQQ73IVY4YxB0d0Ispx2';
+  // FirebaseAuth.instance.currentUser!.uid;
   _resetAndNavigateBack() async {
     Navigator.pop(context);
   }
@@ -154,7 +155,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                 'bookings',
                                 event!,
                                 'cart',
-                                FirebaseAuth.instance.currentUser!.uid,
+                                uid,
                                 DateTime.now(),
                                 widget.eventDate,
                                 amount!,
@@ -162,7 +163,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                             .then((value) async {
                           Navigation(context, AddToCartScreen());
                         });
-                      } else {
+                      } else if (amount == null) {
                         showInformation(context, 'Please Select Services');
                       }
                     },
@@ -196,7 +197,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                 'bookings',
                                 event!,
                                 'pending',
-                                FirebaseAuth.instance.currentUser!.uid,
+                                uid,
                                 DateTime.now(),
                                 widget.eventDate,
                                 amount!,
