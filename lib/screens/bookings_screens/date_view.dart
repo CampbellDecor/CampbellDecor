@@ -19,7 +19,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Future<Set<DateTime>> getDatesFromFirestore(dynamic dates) async {
     CollectionReference eventsCollection =
         FirebaseFirestore.instance.collection('bookings');
-    QuerySnapshot querySnapshot = await eventsCollection.get();
+    QuerySnapshot querySnapshot =
+        await eventsCollection.where('status', isEqualTo: 'active').get();
     querySnapshot.docs.forEach((document) {
       DateTime dateTime = document['eventDate'].toDate();
       dates.add(DateTime.utc(dateTime.year, dateTime.month, dateTime.day));
