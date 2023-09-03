@@ -1,9 +1,9 @@
 import 'dart:convert';
-
 import 'package:campbelldecor/reusable/reusable_methods.dart';
 import 'package:campbelldecor/screens/bookings_screens/booking_screen.dart';
 import 'package:campbelldecor/screens/bookings_screens/cart_screen.dart';
 import 'package:campbelldecor/screens/events_screen/serviceselectscreen.dart';
+import 'package:campbelldecor/screens/payment_screens/checkoutscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -151,18 +151,39 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       event = await getData('event');
                       /*---------------------insert Add to cart Collection---------------------*/
                       if (amount != null && amount! > 0) {
-                        await insertData(
-                                'bookings',
-                                event!,
-                                'cart',
-                                uid,
-                                DateTime.now(),
-                                widget.eventDate,
-                                amount!,
-                                myMap)
-                            .then((value) async {
-                          Navigation(context, AddToCartScreen());
-                        });
+                        if (event != null) {
+                          await insertData(
+                                  'bookings',
+                                  event!,
+                                  'cart',
+                                  uid,
+                                  DateTime.now(),
+                                  widget.eventDate,
+                                  amount!,
+                                  myMap)
+                              .then((value) async {
+                            Navigation(context, AddToCartScreen())
+                                .then((value) {
+                              clearAllSharedPreferenceData();
+                            });
+                          });
+                        } else {
+                          await insertData(
+                                  'bookings',
+                                  'Services Only',
+                                  'cart',
+                                  uid,
+                                  DateTime.now(),
+                                  widget.eventDate,
+                                  amount!,
+                                  myMap)
+                              .then((value) async {
+                            Navigation(context, AddToCartScreen())
+                                .then((value) {
+                              clearAllSharedPreferenceData();
+                            });
+                          });
+                        }
                       } else if (amount == null) {
                         showInformation(context, 'Please Select Services');
                       }
@@ -193,18 +214,57 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       amount = await getDoubleData('amount');
                       /*---------------------insert Booking Collection---------------------*/
                       if (amount != null && amount! > 0) {
-                        await insertData(
-                                'bookings',
-                                event!,
-                                'pending',
-                                uid,
-                                DateTime.now(),
-                                widget.eventDate,
-                                amount!,
-                                myMap)
-                            .then((value) async {
-                          Navigation(context, BookingScreen());
-                        });
+                        if (event != null) {
+                          await insertData(
+                                  'bookings',
+                                  event!,
+                                  'pending',
+                                  uid,
+                                  DateTime.now(),
+                                  widget.eventDate,
+                                  amount!,
+                                  myMap)
+                              .then((value) async {
+                            final _book = FirebaseFirestore.instance
+                                .collection("bookings")
+                                .where('status', isEqualTo: 'pending')
+                                .where('eventDate', isEqualTo: widget.eventDate)
+                                .where('userID',
+                                    isEqualTo:
+                                        FirebaseAuth.instance.currentUser?.uid);
+                            DocumentSnapshot documentSnapshot =
+                                (await _book.get()).docs[1];
+                            Navigation(context,
+                                CheckOutScreen(id: documentSnapshot.id));
+                          });
+                        } else {
+                          await insertData(
+                                  'bookings',
+                                  'Service Only',
+                                  'pending',
+                                  uid,
+                                  DateTime.now(),
+                                  widget.eventDate,
+                                  amount!,
+                                  myMap)
+                              .then((value) async {
+                            final _book = FirebaseFirestore.instance
+                                .collection("bookings")
+                                .where('status', isEqualTo: 'pending')
+                                .where('eventDate', isEqualTo: widget.eventDate)
+                                .where('userID',
+                                    isEqualTo:
+                                        FirebaseAuth.instance.currentUser?.uid);
+                            DocumentSnapshot documentSnapshot =
+                                (await _book.get()).docs[1];
+                            Navigation(context,
+                                CheckOutScreen(id: documentSnapshot.id));
+                          });
+                          // .then((value) async {
+                          // Navigation(context,
+                          //     CheckOutScreen(id: documentSnapshot.id));
+                          // });
+                        }
                       } else {
                         showInformation(context, 'Please Select Services');
                       }
@@ -224,4 +284,12 @@ class _ServicesScreenState extends State<ServicesScreen> {
       ),
     );
   }
+
+  // Future<void> getID() async {
+  //   // final _book = FirebaseFirestore.instance
+  //   //     .collection("bookings")
+  //   //     .where('status', isEqualTo: 'pending')
+  //   //     .where('userID', isEqualTo: FirebaseAuth.instance.currentUser?.uid);
+  //   // DocumentSnapshot documentSnapshot = (await _book.get()).docs[1];
+  // }
 }

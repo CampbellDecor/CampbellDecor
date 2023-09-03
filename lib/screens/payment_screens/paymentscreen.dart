@@ -275,6 +275,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                     print('cancelled: $params');
                                   }),
                             ).then((value) {
+                              clearAllSharedPreferenceData();
+                            }).then((value) {
                               Navigation(context, HomeScreen());
                             });
                           } else if (selectedPaymentMethod == 'cash_on_hand') {
