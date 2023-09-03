@@ -364,6 +364,11 @@ void sendNotification(String id) {
   });
 }
 
+Future<void> clearAllSharedPreferenceData() async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.clear();
+}
+
 /*---------------------- Send Notifications Devic to Another Device ---------------------------*/
 // ElevatedButton(
 //                       onPressed: () {

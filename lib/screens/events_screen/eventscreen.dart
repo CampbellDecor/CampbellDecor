@@ -1,12 +1,10 @@
 import 'package:campbelldecor/screens/bookings_screens/date_view.dart';
 import 'package:campbelldecor/screens/events_screen/religion.dart';
-import 'package:campbelldecor/screens/events_screen/servicesscreen.dart';
-import 'package:campbelldecor/screens/events_screen/usereventscreation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../reusable/reusable_methods.dart';
+import '../../reusable/reusable_widgets.dart';
 
 // Future<void> dataPre() async {
 //   SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -125,16 +123,17 @@ class EventsScreen extends StatelessWidget {
               );
             },
           ),
-          IconButton(
-            onPressed: () {
-              Navigation(context, UserEventsCreationScreen());
-            },
-            icon: Icon(LineAwesomeIcons.plus_circle),
-            iconSize: 45,
-            color: Colors.pink,
-          )
+          // IconButton(
+          //   onPressed: () {
+          //     Navigation(context, UserEventsCreationScreen());
+          //   },
+          //   icon: Icon(LineAwesomeIcons.plus_circle),
+          //   iconSize: 45,
+          //   color: Colors.pink,
+          // )
         ],
       ),
+      bottomNavigationBar: bottom_Bar(context),
     );
   }
 }
