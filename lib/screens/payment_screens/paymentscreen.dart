@@ -265,7 +265,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                       "Contact us for any questions on your order.",
                                   onSuccess: (Map params) async {
                                     sendNotification(widget.id);
-                                    print("onSuccess: $params");
+                                    // print("onSuccess: $params");
                                     _addBooking();
                                   },
                                   onError: (error) {
@@ -276,8 +276,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                   }),
                             ).then((value) {
                               clearAllSharedPreferenceData();
-                            }).then((value) {
-                              Navigation(context, HomeScreen());
                             });
                           } else if (selectedPaymentMethod == 'cash_on_hand') {
                             _addBooking();
