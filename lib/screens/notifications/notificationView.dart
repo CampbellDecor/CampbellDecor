@@ -56,7 +56,7 @@ Widget preFixIcon() {
   return Container(
     height: 50,
     width: 50,
-    padding: EdgeInsets.all(10),
+    padding: const EdgeInsets.all(10),
     decoration: BoxDecoration(
       shape: BoxShape.rectangle,
       color: Colors.cyanAccent[400],
@@ -72,25 +72,23 @@ Widget preFixIcon() {
 
 Widget message(int index) {
   double textSize = 15;
-  return Container(
-    child: RichText(
-      maxLines: 3,
-      overflow: TextOverflow.ellipsis,
-      text: TextSpan(
-        text: 'Message',
-        style: TextStyle(
-            fontSize: textSize,
-            color: Colors.indigo,
-            fontWeight: FontWeight.bold),
-        children: const [
-          TextSpan(
-            // text: 'Notification Description',
-            style: TextStyle(
-              fontWeight: FontWeight.w400,
-            ),
+  return RichText(
+    maxLines: 3,
+    overflow: TextOverflow.ellipsis,
+    text: TextSpan(
+      text: 'Message',
+      style: TextStyle(
+          fontSize: textSize,
+          color: Colors.indigo,
+          fontWeight: FontWeight.bold),
+      children: const [
+        TextSpan(
+          // text: 'Notification Description',
+          style: TextStyle(
+            fontWeight: FontWeight.w400,
           ),
-        ],
-      ),
+        ),
+      ],
     ),
   );
 }

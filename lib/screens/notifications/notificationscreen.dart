@@ -109,10 +109,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
+                    return const CircularProgressIndicator();
                   }
                   if (!snapshot.hasData) {
-                    return Text('Document not found.');
+                    return const Text('Document not found.');
                   }
                   if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
@@ -188,7 +188,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                     Padding(
                                       padding: const EdgeInsets.all(18.0),
                                       child: Text(
-                                        'Address : ${address}',
+                                        'Address : $address',
                                         style: const TextStyle(
                                             fontSize: 18,
                                             color: Colors.white,
@@ -211,7 +211,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                     ),
                                   ],
                                 ),
-                                Row(
+                                const Row(
                                   children: [
                                     Padding(
                                       padding: EdgeInsets.all(18.0),
@@ -225,103 +225,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                     ),
                                   ],
                                 ),
-                                // OutlinedButton(
-                                //     onPressed: () {
-                                //       setState(() {
-                                //         getSubcollectionData(
-                                //             message.data.values.first);
-                                //       });
-                                //     },
-                                //     child: Text('Show')),
-
-                                // Row(
-                                //   children: [
-                                //     SingleChildScrollView(
-                                //       child: Center(
-                                //         child: Column(
-                                //           children: [
-                                //             ElevatedButton(
-                                //               onPressed: () {
-                                //                 toggleDataVisibility();
-                                //                 getSubcollectionData(
-                                //                     message.data.values.first);
-                                //               },
-                                //               child: Text(isDataVisible
-                                //                   ? 'Hide Data'
-                                //                   : 'Show Data'),
-                                //             ),
-                                //             if (isDataVisible)
-                                //               Column(
-                                //                 children: subcollectionData
-                                //                     .map((data) {
-                                //                   return Row(
-                                //                     mainAxisAlignment:
-                                //                         MainAxisAlignment
-                                //                             .center,
-                                //                     children: [
-                                //                       Padding(
-                                //                         padding:
-                                //                             const EdgeInsets
-                                //                                 .all(8.0),
-                                //                         child: Text(
-                                //                           '${data.keys} :-',
-                                //                           style:
-                                //                               const TextStyle(
-                                //                             fontWeight:
-                                //                                 FontWeight.bold,
-                                //                             fontSize: 16,
-                                //                             color: Colors.black,
-                                //                           ),
-                                //                         ),
-                                //                       ),
-                                //                       Text(
-                                //                         data.values.toString(),
-                                //                         style: const TextStyle(
-                                //                           fontWeight:
-                                //                               FontWeight.bold,
-                                //                           fontSize: 16,
-                                //                           color: Colors.black,
-                                //                         ),
-                                //                       ),
-                                //                     ],
-                                //                   );
-                                //                 }).toList(),
-                                //               ),
-                                //           ],
-                                //         ),
-                                //         // Column(
-                                //         //   children: subcollectionData.map((data) {
-                                //         //     return Row(
-                                //         //       mainAxisAlignment:
-                                //         //           MainAxisAlignment.center,
-                                //         //       children: [
-                                //         //         Padding(
-                                //         //           padding:
-                                //         //               const EdgeInsets.all(8.0),
-                                //         //           child: Text(
-                                //         //             '${data.keys.first} :-',
-                                //         //             style: TextStyle(
-                                //         //                 fontWeight:
-                                //         //                     FontWeight.bold,
-                                //         //                 fontSize: 16,
-                                //         //                 color: Colors.white),
-                                //         //           ),
-                                //         //         ),
-                                //         //         Text(
-                                //         //           data.values.first.toString(),
-                                //         //           style: TextStyle(
-                                //         //               fontWeight: FontWeight.bold,
-                                //         //               fontSize: 16,
-                                //         //               color: Colors.white),
-                                //         //         ),
-                                //         //       ],
-                                //         //     );
-                                //         //   }).toList(),
-                                //         // ),
-                                //       ),
-                                //     )
-                                //   ],
-                                // ),
                                 const SizedBox(
                                   height: 60,
                                 ),
@@ -337,7 +240,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                                   .toString())
                                               .update({'status': 'active'});
                                         },
-                                        child: Text('Confirm')),
+                                        child: const Text('Confirm')),
                                     ElevatedButton(
                                         onPressed: () async {
                                           await FirebaseFirestore.instance
@@ -350,7 +253,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                             Navigator.pop(context);
                                           });
                                         },
-                                        child: Text('Reject')),
+                                        child: const Text('Reject')),
                                   ],
                                 ),
                               ],
