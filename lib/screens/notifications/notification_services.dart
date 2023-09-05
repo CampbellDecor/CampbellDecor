@@ -1,10 +1,13 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:campbelldecor/screens/notifications/notificationView.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'notification_view.dart';
 import 'notificationscreen.dart';
 
 class NotificationServices {
@@ -59,6 +62,12 @@ class NotificationServices {
 
   void firebaseInit(BuildContext context) {
     FirebaseMessaging.onMessage.listen((message) {
+      showNotification(message);
+      // Map<String, dynamic> savedMessage = Map();
+      // savedMessage['title'] = message.notification!.title.toString();
+      // savedMessage['body'] = message.notification!.title.toString();
+      // saveNotificationToFirestore(savedMessage);
+      // print('Save the Notification');
       if (kDebugMode) {
         print(message.notification!.title.toString());
         print(message.notification!.body.toString());
@@ -68,9 +77,7 @@ class NotificationServices {
       }
       if (Platform.isAndroid) {
         initLocalNotifications(context, message);
-      } else {
-        showNotification(message);
-      }
+      } else {}
     });
   }
 
@@ -103,6 +110,14 @@ class NotificationServices {
           message.notification!.body.toString(),
           notificationDetails);
     });
+
+    // FirebaseMessaging.onMessage.listen((event) {
+    //   Map<String, dynamic> savedMessage = Map();
+    //   savedMessage['title'] = message.notification!.title.toString();
+    //   savedMessage['body'] = message.notification!.title.toString();
+    //   saveNotificationToFirestore(savedMessage);
+    //   print('Save the Notification');
+    // });
   }
 
   Future<void> setupIneractMessage(BuildContext context) async {
@@ -118,9 +133,19 @@ class NotificationServices {
   }
 
   void handleMessage(BuildContext context, RemoteMessage message) {
-    if (message.data['type'] == 'msj') {
+    if (message.data['type'] == 'msg') {
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => NotificationScreen()));
     }
+    // else {
+    //   Navigator.push(
+    //       context, MaterialPageRoute(builder: (context) => NotiMessage()));
+    // }
+  }
+
+  void saveNotificationToFirestore(Map<String, dynamic> notificationData) {
+    FirebaseFirestore.instance
+        .collection('notifications')
+        .add(notificationData);
   }
 }

@@ -322,7 +322,6 @@ Widget bottom_Bar(BuildContext context) {
           if (index == 0) {
             Navigation(context, HomeScreen());
           } else if (index == 1) {
-            Navigation(context, HomeScreen());
           } else if (index == 2) {
             Navigation(context, EventsScreen());
           } else if (index == 3) {
