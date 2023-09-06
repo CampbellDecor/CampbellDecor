@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'dart:ffi';
+import 'dart:io';
+import 'package:campbelldecor/imageSample/ImageDemo.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
@@ -447,4 +450,52 @@ Future<bool> verifyOTP(String otp) async {
           verificationId: verificationId, smsCode: otp));
 
   return credentials.user != null ? true : false;
+}
+
+Future<void> userImagePicker(BuildContext context) async {
+  try {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final imagePicker = ImagePicker();
+    final XFile? file =
+        await imagePicker.pickImage(source: ImageSource.gallery);
+
+    if (file == null) {
+      return;
+    }
+
+    final user = FirebaseFirestore.instance.collection('users');
+    final storageRef = FirebaseStorage.instance.ref();
+    final imagesRef = storageRef.child('Users/');
+    final uniqueFileName = uid;
+    final fileName = imagesRef.child(uniqueFileName);
+
+    final uploadTask = fileName.putFile(File(file.path));
+
+    uploadTask.snapshotEvents.listen((TaskSnapshot taskSnapshot) {
+      switch (taskSnapshot.state) {
+        case TaskState.running:
+          final progress =
+              100.0 * (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes);
+          print("Upload is $progress% complete.");
+          break;
+        case TaskState.paused:
+          print("Upload is paused.");
+          break;
+        case TaskState.canceled:
+          print("Upload was canceled");
+          break;
+        case TaskState.error:
+          print("Upload error: ");
+          break;
+        case TaskState.success:
+          print("Upload successful.");
+          break;
+      }
+    });
+
+    final imageUrl = await fileName.getDownloadURL();
+    await user.doc(uid).update({'imgURL': imageUrl});
+  } catch (error) {
+    print("Error: $error");
+  }
 }
