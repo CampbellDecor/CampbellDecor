@@ -1,5 +1,5 @@
 import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
-import 'package:campbelldecor/screens/homescreen.dart';
+import 'package:campbelldecor/screens/dash_board/homescreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';

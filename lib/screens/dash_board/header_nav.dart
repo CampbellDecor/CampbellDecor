@@ -1,5 +1,5 @@
 import 'package:campbelldecor/reusable/reusable_methods.dart';
-import 'package:campbelldecor/screens/ContactUs.dart';
+import 'package:campbelldecor/screens/dash_board/ContactUs.dart';
 import 'package:campbelldecor/screens/bookings_screens/booking_details_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 
 import 'AboutUs.dart';
 import 'ToDoList.dart';
+import 'account_details.dart';
 
 class MyDrawer extends StatefulWidget {
   const MyDrawer({super.key});
@@ -39,10 +40,7 @@ class _MyDrawerState extends State<MyDrawer> {
             title: const Text('View Account'),
             leading: const Icon(Icons.account_box),
             onTap: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => MyAboutUs()),
-              // );
+              Navigation(context, ProfileScreen());
             },
           ),
           const Divider(

@@ -1,5 +1,5 @@
 import 'package:campbelldecor/screens/bookings_screens/date_view.dart';
-import 'package:campbelldecor/screens/homescreen.dart';
+import 'package:campbelldecor/screens/dash_board/homescreen.dart';
 import 'package:campbelldecor/screens/usercredential/resetpassword.dart';
 import 'package:campbelldecor/screens/usercredential/signupscreen.dart';
 import 'package:campbelldecor/utils/color_util.dart';

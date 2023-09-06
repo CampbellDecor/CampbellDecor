@@ -1,4 +1,5 @@
 import 'package:campbelldecor/reusable/reusable_methods.dart';
+import 'package:campbelldecor/screens/chat/user_chat_screen.dart';
 import 'package:campbelldecor/screens/payment_screens/paymentscreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,7 @@ import 'package:intl/intl.dart';
 import '../models/ratingModel.dart';
 import '../screens/bookings_screens/cart_screen.dart';
 import '../screens/events_screen/eventscreen.dart';
-import '../screens/homescreen.dart';
+import '../screens/dash_board/homescreen.dart';
 import '../screens/searchbar/searchbar_widget.dart';
 
 Container logoWidget(String imageName) {
@@ -322,6 +323,7 @@ Widget bottom_Bar(BuildContext context) {
           if (index == 0) {
             Navigation(context, HomeScreen());
           } else if (index == 1) {
+            Navigation(context, UserChatScreen());
           } else if (index == 2) {
             Navigation(context, EventsScreen());
           } else if (index == 3) {

@@ -1,5 +1,5 @@
 import 'package:campbelldecor/reusable/reusable_methods.dart';
-import 'package:campbelldecor/screens/homescreen.dart';
+import 'package:campbelldecor/screens/dash_board/homescreen.dart';
 import 'package:campbelldecor/screens/usercredential/signinscreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -33,10 +33,10 @@ class _ResetScreenState extends State<ResetScreen> {
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
             gradient: LinearGradient(colors: [
-              hexStringtoColor("CD2B93"),
-              hexStringtoColor("9546C4"),
-              hexStringtoColor("5E61FA")
-            ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+          hexStringtoColor("CD2B93"),
+          hexStringtoColor("9546C4"),
+          hexStringtoColor("5E61FA")
+        ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.fromLTRB(
