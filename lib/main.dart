@@ -3,6 +3,7 @@ import 'package:campbelldecor/screens/notifications/notification_setup.dart';
 import 'package:campbelldecor/screens/notifications/notificationscreen.dart';
 import 'package:campbelldecor/screens/theme/theme_colors.dart';
 import 'package:campbelldecor/screens/theme/theme_manager.dart';
+import 'package:campbelldecor/screens/usercredential/signinscreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +48,7 @@ class _MyAppState extends State<MyApp> {
               theme: ThemeClass.lightTheme,
               darkTheme: ThemeClass.darkTheme,
               themeMode: themeManager.themeMode,
-              home: ProfileScreen(),
+              home: SignInScreen(),
               navigatorKey: navigatorKey,
               routes: {
                 NotificationScreen.route: (context) => NotificationScreen(),

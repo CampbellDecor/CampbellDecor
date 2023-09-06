@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 
 import 'AboutUs.dart';
 import 'ToDoList.dart';
+import 'account_details.dart';
 
 class MyDrawer extends StatefulWidget {
   const MyDrawer({super.key});
@@ -39,10 +40,7 @@ class _MyDrawerState extends State<MyDrawer> {
             title: const Text('View Account'),
             leading: const Icon(Icons.account_box),
             onTap: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => MyAboutUs()),
-              // );
+              Navigation(context, ProfileScreen());
             },
           ),
           const Divider(
