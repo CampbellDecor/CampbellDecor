@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -414,3 +415,36 @@ Future<void> clearAllSharedPreferenceData() async {
 //     print('Error inserting data: $e');
 //   }
 // }
+
+var verificationId;
+Future<void> phoneAuthentication(String phoneNo) async {
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  await _auth.verifyPhoneNumber(
+    phoneNumber: phoneNo,
+    verificationCompleted: (credential) async {
+      await _auth.signInWithCredential(credential);
+    },
+    codeSent: (verificationId, resendToken) {
+      verificationId = verificationId;
+    },
+    codeAutoRetrievalTimeout: (verificationId) {
+      verificationId = verificationId;
+    },
+    verificationFailed: (e) {
+      if (e.code == 'invalid-phone-number') {
+        print('Invalid Number');
+      } else {
+        print('Something Wrong please try again');
+      }
+    },
+  );
+}
+
+Future<bool> verifyOTP(String otp) async {
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  var credentials = await _auth.signInWithCredential(
+      PhoneAuthProvider.credential(
+          verificationId: verificationId, smsCode: otp));
+
+  return credentials.user != null ? true : false;
+}

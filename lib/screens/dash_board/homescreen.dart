@@ -6,9 +6,9 @@ import 'package:campbelldecor/screens/usercredential/signinscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../reusable/reusable_widgets.dart';
-import 'bookings_screens/date_view.dart';
-import 'bookings_screens/show_rating.dart';
+import '../../reusable/reusable_widgets.dart';
+import '../bookings_screens/date_view.dart';
+import '../bookings_screens/show_rating.dart';
 import 'header_nav.dart';
 import 'package:flutter/cupertino.dart';
 

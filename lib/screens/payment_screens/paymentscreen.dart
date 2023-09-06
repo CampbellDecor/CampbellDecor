@@ -1,5 +1,5 @@
 import 'package:campbelldecor/reusable/reusable_methods.dart';
-import 'package:campbelldecor/screens/homescreen.dart';
+import 'package:campbelldecor/screens/dash_board/homescreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

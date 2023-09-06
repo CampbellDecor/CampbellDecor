@@ -1,0 +1,352 @@
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+class ProfileScreen extends StatefulWidget {
+  @override
+  _ProfileScreenState createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirestoreService _firestoreService = FirestoreService();
+  late UserModel _user;
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _phoneNoController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  bool _isEditing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final User user = _auth.currentUser!;
+    final UserModel? userData = await _firestoreService.getUserData(user.uid);
+    if (userData != null) {
+      setState(() {
+        _user = userData;
+        _nameController.text = _user.name;
+        _emailController.text = _user.email;
+        _phoneNoController.text = _user.phoneNo;
+        _addressController.text = _user.address;
+      });
+    }
+  }
+
+  Future<void> _updateUserData() async {
+    final String newName = _nameController.text.trim();
+    final String newAddress = _addressController.text.trim();
+    final String newPhoneNo = _phoneNoController.text.trim();
+    final UserModel updatedUser = UserModel(
+        id: _user.id,
+        name: newName,
+        email: _user.email,
+        address: newAddress,
+        phoneNo: newPhoneNo);
+
+    await _firestoreService.updateUserData(_user.id, updatedUser);
+
+    await _loadUserData();
+
+    setState(() {
+      _isEditing = false;
+    });
+
+    _showFeedbackMessage('Changes saved successfully!');
+  }
+
+  void _showFeedbackMessage(String message) {
+    final snackBar = SnackBar(
+      padding: EdgeInsets.all(8.0),
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius:
+            BorderRadius.circular(40.0), // Adjust the radius as needed
+      ),
+      content: Center(
+          child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(
+          message,
+          style: TextStyle(
+              color: Colors.black, fontSize: 14, fontWeight: FontWeight.bold),
+        ),
+      )),
+      duration:
+          Duration(seconds: 2), // Duration for which the SnackBar is visible
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: AppBar(
+        title: const Text('Profile'),
+        actions: [
+          IconButton(
+            icon: Icon(_isEditing ? Icons.save : Icons.edit),
+            onPressed: () {
+              setState(() {
+                _isEditing = !_isEditing;
+              });
+              if (_isEditing) {
+              } else {
+                _showFeedbackMessage('Changes saved successfully!');
+              }
+            },
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 20),
+              _isEditing
+                  ? Column(
+                      // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextField(
+                            controller: _nameController,
+                            decoration: InputDecoration(
+                              labelText: 'Name',
+                              hintText: 'Enter your name',
+                              prefixIcon: const Icon(Icons.person),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    color: Colors.grey, width: 1.0),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    color: Colors.blue, width: 2.0),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                            ),
+                            style: const TextStyle(fontSize: 18.0),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextField(
+                            controller: _phoneNoController,
+                            decoration: InputDecoration(
+                              labelText: 'Phone Number',
+                              hintText: 'Enter your name',
+                              prefixIcon: const Icon(Icons.phone),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    color: Colors.grey, width: 1.0),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    color: Colors.blue, width: 2.0),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                            ),
+                            style: const TextStyle(fontSize: 18.0),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextField(
+                            controller: _addressController,
+                            decoration: InputDecoration(
+                              labelText: 'Address',
+                              hintText: 'Enter your name',
+                              prefixIcon: const Icon(Icons.house),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    color: Colors.grey, width: 1.0),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    color: Colors.blue, width: 2.0),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                            ),
+                            style: const TextStyle(fontSize: 18.0),
+                          ),
+                        ),
+                      ],
+                    )
+                  : SingleChildScrollView(
+                      child: Center(
+                        child: Card(
+                          elevation: 5.0,
+                          margin: const EdgeInsets.all(20.0),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                const SizedBox(height: 20.0),
+                                const CircleAvatar(
+                                  radius: 60.0,
+                                  backgroundImage:
+                                      AssetImage('assets/images/user.png'),
+                                ),
+                                const SizedBox(height: 20.0),
+                                const Text(
+                                  'Name:',
+                                  style: TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(height: 5.0),
+                                Text(
+                                  _user.name,
+                                  style: const TextStyle(fontSize: 16.0),
+                                ),
+                                const SizedBox(height: 10.0),
+                                const Text(
+                                  'Email:',
+                                  style: TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(height: 5.0),
+                                Text(
+                                  _user.email,
+                                  style: const TextStyle(fontSize: 16.0),
+                                ),
+                                const SizedBox(height: 20.0),
+                                const Text(
+                                  'Mobile No:',
+                                  style: TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(height: 5.0),
+                                Text(
+                                  _user.phoneNo,
+                                  style: const TextStyle(fontSize: 16.0),
+                                ),
+                                const SizedBox(height: 20.0),
+                                const Text(
+                                  'Address:',
+                                  style: TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(height: 5.0),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(25, 0, 25, 0),
+                                  child: Text(
+                                    _user.address,
+                                    style: const TextStyle(fontSize: 16.0),
+                                  ),
+                                ),
+                                const SizedBox(height: 20.0),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+              const SizedBox(height: 20),
+              Container(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.blue, // Button background color
+                    onPrimary: Colors.white, // Text color
+                    elevation: 3, // Button elevation
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(50.0), // Rounded corners
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16, horizontal: 24),
+                  ),
+                  onPressed: _isEditing ? _updateUserData : null,
+                  child: const Text('Save Changes'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class FirestoreService {
+  final CollectionReference _userCollection =
+      FirebaseFirestore.instance.collection('users');
+
+  Future<UserModel?> getUserData(String userId) async {
+    try {
+      DocumentSnapshot documentSnapshot =
+          await _userCollection.doc(userId).get();
+      if (documentSnapshot.exists) {
+        return UserModel.fromMap(
+            documentSnapshot.data() as Map<String, dynamic>,
+            documentSnapshot.id);
+      }
+      return null;
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
+  Future<void> updateUserData(String userId, UserModel updatedUserData) async {
+    try {
+      await _userCollection.doc(userId).update(updatedUserData.toMap());
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+}
+
+class UserModel {
+  final String id;
+  final String name;
+  final String email;
+  final String address;
+  final String phoneNo;
+
+  UserModel(
+      {required this.id,
+      required this.name,
+      required this.email,
+      required this.address,
+      required this.phoneNo});
+
+  factory UserModel.fromMap(Map<String, dynamic> data, String documentId) {
+    final String name = data['name'];
+    final String email = data['email'];
+    final String address = data['address'];
+    final String phoneNo = data['phoneNo'];
+
+    return UserModel(
+        id: documentId,
+        name: name,
+        email: email,
+        address: address,
+        phoneNo: phoneNo);
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'email': email,
+      'address': address,
+      'phoneNo': phoneNo,
+    };
+  }
+}

@@ -1,5 +1,5 @@
 import 'package:campbelldecor/reusable/reusable_methods.dart';
-import 'package:campbelldecor/screens/ContactUs.dart';
+import 'package:campbelldecor/screens/dash_board/ContactUs.dart';
 import 'package:campbelldecor/screens/bookings_screens/booking_details_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
