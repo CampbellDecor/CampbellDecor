@@ -19,6 +19,27 @@ class MyDrawer extends StatefulWidget {
 
 class _MyDrawerState extends State<MyDrawer> {
   String? email = FirebaseAuth.instance.currentUser?.email;
+  late String name = 'loding..';
+  late String imgURL =
+      'https://firebasestorage.googleapis.com/v0/b/campbelldecor-c2d1f.appspot.com/o/Users%2Fuser.png?alt=media&token=af8768f7-68e4-4961-892f-400eee8bae5d';
+
+  @override
+  void initState() {
+    super.initState();
+    getUserAge();
+  }
+
+  Future<void> getUserAge() async {
+    CollectionReference usersCollection =
+        FirebaseFirestore.instance.collection('users');
+
+    DocumentSnapshot userSnapshot =
+        await usersCollection.doc(FirebaseAuth.instance.currentUser!.uid).get();
+    setState(() {
+      imgURL = (userSnapshot.data() as Map<String, dynamic>)['imgURL'];
+      name = (userSnapshot.data() as Map<String, dynamic>)['name'];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,12 +47,40 @@ class _MyDrawerState extends State<MyDrawer> {
       child: ListView(
         children: [
           UserAccountsDrawerHeader(
-            accountName: Text('name'!),
+            accountName: Text(name),
             accountEmail: Text(email!),
             currentAccountPicture: CircleAvatar(
               backgroundColor: Colors.white,
-              child: ClipOval(
-                child: Image.asset('assets/images/logo2.png'),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                    width: 120,
+                    height: 120,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.blueGrey,
+                        width: 2.0,
+                      ),
+                    ),
+                    child: ClipOval(
+                      child: imgURL != null
+                          ? Image.network(
+                              imgURL,
+                              width: 150,
+                              height: 150,
+                              fit: BoxFit.cover,
+                            )
+                          : Image.network(
+                              imgURL,
+                              width: 150,
+                              height: 150,
+                              fit: BoxFit.cover,
+                            ),
+                    ),
+                  ),
+                ],
               ),
             ),
             otherAccountsPictures: [],

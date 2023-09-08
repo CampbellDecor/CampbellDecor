@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../reusable/reusable_methods.dart';
 
 final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -11,23 +12,26 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirestoreService _firestoreService = FirestoreService();
   late UserModel _user;
+  final FirestoreService _firestoreService = FirestoreService();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneNoController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   bool _isEditing = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadUserData();
-  }
-
   Future<void> _loadUserData() async {
     final User user = _auth.currentUser!;
     final UserModel? userData = await _firestoreService.getUserData(user.uid);
+    _user = userData ??
+        UserModel(
+          id: '',
+          name: 'Loading...',
+          imgURL: 'default_image_url',
+          email: '',
+          address: '',
+          phoneNo: '',
+        );
+
     if (userData != null) {
       setState(() {
         _user = userData;
@@ -39,6 +43,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  // Future<void> _loadUserData() async {
+  //   final User user = _auth.currentUser!;
+  //   final UserModel? userData = await _firestoreService.getUserData(user.uid);
+  //   if (userData != null) {
+  //     setState(() {
+  //       _user = userData;
+  //       _nameController.text = _user.name;
+  //       _emailController.text = _user.email;
+  //       _phoneNoController.text = _user.phoneNo;
+  //       _addressController.text = _user.address;
+  //     });
+  //   }
+  // }
+
   Future<void> _updateUserData() async {
     final String newName = _nameController.text.trim();
     final String newAddress = _addressController.text.trim();
@@ -46,6 +70,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final UserModel updatedUser = UserModel(
         id: _user.id,
         name: newName,
+        imgURL: _user.imgURL,
         email: _user.email,
         address: newAddress,
         phoneNo: newPhoneNo);
@@ -86,6 +111,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String userURL = _user.imgURL;
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -194,12 +220,58 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: Column(
                               children: [
                                 const SizedBox(height: 20.0),
-                                const CircleAvatar(
-                                  radius: 60.0,
-                                  backgroundImage:
-                                      AssetImage('assets/images/user.png'),
+                                Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Container(
+                                      width: 120,
+                                      height: 120,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: Colors.blueGrey,
+                                          width: 2.0,
+                                        ),
+                                      ),
+                                      child: ClipOval(
+                                        child: userURL != null
+                                            ? Image.network(
+                                                userURL,
+                                                width: 150,
+                                                height: 150,
+                                                fit: BoxFit.cover,
+                                              )
+                                            : Image.network(
+                                                'https://firebasestorage.googleapis.com/v0/b/campbelldecor-c2d1f.appspot.com/o/Users%2Fuser.png?alt=media&token=af8768f7-68e4-4961-892f-400eee8bae5d',
+                                                width: 150,
+                                                height: 150,
+                                                fit: BoxFit.cover,
+                                              ),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      bottom: -10,
+                                      right: -10,
+                                      child: IconButton(
+                                        icon: Icon(Icons.camera_alt_outlined),
+                                        onPressed: () {
+                                          userImagePicker(context)
+                                              .then((value) {
+                                            Navigation(
+                                                context, ProfileScreen());
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                const SizedBox(height: 20.0),
+                                const SizedBox(height: 15.0),
+
+                                // CircleAvatar(
+                                //   radius: 60.0,
+                                //   backgroundImage:
+                                //       AssetImage('assets/images/user.png'),
+                                // ),
                                 const Text(
                                   'Name:',
                                   style: TextStyle(
@@ -316,6 +388,7 @@ class FirestoreService {
 class UserModel {
   final String id;
   final String name;
+  final String imgURL;
   final String email;
   final String address;
   final String phoneNo;
@@ -323,12 +396,14 @@ class UserModel {
   UserModel(
       {required this.id,
       required this.name,
+      required this.imgURL,
       required this.email,
       required this.address,
       required this.phoneNo});
 
   factory UserModel.fromMap(Map<String, dynamic> data, String documentId) {
     final String name = data['name'];
+    final String imgURL = data['imgURL'];
     final String email = data['email'];
     final String address = data['address'];
     final String phoneNo = data['phoneNo'];
@@ -336,6 +411,7 @@ class UserModel {
     return UserModel(
         id: documentId,
         name: name,
+        imgURL: imgURL,
         email: email,
         address: address,
         phoneNo: phoneNo);
@@ -344,6 +420,7 @@ class UserModel {
   Map<String, dynamic> toMap() {
     return {
       'name': name,
+      'imgURL': imgURL,
       'email': email,
       'address': address,
       'phoneNo': phoneNo,

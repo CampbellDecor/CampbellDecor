@@ -49,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final themeManager = Provider.of<ThemeManager>(context);
     return Scaffold(
-      drawer: const MyDrawer(),
+      drawer: MyDrawer(),
       appBar: AppBar(
         title: const Text('Campbell Decor'),
         backgroundColor: Colors.purple[700],
