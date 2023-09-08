@@ -19,6 +19,35 @@ Container logoWidget(String imageName) {
   );
 }
 
+Container Profile(String userURL) {
+  return Container(
+    width: 120,
+    height: 120,
+    decoration: BoxDecoration(
+      shape: BoxShape.circle,
+      border: Border.all(
+        color: Colors.blueGrey,
+        width: 2.0,
+      ),
+    ),
+    child: ClipOval(
+      child: userURL != null
+          ? Image.network(
+              userURL,
+              width: 150,
+              height: 150,
+              fit: BoxFit.cover,
+            )
+          : Image.network(
+              'https://firebasestorage.googleapis.com/v0/b/campbelldecor-c2d1f.appspot.com/o/Users%2Fuser.png?alt=media&token=af8768f7-68e4-4961-892f-400eee8bae5d',
+              width: 150,
+              height: 150,
+              fit: BoxFit.cover,
+            ),
+    ),
+  );
+}
+
 /*----------------------- Image for Container List view ----------------------------------*/
 ClipRRect IconImageWidget(String imageName, double height, double width) {
   return ClipRRect(
