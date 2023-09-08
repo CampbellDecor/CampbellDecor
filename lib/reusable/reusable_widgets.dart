@@ -321,15 +321,15 @@ Widget bottom_Bar(BuildContext context) {
         // currentIndex: _selectedIndex,
         onTap: (index) {
           if (index == 0) {
-            Navigation(context, HomeScreen());
+            BottomNavigation(context, HomeScreen());
           } else if (index == 1) {
-            Navigation(context, UserChatScreen());
+            BottomNavigation(context, UserChatScreen());
           } else if (index == 2) {
-            Navigation(context, EventsScreen());
+            BottomNavigation(context, EventsScreen());
           } else if (index == 3) {
-            Navigation(context, AddToCartScreen());
+            BottomNavigation(context, AddToCartScreen());
           } else if (index == 4) {
-            Navigation(context, SearchScreen());
+            BottomNavigation(context, SearchScreen());
           } else {
             // _navigateToSearch(context);
           }

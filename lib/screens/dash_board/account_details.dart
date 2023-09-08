@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import '../../reusable/reusable_methods.dart';
 
 final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -13,23 +12,26 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  late final UserModel _user;
+  late UserModel _user;
   final FirestoreService _firestoreService = FirestoreService();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneNoController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   bool _isEditing = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadUserData();
-  }
-
   Future<void> _loadUserData() async {
     final User user = _auth.currentUser!;
     final UserModel? userData = await _firestoreService.getUserData(user.uid);
+    _user = userData ??
+        UserModel(
+          id: '',
+          name: 'Loading...',
+          imgURL: 'default_image_url',
+          email: '',
+          address: '',
+          phoneNo: '',
+        );
+
     if (userData != null) {
       setState(() {
         _user = userData;
@@ -40,6 +42,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
       });
     }
   }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  // Future<void> _loadUserData() async {
+  //   final User user = _auth.currentUser!;
+  //   final UserModel? userData = await _firestoreService.getUserData(user.uid);
+  //   if (userData != null) {
+  //     setState(() {
+  //       _user = userData;
+  //       _nameController.text = _user.name;
+  //       _emailController.text = _user.email;
+  //       _phoneNoController.text = _user.phoneNo;
+  //       _addressController.text = _user.address;
+  //     });
+  //   }
+  // }
 
   Future<void> _updateUserData() async {
     final String newName = _nameController.text.trim();
@@ -219,8 +241,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 height: 150,
                                                 fit: BoxFit.cover,
                                               )
-                                            : Image.asset(
-                                                'assets/images/user.png',
+                                            : Image.network(
+                                                'https://firebasestorage.googleapis.com/v0/b/campbelldecor-c2d1f.appspot.com/o/Users%2Fuser.png?alt=media&token=af8768f7-68e4-4961-892f-400eee8bae5d',
                                                 width: 150,
                                                 height: 150,
                                                 fit: BoxFit.cover,
