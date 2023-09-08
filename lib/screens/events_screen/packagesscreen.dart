@@ -197,8 +197,7 @@ class _PackageScreenState extends State<PackageScreen> {
   void applyFilters() {
     setState(() {
       // This function will be called when the filter screen is closed.
-      // Update your filter criteria here.
-      // For example, you can access _currentFilter and apply the filters to your data.
+      //  filter criteria.
     });
   }
 }
