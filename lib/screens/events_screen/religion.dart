@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../../reusable/reusable_methods.dart';
+import '../../utils/color_util.dart';
 
 class ReligionSelectScreen extends StatefulWidget {
   @override
@@ -20,6 +21,15 @@ class _ReligionSelectScreenState extends State<ReligionSelectScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Religions'),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              hexStringtoColor("CB2893"),
+              hexStringtoColor("9546C4"),
+              hexStringtoColor("5E61F4")
+            ], begin: Alignment.bottomRight, end: Alignment.topLeft),
+          ),
+        ),
       ),
       body: Column(
         children: [
@@ -93,13 +103,13 @@ class _ReligionSelectScreenState extends State<ReligionSelectScreen> {
                 //   }
                 // },
                 onPressed: () {
-                  showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (BuildContext context) {
-                      return PageLoader();
-                    },
-                  );
+                  // showDialog(
+                  //   context: context,
+                  //   barrierDismissible: false,
+                  //   builder: (BuildContext context) {
+                  //     // return PageLoader();
+                  //   },
+                  // );
                   Future.delayed(Duration(seconds: 2), () {
                     // Navigate to next page
                     Navigation(context, CalendarScreen());

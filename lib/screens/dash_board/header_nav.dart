@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
+import '../../utils/color_util.dart';
 import 'AboutUs.dart';
 import 'ToDoList.dart';
 import 'account_details.dart';
@@ -44,9 +45,17 @@ class _MyDrawerState extends State<MyDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: ListView(
+      child: Wrap(
+        runSpacing: 14,
         children: [
           UserAccountsDrawerHeader(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [
+                hexStringtoColor("CB2893"),
+                hexStringtoColor("9546C4"),
+                hexStringtoColor("5E61F4")
+              ], begin: Alignment.bottomRight, end: Alignment.topLeft),
+            ),
             accountName: Text(name),
             accountEmail: Text(email!),
             currentAccountPicture: CircleAvatar(

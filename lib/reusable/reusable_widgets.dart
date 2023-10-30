@@ -9,6 +9,22 @@ import '../screens/bookings_screens/cart_screen.dart';
 import '../screens/events_screen/eventscreen.dart';
 import '../screens/dash_board/homescreen.dart';
 import '../screens/searchbar/searchbar_widget.dart';
+import '../utils/color_util.dart';
+
+// Widget customAppBarw(String title) {
+//   return AppBar(
+//     title: Text(title),
+//     flexibleSpace: Container(
+//       decoration: BoxDecoration(
+//         gradient: LinearGradient(colors: [
+//           hexStringtoColor("CB2893"),
+//           hexStringtoColor("9546C4"),
+//           hexStringtoColor("5E61F4")
+//         ], begin: Alignment.bottomRight, end: Alignment.topLeft),
+//       ),
+//     ),
+//   );
+// }
 
 Container logoWidget(String imageName) {
   return Container(
@@ -313,44 +329,62 @@ Widget reusePaymentContainer(
 //     ],
 //   );
 // }
+/**************************/
 
 Widget bottom_Bar(BuildContext context) {
-  return Theme(
-    data: Theme.of(context).copyWith(
-      canvasColor: Colors.white,
-      primaryColor: Colors.purple, // Selected icon color
-      textTheme: Theme.of(context).textTheme.copyWith(
-            bodySmall:
-                const TextStyle(color: Colors.grey), // Unselected icon color
-          ),
+  return Container(
+    decoration: BoxDecoration(
+      gradient: LinearGradient(colors: [
+        hexStringtoColor("CB2893"),
+        hexStringtoColor("9546C4"),
+        hexStringtoColor("5E61F4")
+      ], begin: Alignment.bottomRight, end: Alignment.topLeft),
     ),
     child: CupertinoTabBar(
+        backgroundColor: Colors.transparent,
+        activeColor: Colors.white,
+        inactiveColor: Colors.black,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.home),
+            icon: Padding(
+              padding: EdgeInsets.all(4.0),
+              child: Icon(CupertinoIcons.home),
+            ),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.chat_bubble_text_fill),
+            icon: Padding(
+              padding: EdgeInsets.all(4.0),
+              child: Icon(CupertinoIcons.chat_bubble_text_fill),
+            ),
             label: 'Chat',
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.add),
+            icon: Padding(
+              padding: EdgeInsets.all(4.0),
+              child: Icon(CupertinoIcons.add),
+            ),
             label: 'Add',
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.cart_badge_plus),
-            label: 'Add',
+            icon: Padding(
+              padding: EdgeInsets.all(4.0),
+              child: Icon(CupertinoIcons.cart_badge_plus),
+            ),
+            label: 'Cart',
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.search),
+            icon: Padding(
+              padding: EdgeInsets.all(4.0),
+              child: Icon(CupertinoIcons.search),
+            ),
             label: 'Search',
           ),
         ],
         // currentIndex: _selectedIndex,
         onTap: (index) {
           if (index == 0) {
-            BottomNavigation(context, HomeScreen());
+            BottomNavigationForHome(context, HomeScreen());
           } else if (index == 1) {
             BottomNavigation(context, UserChatScreen());
           } else if (index == 2) {
@@ -359,8 +393,6 @@ Widget bottom_Bar(BuildContext context) {
             BottomNavigation(context, AddToCartScreen());
           } else if (index == 4) {
             BottomNavigation(context, SearchScreen());
-          } else {
-            // _navigateToSearch(context);
           }
         }),
   );

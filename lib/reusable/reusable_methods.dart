@@ -65,15 +65,54 @@ Future<void> Navigation(BuildContext context, dynamic function) async {
   // Get.to(() => function(), transition: Transition.zoom);
 }
 
+Future<void> NavigationWithoutAnimation(
+    BuildContext context, dynamic function) async {
+  Navigator.push(context, MaterialPageRoute(builder: (context) => function));
+  // Navigator.push(
+  //   context,
+  //   PageTransition(
+  //     type: PageTransitionType.rightToLeft,
+  //     child: function,
+  //     duration: Duration(milliseconds: 600),
+  //     reverseDuration: Duration(milliseconds: 500),
+  //   ),
+  //   // PageRouteBuilder(
+  //   //   pageBuilder: (context, animation, secondaryAnimation) {
+  //   //     return function;
+  //   //   },
+  //   //   transitionsBuilder: (context, animation, secondaryAnimation, child) {
+  //   //     const begin = Offset(0.0, 1.0);
+  //   //     const end = Offset.zero;
+  //   //     const curve = Curves.easeInOut;
+  //   //     const duration = Duration(milliseconds: 500);
+  //   //
+  //   //     var offsetAnimation = animation.drive(
+  //   //       Tween(begin: begin, end: end).chain(
+  //   //         CurveTween(curve: curve),
+  //   //       ),
+  //   //     );
+  //   //
+  //   //     return SlideTransition(
+  //   //       position: offsetAnimation,
+  //   //       child: child,
+  //   //     );
+  //   //   },
+  //   // ),
+  // );
+
+  // Get.to(() => function(), transition: Transition.zoom);
+}
+
 Future<void> BottomNavigation(BuildContext context, dynamic function) async {
   Navigator.push(
     context,
     PageTransition(
       type: PageTransitionType.bottomToTop,
       child: function,
-      duration: Duration(milliseconds: 500),
-      reverseDuration: Duration(milliseconds: 500),
+      duration: Duration(milliseconds: 100),
+      reverseDuration: Duration(milliseconds: 100),
     ),
+
     // PageRouteBuilder(
     //   pageBuilder: (context, animation, secondaryAnimation) {
     //     return function;
@@ -97,6 +136,36 @@ Future<void> BottomNavigation(BuildContext context, dynamic function) async {
     //   },
     // ),
   );
+
+  // Get.to(() => function(), transition: Transition.zoom);
+}
+
+Future<void> BottomNavigationForHome(
+    BuildContext context, dynamic function) async {
+  NavigationWithoutAnimation(context, function);
+
+  // PageRouteBuilder(
+  //   pageBuilder: (context, animation, secondaryAnimation) {
+  //     return function;
+  //   },
+  //   transitionsBuilder: (context, animation, secondaryAnimation, child) {
+  //     const begin = Offset(0.0, 1.0);
+  //     const end = Offset.zero;
+  //     const curve = Curves.easeInOut;
+  //     const duration = Duration(milliseconds: 500);
+  //
+  //     var offsetAnimation = animation.drive(
+  //       Tween(begin: begin, end: end).chain(
+  //         CurveTween(curve: curve),
+  //       ),
+  //     );
+  //
+  //     return SlideTransition(
+  //       position: offsetAnimation,
+  //       child: child,
+  //     );
+  //   },
+  // ),
 
   // Get.to(() => function(), transition: Transition.zoom);
 }
