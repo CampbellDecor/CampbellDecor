@@ -1,3 +1,4 @@
+import 'package:campbelldecor/screens/dash_board/homescreen.dart';
 import 'package:campbelldecor/screens/notifications/notification_setup.dart';
 import 'package:campbelldecor/screens/notifications/notificationscreen.dart';
 import 'package:campbelldecor/screens/theme/theme_colors.dart';
@@ -43,11 +44,11 @@ class _MyAppState extends State<MyApp> {
             final themeManager = Provider.of<ThemeManager>(context);
             return MaterialApp(
               debugShowCheckedModeBanner: false,
-              title: 'Flutter Demo',
+              title: 'Campbell',
               theme: ThemeClass.lightTheme,
               darkTheme: ThemeClass.darkTheme,
               themeMode: themeManager.themeMode,
-              home: SignInScreen(),
+              home: HomeScreen(),
               navigatorKey: navigatorKey,
               routes: {
                 NotificationScreen.route: (context) => NotificationScreen(),

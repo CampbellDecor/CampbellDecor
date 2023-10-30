@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../reusable/reusable_methods.dart';
+import '../../reusable/reusable_widgets.dart';
 
 final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -19,6 +20,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   bool _isEditing = false;
+  late String userURL;
+
   Future<void> _loadUserData() async {
     final User user = _auth.currentUser!;
     final UserModel? userData = await _firestoreService.getUserData(user.uid);
@@ -26,7 +29,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         UserModel(
           id: '',
           name: 'Loading...',
-          imgURL: 'default_image_url',
+          imgURL:
+              'https://firebasestorage.googleapis.com/v0/b/campbelldecor-c2d1f.appspot.com/o/Users%2Fuser.png?alt=media&token=af8768f7-68e4-4961-892f-400eee8bae5d',
           email: '',
           address: '',
           phoneNo: '',
@@ -91,8 +95,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       padding: EdgeInsets.all(8.0),
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
-        borderRadius:
-            BorderRadius.circular(40.0), // Adjust the radius as needed
+        borderRadius: BorderRadius.circular(40.0),
       ),
       content: Center(
           child: Padding(
@@ -103,15 +106,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
               color: Colors.black, fontSize: 14, fontWeight: FontWeight.bold),
         ),
       )),
-      duration:
-          Duration(seconds: 2), // Duration for which the SnackBar is visible
+      duration: Duration(seconds: 2),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
   Widget build(BuildContext context) {
-    String userURL = _user.imgURL;
+    setState(() {
+      userURL = _user.imgURL;
+    });
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -223,42 +227,52 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 Stack(
                                   alignment: Alignment.center,
                                   children: [
-                                    Container(
-                                      width: 120,
-                                      height: 120,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                          color: Colors.blueGrey,
-                                          width: 2.0,
-                                        ),
-                                      ),
-                                      child: ClipOval(
-                                        child: userURL != null
-                                            ? Image.network(
-                                                userURL,
-                                                width: 150,
-                                                height: 150,
-                                                fit: BoxFit.cover,
-                                              )
-                                            : Image.network(
-                                                'https://firebasestorage.googleapis.com/v0/b/campbelldecor-c2d1f.appspot.com/o/Users%2Fuser.png?alt=media&token=af8768f7-68e4-4961-892f-400eee8bae5d',
-                                                width: 150,
-                                                height: 150,
-                                                fit: BoxFit.cover,
-                                              ),
-                                      ),
-                                    ),
+                                    // Container(
+                                    //   width: 120,
+                                    //   height: 120,
+                                    //   decoration: BoxDecoration(
+                                    //     shape: BoxShape.circle,
+                                    //     border: Border.all(
+                                    //       color: Colors.blueGrey,
+                                    //       width: 2.0,
+                                    //     ),
+                                    //   ),
+                                    //   child: ClipOval(
+                                    //     child: userURL != null
+                                    //         ? Image.network(
+                                    //             userURL,
+                                    //             width: 150,
+                                    //             height: 150,
+                                    //             fit: BoxFit.cover,
+                                    //           )
+                                    //         : Image.network(
+                                    //             'https://firebasestorage.googleapis.com/v0/b/campbelldecor-c2d1f.appspot.com/o/Users%2Fuser.png?alt=media&token=af8768f7-68e4-4961-892f-400eee8bae5d',
+                                    //             width: 150,
+                                    //             height: 150,
+                                    //             fit: BoxFit.cover,
+                                    //           ),
+                                    //   ),
+                                    // ),
+                                    Profile(userURL),
                                     Positioned(
                                       bottom: -10,
                                       right: -10,
                                       child: IconButton(
                                         icon: Icon(Icons.camera_alt_outlined),
                                         onPressed: () {
-                                          userImagePicker(context)
-                                              .then((value) {
-                                            Navigation(
-                                                context, ProfileScreen());
+                                          userImagePicker(context).then((_) {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ProfileScreen()));
+                                            _showFeedbackMessage(
+                                                'Profile image updated successfully!');
+                                          }).catchError((error) {
+                                            print(
+                                                'Error updating profile image: $error');
+                                            _showFeedbackMessage(
+                                                'Failed to update profile image');
                                           });
                                         },
                                       ),

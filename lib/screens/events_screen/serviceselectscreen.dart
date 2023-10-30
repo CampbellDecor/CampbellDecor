@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../utils/color_util.dart';
+
 class ServiceSelectScreen extends StatefulWidget {
   final String data;
   final String id;
@@ -31,9 +33,14 @@ class _ServiceSelectScreenState extends State<ServiceSelectScreen> {
       appBar: AppBar(
         title: const Text(
           "Select Services",
-          style: TextStyle(
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
+        ),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              hexStringtoColor("CB2893"),
+              hexStringtoColor("9546C4"),
+              hexStringtoColor("5E61F4")
+            ], begin: Alignment.bottomRight, end: Alignment.topLeft),
           ),
         ),
       ),

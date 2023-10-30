@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../reusable/reusable_widgets.dart';
+import '../../utils/color_util.dart';
 import '../bookings_screens/date_view.dart';
 import '../bookings_screens/show_rating.dart';
 import 'header_nav.dart';
@@ -52,7 +53,16 @@ class _HomeScreenState extends State<HomeScreen> {
       drawer: MyDrawer(),
       appBar: AppBar(
         title: const Text('Campbell Decor'),
-        backgroundColor: Colors.purple[700],
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              hexStringtoColor("CB2893"),
+              hexStringtoColor("9546C4"),
+              hexStringtoColor("5E61F4")
+            ], begin: Alignment.bottomRight, end: Alignment.topLeft),
+          ),
+        ),
+        // backgroundColor: Colors.purple[700],
         /* Dark mood and Light mode button */
         actions: [
           Switch(
