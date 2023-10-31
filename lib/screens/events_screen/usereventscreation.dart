@@ -1,16 +1,11 @@
 import 'dart:io';
 
-import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../reusable/reusable_methods.dart';
 import '../../reusable/reusable_widgets.dart';
-import '../../utils/color_util.dart';
-import '../notifications/welcomeNotification.dart';
 
 class UserEventsCreationScreen extends StatefulWidget {
   const UserEventsCreationScreen({super.key});
