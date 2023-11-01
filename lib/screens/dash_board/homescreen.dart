@@ -10,6 +10,7 @@ import '../../reusable/reusable_widgets.dart';
 import '../../utils/color_util.dart';
 import '../bookings_screens/date_view.dart';
 import '../bookings_screens/show_rating.dart';
+import '../events_screen/packagesscreen.dart';
 import 'header_nav.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -28,16 +29,16 @@ class _HomeScreenState extends State<HomeScreen> {
     notificationServices.firebaseInit(context);
     notificationServices.setupIneractMessage(context);
     notificationServices.getDeviceToken().then((value) {
-      print('device Token');
-      print('Device Token $value');
+      // print('device Token');
+      // print('Device Token $value');
     });
   }
 
-  @override
-  void _openDrawer(BuildContext context) {
-    final themeManager = Provider.of<ThemeManager>(context);
-    Scaffold.of(context).openDrawer();
-  }
+  // @override
+  // void _openDrawer(BuildContext context) {
+  //   final themeManager = Provider.of<ThemeManager>(context);
+  //   Scaffold.of(context).openDrawer();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +63,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ], begin: Alignment.bottomRight, end: Alignment.topLeft),
           ),
         ),
-        // backgroundColor: Colors.purple[700],
         /* Dark mood and Light mode button */
         actions: [
           Switch(
@@ -136,12 +136,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                       width: 350,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(20),
-                                        // image: DecorationImage(
-                                        //   image: NetworkImage(
-                                        //     documentSnapshot['imgURL'],
-                                        //   ),
-                                        //   fit: BoxFit.cover,
-                                        // ),
+                                        image: DecorationImage(
+                                          image: NetworkImage(
+                                            documentSnapshot['imgURL'],
+                                          ),
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                       child: Stack(
                                         children: [
@@ -174,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       'packageName'],
                                                   style: const TextStyle(
                                                     fontWeight: FontWeight.bold,
-                                                    fontSize: 28,
+                                                    fontSize: 20,
                                                     color: Colors.white,
                                                   ),
                                                 ),
@@ -252,7 +252,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
-                      primary: Colors.blue,
+                      foregroundColor: Colors.blue,
                       side: BorderSide(color: Colors.blue),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(50),
@@ -266,10 +266,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontSize: 18),
                     ),
                     onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => MyPackage()),
-                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PackageScreen()),
+                      );
                     },
                   ),
                   const SizedBox(height: 20),
@@ -341,7 +342,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   documentSnapshot['name'],
                                                   style: const TextStyle(
                                                     fontWeight: FontWeight.bold,
-                                                    fontSize: 28,
+                                                    fontSize: 20,
                                                     color: Colors.white,
                                                   ),
                                                 ),
@@ -364,7 +365,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
-                      primary: Colors.blue,
+                      foregroundColor: Colors.blue,
                       side: BorderSide(color: Colors.blue),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(50),
@@ -449,7 +450,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   documentSnapshot['name'],
                                                   style: const TextStyle(
                                                     fontWeight: FontWeight.bold,
-                                                    fontSize: 28,
+                                                    fontSize: 20,
                                                     color: Colors.white,
                                                   ),
                                                 ),
@@ -473,7 +474,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 10),
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
-                      primary: Colors.blue,
+                      foregroundColor: Colors.blue,
                       side: BorderSide(color: Colors.blue),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(50),

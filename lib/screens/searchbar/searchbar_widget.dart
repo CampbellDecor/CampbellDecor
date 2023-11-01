@@ -132,9 +132,10 @@
 // }
 /****************************************************/
 
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../../utils/color_util.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -182,6 +183,15 @@ class _SearchScreenState extends State<SearchScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Search'),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              hexStringtoColor("CB2893"),
+              hexStringtoColor("9546C4"),
+              hexStringtoColor("5E61F4")
+            ], begin: Alignment.bottomRight, end: Alignment.topLeft),
+          ),
+        ),
         actions: [
           // Add a filter dropdown button
           DropdownButton<String>(
@@ -194,7 +204,8 @@ class _SearchScreenState extends State<SearchScreen> {
               // Perform a new search based on the selected filter
               _performSearch(_searchController.text);
             },
-            items: ['All', 'Events', 'Services', 'Packages'].map<DropdownMenuItem<String>>((String value) {
+            items: ['All', 'Events', 'Services', 'Packages']
+                .map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Text(value),
@@ -221,7 +232,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: searchResults.docs.map((doc) {
                     Map<String, dynamic> data =
-                    doc.data() as Map<String, dynamic>;
+                        doc.data() as Map<String, dynamic>;
 
                     return ListTile(
                       title: Text(data['name'] ?? 'Title not found'),
@@ -244,4 +255,3 @@ List<CollectionReference> collectionReferences = [
   FirebaseFirestore.instance.collection('events'),
   FirebaseFirestore.instance.collection('services'),
 ];
-

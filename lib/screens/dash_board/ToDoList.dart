@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../utils/color_util.dart';
+
 final String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
 final User? user = FirebaseAuth.instance.currentUser;
 
@@ -43,6 +45,15 @@ class TodoListScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('ToDo Page'),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              hexStringtoColor("CB2893"),
+              hexStringtoColor("9546C4"),
+              hexStringtoColor("5E61F4")
+            ], begin: Alignment.bottomRight, end: Alignment.topLeft),
+          ),
+        ),
       ),
       body: Column(
         children: [

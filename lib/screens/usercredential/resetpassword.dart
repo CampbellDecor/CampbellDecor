@@ -25,7 +25,15 @@ class _ResetScreenState extends State<ResetScreen> {
         elevation: 0,
         title: const Text(
           "Forget Password",
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        ),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              hexStringtoColor("CB2893"),
+              hexStringtoColor("9546C4"),
+              hexStringtoColor("5E61F4")
+            ], begin: Alignment.bottomRight, end: Alignment.topLeft),
+          ),
         ),
       ),
       body: Container(

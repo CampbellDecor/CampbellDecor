@@ -229,33 +229,39 @@ Widget reusePaymentContainer(
           width: 360,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            color: Color.fromARGB(50, 200, 20, 205),
+            gradient: LinearGradient(colors: [
+              hexStringtoColor("5Ed1F4"),
+              hexStringtoColor("CB28ee"),
+              hexStringtoColor("9546d4"),
+            ], begin: Alignment.bottomRight, end: Alignment.topLeft),
           ),
           child: Row(
             children: [
               Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                      padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
                       child: Text(
                         "Price Amount : Rs.${price.toStringAsFixed(2)}",
-                        style: const TextStyle(
-                          fontSize: 14,
-                        ),
+                        style:
+                            const TextStyle(fontSize: 14, color: Colors.white),
                       )),
                   Padding(
                       padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                       child: Text(
                         "Bond Money : Rs.${bondmoney.toStringAsFixed(2)}",
-                        style: const TextStyle(fontSize: 14),
+                        style:
+                            const TextStyle(fontSize: 14, color: Colors.white),
                       )),
                   Padding(
                       padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                       child: Text(
                         "Total Amount : Rs.${total.toStringAsFixed(2)}",
                         style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       )),
                 ],
               ),

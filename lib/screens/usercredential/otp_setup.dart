@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../utils/color_util.dart';
+
 class OTPScreen extends StatefulWidget {
   const OTPScreen({super.key});
 
@@ -11,7 +13,7 @@ class OTPScreen extends StatefulWidget {
 class _OTPScreenState extends State<OTPScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String verificationId = '';
-  String num = '+940758923831';
+  String num = '+940773059185';
   String otp = '';
   bool isCodeSent = false;
 
@@ -77,6 +79,15 @@ class _OTPScreenState extends State<OTPScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('OTP Verification'),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              hexStringtoColor("CB2893"),
+              hexStringtoColor("9546C4"),
+              hexStringtoColor("5E61F4")
+            ], begin: Alignment.bottomRight, end: Alignment.topLeft),
+          ),
+        ),
       ),
       body: Center(
         child: Padding(
