@@ -61,71 +61,87 @@ class EventsScreen extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   elevation: 10,
-                                  child: Container(
-                                    height: 200,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      image: DecorationImage(
-                                        image: NetworkImage(
-                                          documentSnapshot['imgURL'],
-                                        ),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                    child: Stack(
-                                      children: [
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            color:
-                                                Colors.black.withOpacity(0.2),
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      if (documentSnapshot['name'] ==
+                                          'Wedding') {
+                                        Navigation(
+                                            context, ReligionSelectScreen());
+                                      } else {
+                                        SharedPreferences preferences =
+                                            await SharedPreferences
+                                                .getInstance();
+                                        preferences.setString(
+                                            'event', documentSnapshot['name']);
+                                        Navigation(context, CalendarScreen());
+                                      }
+                                    },
+                                    child: Container(
+                                      height: 200,
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        image: DecorationImage(
+                                          image: NetworkImage(
+                                            documentSnapshot['imgURL'],
                                           ),
+                                          fit: BoxFit.cover,
                                         ),
-                                        Align(
-                                          alignment: Alignment.center,
-                                          child: ListTile(
-                                            //----------------------Text Container background ----------------------//
+                                      ),
+                                      child: Stack(
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              color:
+                                                  Colors.black.withOpacity(0.2),
+                                            ),
+                                          ),
+                                          Align(
+                                            alignment: Alignment.center,
+                                            child: ListTile(
+                                              //----------------------Text Container background ----------------------//
 
-                                            title: Container(
-                                              height: 70,
-                                              width: double.infinity,
-                                              alignment: Alignment.center,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                                color: Colors.black
-                                                    .withOpacity(0.5),
-                                              ),
-                                              //----------------------Text Editings----------------------//
-                                              child: Text(
-                                                documentSnapshot['name'],
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 32,
-                                                  color: Colors.white,
+                                              title: Container(
+                                                height: 70,
+                                                width: double.infinity,
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  color: Colors.black
+                                                      .withOpacity(0.5),
+                                                ),
+                                                //----------------------Text Editings----------------------//
+                                                child: Text(
+                                                  documentSnapshot['name'],
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 32,
+                                                    color: Colors.white,
+                                                  ),
                                                 ),
                                               ),
+                                              // onTap: () async {
+                                              //   if (documentSnapshot['name'] ==
+                                              //       'Wedding') {
+                                              //     Navigation(context,
+                                              //         ReligionSelectScreen());
+                                              //   } else {
+                                              //     SharedPreferences preferences =
+                                              //         await SharedPreferences
+                                              //             .getInstance();
+                                              //     preferences.setString('event',
+                                              //         documentSnapshot['name']);
+                                              //     Navigation(
+                                              //         context, CalendarScreen());
+                                              //   }
+                                              // },
                                             ),
-                                            onTap: () async {
-                                              if (documentSnapshot['name'] ==
-                                                  'Wedding') {
-                                                Navigation(context,
-                                                    ReligionSelectScreen());
-                                              } else {
-                                                SharedPreferences preferences =
-                                                    await SharedPreferences
-                                                        .getInstance();
-                                                preferences.setString('event',
-                                                    documentSnapshot['name']);
-                                                Navigation(
-                                                    context, CalendarScreen());
-                                              }
-                                            },
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),

@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'dart:convert';
 import 'package:campbelldecor/reusable/reusable_methods.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +13,7 @@ class ServiceSelectScreen extends StatefulWidget {
   final String id;
   Map<String, dynamic> map;
   ServiceSelectScreen(
-      {required this.data, required this.map, required this.id});
+      {super.key, required this.data, required this.map, required this.id});
   @override
   State<ServiceSelectScreen> createState() => _ServiceSelectScreenState();
 }
@@ -26,8 +28,8 @@ class _ServiceSelectScreenState extends State<ServiceSelectScreen> {
   TextEditingController priceController = TextEditingController(text: '0');
   @override
   Widget build(BuildContext context) {
-    print('Amount is $amount');
-    print(totalPrice);
+    // print('Amount is $amount');
+    // print(totalPrice);
     return Scaffold(
       extendBodyBehindAppBar: false,
       appBar: AppBar(

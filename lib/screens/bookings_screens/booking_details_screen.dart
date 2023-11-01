@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../reusable/reusable_methods.dart';
+import '../../utils/color_util.dart';
 
 class BookingScreen extends StatelessWidget {
   @override
@@ -12,6 +13,15 @@ class BookingScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Bookings'),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              hexStringtoColor("CB2893"),
+              hexStringtoColor("9546C4"),
+              hexStringtoColor("5E61F4")
+            ], begin: Alignment.bottomRight, end: Alignment.topLeft),
+          ),
+        ),
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance

@@ -1,10 +1,13 @@
 import 'package:campbelldecor/reusable/reusable_methods.dart';
+import 'package:campbelldecor/screens/dash_board/homescreen.dart';
 import 'package:campbelldecor/screens/payment_screens/checkoutscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../utils/color_util.dart';
 
 class AddToCartScreen extends StatefulWidget {
   AddToCartScreen({super.key});
@@ -25,8 +28,9 @@ class _AddToCartScreenState extends State<AddToCartScreen> {
   _resetAndNavigateBack() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('amount');
-    await prefs.remove('amount');
-    Navigator.pop(context);
+    await prefs.remove('events');
+    await prefs.remove('package');
+    await BottomNavigationForHome(context, HomeScreen());
   }
 
   @override
@@ -38,6 +42,15 @@ class _AddToCartScreenState extends State<AddToCartScreen> {
           onPressed: _resetAndNavigateBack,
         ),
         title: const Text('My Carts'),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              hexStringtoColor("CB2893"),
+              hexStringtoColor("9546C4"),
+              hexStringtoColor("5E61F4")
+            ], begin: Alignment.bottomRight, end: Alignment.topLeft),
+          ),
+        ),
       ),
       body: Column(
         children: [

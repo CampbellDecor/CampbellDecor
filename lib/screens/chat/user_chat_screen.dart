@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../utils/color_util.dart';
+
 class UserChatScreen extends StatefulWidget {
   UserChatScreen({super.key});
   @override
@@ -60,6 +62,15 @@ class _UserChatScreenState extends State<UserChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('User Chat'),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              hexStringtoColor("CB2893"),
+              hexStringtoColor("9546C4"),
+              hexStringtoColor("5E61F4")
+            ], begin: Alignment.bottomRight, end: Alignment.topLeft),
+          ),
+        ),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.logout),

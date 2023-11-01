@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../../reusable/reusable_widgets.dart';
+import '../../utils/color_util.dart';
 
 class CheckOutScreen extends StatefulWidget {
   String id;
@@ -17,12 +18,18 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
       appBar: AppBar(
         title: const Row(mainAxisAlignment: MainAxisAlignment.start, children: [
           Text(
-            "CheckOut",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
+            "Checkout",
           ),
         ]),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              hexStringtoColor("CB2893"),
+              hexStringtoColor("9546C4"),
+              hexStringtoColor("5E61F4")
+            ], begin: Alignment.bottomRight, end: Alignment.topLeft),
+          ),
+        ),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -32,7 +39,6 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
               stream: FirebaseFirestore.instance
                   .collection('bookings')
                   .doc(widget.id)
-                  // .doc('')
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../reusable/reusable_widgets.dart';
+import '../../utils/color_util.dart';
 
 class AboutUs extends StatefulWidget {
   @override
@@ -14,6 +15,15 @@ class _AboutUsState extends State<AboutUs> {
     return Scaffold(
         appBar: AppBar(
           title: new Text('AboutUs'),
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [
+                hexStringtoColor("CB2893"),
+                hexStringtoColor("9546C4"),
+                hexStringtoColor("5E61F4")
+              ], begin: Alignment.bottomRight, end: Alignment.topLeft),
+            ),
+          ),
         ),
         bottomNavigationBar: bottom_Bar(context),
         body: SingleChildScrollView(

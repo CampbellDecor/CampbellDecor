@@ -9,6 +9,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../utils/color_util.dart';
+
 class ServicesScreen extends StatefulWidget {
   final DateTime eventDate;
   ServicesScreen({required this.eventDate});
@@ -25,6 +27,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
   Map<String, dynamic> myMap = {};
   double? amount;
   String? event;
+  String? package;
   final uid = FirebaseAuth.instance.currentUser!.uid;
   _resetAndNavigateBack() async {
     Navigator.pop(context);
@@ -41,6 +44,15 @@ class _ServicesScreenState extends State<ServicesScreen> {
           onPressed: _resetAndNavigateBack,
         ),
         title: Text('Our Services'),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              hexStringtoColor("CB2893"),
+              hexStringtoColor("9546C4"),
+              hexStringtoColor("5E61F4")
+            ], begin: Alignment.bottomRight, end: Alignment.topLeft),
+          ),
+        ),
       ),
       body: Column(
         children: [
@@ -148,12 +160,29 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       });
                       amount = await getDoubleData('amount');
                       event = await getData('event');
+                      package = await getData('package');
                       /*---------------------insert Add to cart Collection---------------------*/
                       if (amount != null && amount! > 0) {
                         if (event != null) {
                           await insertData(
                                   'bookings',
                                   event!,
+                                  'cart',
+                                  uid,
+                                  DateTime.now(),
+                                  widget.eventDate,
+                                  amount!,
+                                  myMap)
+                              .then((value) async {
+                            Navigation(context, AddToCartScreen())
+                                .then((value) {
+                              clearAllSharedPreferenceData();
+                            });
+                          });
+                        } else if (package != null) {
+                          await insertData(
+                                  'bookings',
+                                  package!,
                                   'cart',
                                   uid,
                                   DateTime.now(),
@@ -211,12 +240,37 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       });
                       event = await getData('event');
                       amount = await getDoubleData('amount');
+                      package = await getData('package');
+
                       /*---------------------insert Booking Collection---------------------*/
                       if (amount != null && amount! > 0) {
                         if (event != null) {
                           await insertData(
                                   'bookings',
                                   event!,
+                                  'cart',
+                                  uid,
+                                  DateTime.now(),
+                                  widget.eventDate,
+                                  amount!,
+                                  myMap)
+                              .then((value) async {
+                            final _book = FirebaseFirestore.instance
+                                .collection("bookings")
+                                .where('status', isEqualTo: 'cart')
+                                .where('eventDate', isEqualTo: widget.eventDate)
+                                .where('userID',
+                                    isEqualTo:
+                                        FirebaseAuth.instance.currentUser?.uid);
+                            DocumentSnapshot documentSnapshot =
+                                (await _book.get()).docs[0];
+                            Navigation(context,
+                                CheckOutScreen(id: documentSnapshot.id));
+                          });
+                        } else if (package != null) {
+                          await insertData(
+                                  'bookings',
+                                  package!,
                                   'cart',
                                   uid,
                                   DateTime.now(),

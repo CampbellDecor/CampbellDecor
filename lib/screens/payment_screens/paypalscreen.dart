@@ -2,6 +2,8 @@ import 'package:campbelldecor/reusable/reusable_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_paypal/flutter_paypal.dart';
 
+import '../../utils/color_util.dart';
+
 class PaypalPayScreen extends StatefulWidget {
   const PaypalPayScreen({super.key});
 
@@ -15,6 +17,15 @@ class _PaypalPayScreenState extends State<PaypalPayScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Payments through PayPal'),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              hexStringtoColor("CB2893"),
+              hexStringtoColor("9546C4"),
+              hexStringtoColor("5E61F4")
+            ], begin: Alignment.bottomRight, end: Alignment.topLeft),
+          ),
+        ),
       ),
       body: Center(
         child: ElevatedButton(

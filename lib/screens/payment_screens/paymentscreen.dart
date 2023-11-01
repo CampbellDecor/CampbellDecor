@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_paypal/flutter_paypal.dart';
 
+import '../../utils/color_util.dart';
+
 class PaymentScreen extends StatefulWidget {
   final double price;
   final String id;
@@ -45,6 +47,17 @@ class _PaymentScreenState extends State<PaymentScreen> {
     }
   }
 
+  Future<void> SaveUserAddress(String address) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('bookings')
+          .doc(widget.id)
+          .set({"address": address});
+    } catch (e) {
+      print('Error retrieving user address: $e');
+    }
+  }
+
   // Future<double?> getDoubleData() async {
   //   SharedPreferences prefs = await SharedPreferences.getInstance();
   //   amount = prefs.getDouble('amount')!;
@@ -56,6 +69,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Pay'),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              hexStringtoColor("CB2893"),
+              hexStringtoColor("9546C4"),
+              hexStringtoColor("5E61F4")
+            ], begin: Alignment.bottomRight, end: Alignment.topLeft),
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -71,15 +93,21 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     width: 350,
                     height: 150,
                     decoration: BoxDecoration(
-                      color: Color.fromARGB(50, 260, 250, 254),
+                      gradient: LinearGradient(colors: [
+                        hexStringtoColor("5Ed1F4"),
+                        hexStringtoColor("CB28ee"),
+                        hexStringtoColor("9546d4"),
+                      ], begin: Alignment.bottomRight, end: Alignment.topLeft),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Padding(
-                      padding: EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(18.0),
                       child: Text(
                         'Billing Address : $userAddress',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       ),
                     ),
                   ),
@@ -115,26 +143,64 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     width: 350,
                     height: 150,
                     decoration: BoxDecoration(
-                      color: Color.fromARGB(50, 260, 25, 254),
+                      gradient: LinearGradient(colors: [
+                        hexStringtoColor("5Ed1F4"),
+                        hexStringtoColor("CB28ee"),
+                        hexStringtoColor("9546d4"),
+                      ], begin: Alignment.bottomRight, end: Alignment.topLeft),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Padding(
-                      padding: EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(18.0),
                       child: Text(
-                        'Total Amount : ${widget.price}',
+                        'Billing Address : $userAddress',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       ),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 130),
+              SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 350,
+                    height: 150,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(colors: [
+                        hexStringtoColor("5Ed1F4"),
+                        hexStringtoColor("CB28ee"),
+                        hexStringtoColor("9546d4"),
+                      ], begin: Alignment.bottomRight, end: Alignment.topLeft),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(18.0),
+                      child: Text(
+                        'Total Amount : ${widget.price}',
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16),
               Container(
                 width: 350,
                 height: 200,
                 decoration: BoxDecoration(
-                  color: Colors.red[100],
+                  gradient: LinearGradient(colors: [
+                    hexStringtoColor("5Ed1F4"),
+                    hexStringtoColor("CB28ee"),
+                    hexStringtoColor("9546d4"),
+                  ], begin: Alignment.bottomRight, end: Alignment.topLeft),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Padding(
@@ -146,7 +212,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         children: [
                           Text('Select Your Payments Method :',
                               style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold))
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold))
                         ],
                       ),
                       Container(
