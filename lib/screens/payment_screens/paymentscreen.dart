@@ -17,12 +17,15 @@ class PaymentScreen extends StatefulWidget {
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
+  final TextEditingController _addressController = TextEditingController();
   String? selectedPaymentMethod;
   String userAddress = '';
+  String userShippingAddress = '';
 
   @override
   void initState() {
     super.initState();
+    retrieveUserShippingAddress();
     retrieveUserAddress();
   }
 
@@ -47,12 +50,33 @@ class _PaymentScreenState extends State<PaymentScreen> {
     }
   }
 
-  Future<void> SaveUserAddress(String address) async {
+  Future<void> retrieveUserShippingAddress() async {
+    try {
+      CollectionReference collectionReference =
+          await FirebaseFirestore.instance.collection('bookings');
+      DocumentSnapshot documentSnapshot =
+          await collectionReference.doc(widget.id).get();
+      Map<String, dynamic> data =
+          documentSnapshot.data() as Map<String, dynamic>;
+
+      if (data.length > 0) {
+        setState(() {
+          userShippingAddress = data['address'];
+        });
+      } else {
+        print('User not found');
+      }
+    } catch (e) {
+      print('Error retrieving user address: $e');
+    }
+  }
+
+  Future<void> saveUserAddress(String address) async {
     try {
       await FirebaseFirestore.instance
           .collection('bookings')
           .doc(widget.id)
-          .set({"address": address});
+          .update({"address": address});
     } catch (e) {
       print('Error retrieving user address: $e');
     }
@@ -139,25 +163,95 @@ class _PaymentScreenState extends State<PaymentScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    width: 350,
-                    height: 150,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(colors: [
-                        hexStringtoColor("5Ed1F4"),
-                        hexStringtoColor("CB28ee"),
-                        hexStringtoColor("9546d4"),
-                      ], begin: Alignment.bottomRight, end: Alignment.topLeft),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(18.0),
-                      child: Text(
-                        'Billing Address : $userAddress',
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
+                  GestureDetector(
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              shadowColor: Colors.black,
+                              elevation: 8,
+                              icon: const Icon(
+                                Icons.edit,
+                                color: Colors.blue,
+                                size: 40,
+                              ),
+                              title: const Padding(
+                                padding: EdgeInsets.all(4.0),
+                                child: Padding(
+                                  padding: EdgeInsets.all(4.0),
+                                  child: Text(
+                                    "Shiping Address : ",
+                                  ),
+                                ),
+                              ),
+                              content: TextField(
+                                controller: _addressController,
+                                decoration: InputDecoration(
+                                  labelText: 'Shipping Address',
+                                  hintText: 'Enter your address',
+                                  prefixIcon: const Icon(Icons.house),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                        color: Colors.grey, width: 1.0),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                        color: Colors.blue, width: 2.0),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                ),
+                                style: const TextStyle(fontSize: 18.0),
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: const Text('OK',
+                                      style: TextStyle(fontSize: 16)),
+                                  onPressed: () async {
+                                    if (_addressController.text != null) {
+                                      final String newAddress =
+                                          _addressController.text.trim();
+                                      await saveUserAddress(newAddress);
+                                      Navigator.of(context).pop();
+                                    } else {
+                                      showInformationAlert(
+                                          context,
+                                          "Please Enter Your Shipping Address",
+                                          () {});
+                                    }
+                                  },
+                                ),
+                              ],
+                            );
+                          });
+                    },
+                    child: Container(
+                      width: 350,
+                      height: 150,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            colors: [
+                              hexStringtoColor("5Ed1F4"),
+                              hexStringtoColor("CB28ee"),
+                              hexStringtoColor("9546d4"),
+                            ],
+                            begin: Alignment.bottomRight,
+                            end: Alignment.topLeft),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(18.0),
+                        child: Text(
+                          'Shipping Address : $userShippingAddress',
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
                       ),
                     ),
                   ),
@@ -333,8 +427,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                       "Contact us for any questions on your order.",
                                   onSuccess: (Map params) async {
                                     sendNotification(widget.id);
-                                    // print("onSuccess: $params");
                                     _addBooking();
+                                    Navigation(context, HomeScreen());
                                   },
                                   onError: (error) {
                                     print("onError: $error");

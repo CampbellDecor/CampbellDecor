@@ -75,9 +75,9 @@ class _AddToCartScreenState extends State<AddToCartScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.0),
                             ),
-                            elevation: 3,
+                            elevation: 4,
                             margin: const EdgeInsets.fromLTRB(30, 10, 30, 10),
-                            color: const Color.fromARGB(100, 260, 250, 254),
+                            // colorr: Color.fromARGB(100, 260, 250, 254),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: CheckboxListTile(
