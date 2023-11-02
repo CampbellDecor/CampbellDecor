@@ -48,52 +48,52 @@ class _MyDrawerState extends State<MyDrawer> {
       child: Wrap(
         runSpacing: 14,
         children: [
-          UserAccountsDrawerHeader(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [
-                hexStringtoColor("CB2893"),
-                hexStringtoColor("9546C4"),
-                hexStringtoColor("5E61F4")
-              ], begin: Alignment.bottomRight, end: Alignment.topLeft),
-            ),
-            accountName: Text(name),
-            accountEmail: Text(email!),
-            currentAccountPicture: CircleAvatar(
-              backgroundColor: Colors.white,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Container(
-                    width: 120,
-                    height: 120,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Colors.blueGrey,
-                        width: 2.0,
-                      ),
-                    ),
-                    child: ClipOval(
-                      child: imgURL != null
-                          ? Image.network(
-                              imgURL,
-                              width: 150,
-                              height: 150,
-                              fit: BoxFit.cover,
-                            )
-                          : Image.network(
-                              imgURL,
-                              width: 150,
-                              height: 150,
-                              fit: BoxFit.cover,
-                            ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            otherAccountsPictures: [],
-          ),
+          // UserAccountsDrawerHeader(
+          //   decoration: BoxDecoration(
+          //     gradient: LinearGradient(colors: [
+          //       hexStringtoColor("CB2893"),
+          //       hexStringtoColor("9546C4"),
+          //       hexStringtoColor("5E61F4")
+          //     ], begin: Alignment.bottomRight, end: Alignment.topLeft),
+          //   ),
+          //   accountName: Text(name),
+          //   accountEmail: Text(email!),
+          //   currentAccountPicture: CircleAvatar(
+          //     backgroundColor: Colors.white,
+          //     child: Stack(
+          //       alignment: Alignment.center,
+          //       children: [
+          //         Container(
+          //           width: 120,
+          //           height: 120,
+          //           decoration: BoxDecoration(
+          //             shape: BoxShape.circle,
+          //             border: Border.all(
+          //               color: Colors.blueGrey,
+          //               width: 2.0,
+          //             ),
+          //           ),
+          //           child: ClipOval(
+          //             child: imgURL != null
+          //                 ? Image.network(
+          //                     imgURL,
+          //                     width: 150,
+          //                     height: 150,
+          //                     fit: BoxFit.cover,
+          //                   )
+          //                 : Image.network(
+          //                     imgURL,
+          //                     width: 150,
+          //                     height: 150,
+          //                     fit: BoxFit.cover,
+          //                   ),
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          //   otherAccountsPictures: [],
+          // ),
           ListTile(
             title: const Text('View Account'),
             leading: const Icon(Icons.account_box),
