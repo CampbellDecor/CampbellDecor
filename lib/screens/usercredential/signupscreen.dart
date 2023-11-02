@@ -130,11 +130,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       }
                     } catch (e) {
                       if (e is FirebaseAuthException) {
-                        if (e.code == 'firebase_auth/email-already-in-use') {
-                          showInformation(context,
-                              'Email is already in use. User already exists.');
+                        if (e.code == 'email-already-in-use') {
+                          print("pinthu");
+                          print(e);
                         } else {
-                          // Handle other errors.
+                          print("gowshi");
                           print('Error: $e');
                         }
                       }
