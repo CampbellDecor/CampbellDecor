@@ -19,27 +19,26 @@ class MyDrawer extends StatefulWidget {
 }
 
 class _MyDrawerState extends State<MyDrawer> {
-  String? email = FirebaseAuth.instance.currentUser?.email;
-  late String name = 'loding..';
-  late String imgURL =
-      'https://firebasestorage.googleapis.com/v0/b/campbelldecor-c2d1f.appspot.com/o/Users%2Fuser.png?alt=media&token=af8768f7-68e4-4961-892f-400eee8bae5d';
-
   @override
   void initState() {
     super.initState();
-    getUserAge();
+    getUserInfo();
   }
 
-  Future<void> getUserAge() async {
+  String? email = FirebaseAuth.instance.currentUser?.email;
+  late String name = 'loading..';
+  late String imgURL =
+      'https://firebasestorage.googleapis.com/v0/b/campbelldecor-c2d1f.appspot.com/o/Users%2Fuser.png?alt=media&token=af8768f7-68e4-4961-892f-400eee8bae5d';
+  Future<void> getUserInfo() async {
     CollectionReference usersCollection =
         FirebaseFirestore.instance.collection('users');
-
     DocumentSnapshot userSnapshot =
         await usersCollection.doc(FirebaseAuth.instance.currentUser!.uid).get();
     setState(() {
-      imgURL = (userSnapshot.data() as Map<String, dynamic>)['imgURL'];
       name = (userSnapshot.data() as Map<String, dynamic>)['name'];
+      imgURL = (userSnapshot.data() as Map<String, dynamic>)['imgURL'];
     });
+
     //DocumentSnapshot userSnapshot =
     //         await usersCollection.doc(FirebaseAuth.instance.currentUser!.uid).get();
     //     Map<String, dynamic> userInfo = userSnapshot as Map<String, dynamic>;

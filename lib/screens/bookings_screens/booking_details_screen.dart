@@ -49,7 +49,9 @@ class BookingScreen extends StatelessWidget {
               activeBookings.add(doc);
             } else if (status == 'pending') {
               pendingBookings.add(doc);
-            } else if (status == 'cancelled' || status == 'expired') {
+            } else if (status == 'cancelled' ||
+                status == 'expired' ||
+                status == 'rejected') {
               expiredBookings.add(doc);
             }
           }
