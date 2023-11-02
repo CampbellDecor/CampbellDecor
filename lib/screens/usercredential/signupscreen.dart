@@ -90,42 +90,54 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   context,
                   false,
                   () async {
-                    if (_userTextController.text.isNotEmpty &&
-                        _emailTextController.text.isNotEmpty &&
-                        _passwordTextController.text.isNotEmpty &&
-                        _phoneNoTextController.text.isNotEmpty &&
-                        _addressTextController.text.isNotEmpty) {
-                      if (_passwordTextController.text ==
-                          _confirmpassTextController.text) {
-                        await FirebaseAuth.instance
-                            .createUserWithEmailAndPassword(
-                                email: _emailTextController.text,
-                                password: _passwordTextController.text)
-                            .then((value) {
-                          insertUserData(
-                              _userTextController.text,
-                              _emailTextController.text,
-                              _phoneNoTextController.text,
-                              _addressTextController.text,
-                              FirebaseAuth.instance.currentUser!.uid);
-                          print("Create New Account");
-                          Navigation(context, HomeScreen()).then((value) {
-                            CreationNotificationService notificationService =
-                                CreationNotificationService();
-                            notificationService.showNotification(
-                                title: 'Create Account',
-                                body: 'Welcome ${_userTextController.text}');
+                    try {
+                      if (_userTextController.text.isNotEmpty &&
+                          _emailTextController.text.isNotEmpty &&
+                          _passwordTextController.text.isNotEmpty &&
+                          _phoneNoTextController.text.isNotEmpty &&
+                          _addressTextController.text.isNotEmpty) {
+                        if (_passwordTextController.text ==
+                            _confirmpassTextController.text) {
+                          await FirebaseAuth.instance
+                              .createUserWithEmailAndPassword(
+                                  email: _emailTextController.text,
+                                  password: _passwordTextController.text)
+                              .then((value) {
+                            insertUserData(
+                                _userTextController.text,
+                                _emailTextController.text,
+                                _phoneNoTextController.text,
+                                _addressTextController.text,
+                                FirebaseAuth.instance.currentUser!.uid);
+                            print("Create New Account");
+                            Navigation(context, HomeScreen()).then((value) {
+                              CreationNotificationService notificationService =
+                                  CreationNotificationService();
+                              notificationService.showNotification(
+                                  title: 'Create Account',
+                                  body: 'Welcome ${_userTextController.text}');
+                            });
+                          }).onError((error, stackTrace) {
+                            print("Error ${error.toString()}");
                           });
-                        }).onError((error, stackTrace) {
-                          print("Error ${error.toString()}");
-                        });
+                        } else {
+                          showErrorAlert(context,
+                              'Password and Confirm password not Matched ');
+                          print('Password and Confirm password not Matched ');
+                        }
                       } else {
-                        showErrorAlert(context,
-                            'Password and Confirm password not Matched ');
-                        print('Password and Confirm password not Matched ');
+                        showErrorAlert(context, 'Please Fill the All feilds ');
                       }
-                    } else {
-                      showErrorAlert(context, 'Please Fill the All feilds ');
+                    } catch (e) {
+                      if (e is FirebaseAuthException) {
+                        if (e.code == 'firebase_auth/email-already-in-use') {
+                          showInformation(context,
+                              'Email is already in use. User already exists.');
+                        } else {
+                          // Handle other errors.
+                          print('Error: $e');
+                        }
+                      }
                     }
                   },
                 ),
