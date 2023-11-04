@@ -348,8 +348,8 @@ Widget bottom_Bar(BuildContext context) {
     ),
     child: CupertinoTabBar(
         backgroundColor: Colors.transparent,
-        activeColor: Colors.white,
-        inactiveColor: Colors.black,
+        activeColor: Colors.black45,
+        inactiveColor: Colors.white70,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Padding(
@@ -365,13 +365,13 @@ Widget bottom_Bar(BuildContext context) {
             ),
             label: 'Chat',
           ),
-          BottomNavigationBarItem(
-            icon: Padding(
-              padding: EdgeInsets.all(4.0),
-              child: Icon(CupertinoIcons.add),
-            ),
-            label: 'Add',
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Padding(
+          //     padding: EdgeInsets.all(4.0),
+          //     child: Icon(CupertinoIcons.add),
+          //   ),
+          //   label: 'Add',
+          // ),
           BottomNavigationBarItem(
             icon: Padding(
               padding: EdgeInsets.all(4.0),
@@ -393,11 +393,13 @@ Widget bottom_Bar(BuildContext context) {
             BottomNavigationForHome(context, HomeScreen());
           } else if (index == 1) {
             BottomNavigation(context, UserChatScreen());
-          } else if (index == 2) {
-            BottomNavigation(context, EventsScreen());
-          } else if (index == 3) {
+          }
+          // else if (index == 2) {
+          //   BottomNavigation(context, EventsScreen());
+          // }
+          else if (index == 2) {
             BottomNavigation(context, AddToCartScreen());
-          } else if (index == 4) {
+          } else if (index == 3) {
             BottomNavigation(context, SearchScreen());
           }
         }),

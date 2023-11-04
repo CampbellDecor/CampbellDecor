@@ -21,7 +21,7 @@ class _testState extends State<test> {
       body: Center(
         child: ElevatedButton(
             onPressed: () {
-              sendNotification('1r2DkrsQw1OsaMqw8BU8');
+              sendNotificationForAdmin('QBBkWO2Xet8eferxz8Wb');
             },
             child: Text('SendNotification')),
       ),

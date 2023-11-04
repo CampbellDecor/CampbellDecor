@@ -510,12 +510,12 @@ Future<void> insertData(
   // });
 }
 
-void sendNotification(String id) {
+void sendNotificationForAdmin(String id) {
   final NotificationServices notificationServices = NotificationServices();
   notificationServices.getDeviceToken().then((value) async {
     var data = {
       'to':
-          'ecpxq0aGR8q8wtnuwJwek1:APA91bGhsQT9PzhXipWTeM5NiwRu_exYgRssB-bdIVX08bOpMRoEO0D8s2404yUBRwqTfPsvnhndeBBHx739bChA-9rAouj2Cpkkau6TiAGsm5hVkWvAGk0EsKUEaKIO575mGZXT5QyR',
+          'dht4u_eJTeGT_qvTV7WTEb:APA91bEiskpplkKjwPoQOlRLmE1_P_TivR6HovJqt87wXps1nL708l1t40VlSPh8hjOHKcBYjaCVoLiuQ2LLzR7qYlk6APSFPvNhMUMvNNlxQDhPWj_Z_wTucDGdtHJIt9RYqITbraoN',
       'priority': 'high',
       'notification': {
         'title': 'Booking Confirmation',

@@ -47,7 +47,7 @@ class EventsScreen extends StatelessWidget {
                       (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
                     if (streamSnapshot.hasData) {
                       return LimitedBox(
-                        maxHeight: 700,
+                        maxHeight: 720,
                         child: ListView.builder(
                             itemCount: streamSnapshot.data!.docs.length,
                             itemBuilder: (context, index) {
@@ -55,7 +55,7 @@ class EventsScreen extends StatelessWidget {
                                   streamSnapshot.data!.docs[index];
                               return Padding(
                                 padding:
-                                    const EdgeInsets.fromLTRB(30, 10, 30, 10),
+                                    const EdgeInsets.fromLTRB(50, 10, 50, 10),
                                 child: Card(
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
@@ -77,7 +77,7 @@ class EventsScreen extends StatelessWidget {
                                       }
                                     },
                                     child: Container(
-                                      height: 200,
+                                      height: 180,
                                       width: double.infinity,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(20),
@@ -118,7 +118,7 @@ class EventsScreen extends StatelessWidget {
                                                   documentSnapshot['name'],
                                                   style: const TextStyle(
                                                     fontWeight: FontWeight.bold,
-                                                    fontSize: 32,
+                                                    fontSize: 20,
                                                     color: Colors.white,
                                                   ),
                                                 ),
