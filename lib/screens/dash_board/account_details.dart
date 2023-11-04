@@ -21,11 +21,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   bool _isEditing = false;
-  late String userURL;
+  late String userURL =
+      'https://firebasestorage.googleapis.com/v0/b/campbelldecor-c2d1f.appspot.com/o/Users%2Fuser.png?alt=media&token=af8768f7-68e4-4961-892f-400eee8bae5d';
 
-  Future<void> _loadUserData() async {
+  // Future<void> _loadUserData() async {
+  //   final User user = _auth.currentUser!;
+  //   final UserModel? userData = await _firestoreService.getUserData(user.uid);
+  //   _user = userData ??
+  //       UserModel(
+  //         id: '',
+  //         name: 'Loading...',
+  //         imgURL:
+  //             'https://firebasestorage.googleapis.com/v0/b/campbelldecor-c2d1f.appspot.com/o/Users%2Fuser.png?alt=media&token=af8768f7-68e4-4961-892f-400eee8bae5d',
+  //         email: '',
+  //         address: '',
+  //         phoneNo: '',
+  //       );
+  //
+  //   if (userData != null) {
+  //     setState(() {
+  //       _user = userData;
+  //       _nameController.text = _user.name;
+  //       _emailController.text = _user.email;
+  //       _phoneNoController.text = _user.phoneNo;
+  //       _addressController.text = _user.address;
+  //     });
+  //   }
+  // }
+
+  Future<Map<String, dynamic>> _loadUserData() async {
     final User user = _auth.currentUser!;
     final UserModel? userData = await _firestoreService.getUserData(user.uid);
+
     _user = userData ??
         UserModel(
           id: '',
@@ -36,22 +63,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
           address: '',
           phoneNo: '',
         );
-
+    userURL = _user.imgURL;
     if (userData != null) {
-      setState(() {
-        _user = userData;
-        _nameController.text = _user.name;
-        _emailController.text = _user.email;
-        _phoneNoController.text = _user.phoneNo;
-        _addressController.text = _user.address;
-      });
+      _user = userData;
+      return {
+        'name': _user.name,
+        'email': _user.email,
+        'phone': _user.phoneNo,
+        'address': _user.address
+      };
+    } else {
+      return {
+        'name': "name",
+        'email': "email",
+        'phone': "phoneNo",
+        'address': "address"
+      };
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _loadUserData();
   }
 
   // Future<void> _loadUserData() async {
@@ -107,16 +135,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               color: Colors.black, fontSize: 14, fontWeight: FontWeight.bold),
         ),
       )),
-      duration: Duration(seconds: 2),
+      duration: Duration(seconds: 3),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      userURL = _user.imgURL;
-    });
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -139,6 +164,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               });
               if (_isEditing) {
               } else {
+                _updateUserData();
                 _showFeedbackMessage('Changes saved successfully!');
               }
             },
@@ -224,154 +250,181 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ],
                     )
-                  : SingleChildScrollView(
-                      child: Center(
-                        child: Card(
-                          elevation: 5.0,
-                          margin: const EdgeInsets.all(20.0),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                const SizedBox(height: 20.0),
-                                Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    // Container(
-                                    //   width: 120,
-                                    //   height: 120,
-                                    //   decoration: BoxDecoration(
-                                    //     shape: BoxShape.circle,
-                                    //     border: Border.all(
-                                    //       color: Colors.blueGrey,
-                                    //       width: 2.0,
-                                    //     ),
-                                    //   ),
-                                    //   child: ClipOval(
-                                    //     child: userURL != null
-                                    //         ? Image.network(
-                                    //             userURL,
-                                    //             width: 150,
-                                    //             height: 150,
-                                    //             fit: BoxFit.cover,
-                                    //           )
-                                    //         : Image.network(
-                                    //             'https://firebasestorage.googleapis.com/v0/b/campbelldecor-c2d1f.appspot.com/o/Users%2Fuser.png?alt=media&token=af8768f7-68e4-4961-892f-400eee8bae5d',
-                                    //             width: 150,
-                                    //             height: 150,
-                                    //             fit: BoxFit.cover,
-                                    //           ),
-                                    //   ),
-                                    // ),
-                                    Profile(userURL),
-                                    Positioned(
-                                      bottom: -10,
-                                      right: -10,
-                                      child: IconButton(
-                                        icon: Icon(Icons.camera_alt_outlined),
-                                        onPressed: () {
-                                          userImagePicker(context).then((_) {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ProfileScreen()));
-                                            _showFeedbackMessage(
-                                                'Profile image updated successfully!');
-                                          }).catchError((error) {
-                                            print(
-                                                'Error updating profile image: $error');
-                                            _showFeedbackMessage(
-                                                'Failed to update profile image');
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 15.0),
+                  : FutureBuilder(
+                      future: _loadUserData(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator(); // Show a loading indicator while fetching data.
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          _nameController.text = snapshot.data!['name'];
+                          _emailController.text = snapshot.data!['email'];
+                          _phoneNoController.text = snapshot.data!['phone'];
+                          _addressController.text = snapshot.data!['address'];
 
-                                // CircleAvatar(
-                                //   radius: 60.0,
-                                //   backgroundImage:
-                                //       AssetImage('assets/images/user.png'),
-                                // ),
-                                const Text(
-                                  'Name:',
-                                  style: TextStyle(
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(height: 5.0),
-                                Text(
-                                  _user.name,
-                                  style: const TextStyle(fontSize: 16.0),
-                                ),
-                                const SizedBox(height: 10.0),
-                                const Text(
-                                  'Email:',
-                                  style: TextStyle(
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(height: 5.0),
-                                Text(
-                                  _user.email,
-                                  style: const TextStyle(fontSize: 16.0),
-                                ),
-                                const SizedBox(height: 20.0),
-                                const Text(
-                                  'Mobile No:',
-                                  style: TextStyle(
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(height: 5.0),
-                                Text(
-                                  _user.phoneNo,
-                                  style: const TextStyle(fontSize: 16.0),
-                                ),
-                                const SizedBox(height: 20.0),
-                                const Text(
-                                  'Address:',
-                                  style: TextStyle(
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(height: 5.0),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(25, 0, 25, 0),
-                                  child: Text(
-                                    _user.address,
-                                    style: const TextStyle(fontSize: 16.0),
+                          return SingleChildScrollView(
+                            child: Center(
+                              child: Card(
+                                elevation: 5.0,
+                                margin: const EdgeInsets.all(20.0),
+                                child: Container(
+                                  width: 300,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      children: [
+                                        const SizedBox(height: 20.0),
+                                        Stack(
+                                          alignment: Alignment.center,
+                                          children: [
+                                            Container(
+                                              width: 120,
+                                              height: 120,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                border: Border.all(
+                                                  color: Colors.blueGrey,
+                                                  width: 2.0,
+                                                ),
+                                              ),
+                                              child: ClipOval(
+                                                child: userURL != null
+                                                    ? Image.network(
+                                                        userURL,
+                                                        width: 150,
+                                                        height: 150,
+                                                        fit: BoxFit.cover,
+                                                      )
+                                                    : Image.network(
+                                                        'https://firebasestorage.googleapis.com/v0/b/campbelldecor-c2d1f.appspot.com/o/Users%2Fuser.png?alt=media&token=af8768f7-68e4-4961-892f-400eee8bae5d',
+                                                        width: 150,
+                                                        height: 150,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                              ),
+                                            ),
+                                            Profile(userURL),
+                                            Positioned(
+                                              bottom: -10,
+                                              right: -10,
+                                              child: IconButton(
+                                                icon: Icon(
+                                                    Icons.camera_alt_outlined),
+                                                onPressed: () {
+                                                  userImagePicker(context)
+                                                      .then((_) {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                ProfileScreen()));
+                                                    _showFeedbackMessage(
+                                                        'Profile image updated successfully!');
+                                                  }).catchError((error) {
+                                                    print(
+                                                        'Error updating profile image: $error');
+                                                    _showFeedbackMessage(
+                                                        'Failed to update profile image');
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 15.0),
+
+                                        // CircleAvatar(
+                                        //   radius: 60.0,
+                                        //   backgroundImage:
+                                        //       AssetImage('assets/images/user.png'),
+                                        // ),
+                                        const Text(
+                                          'Name:',
+                                          style: TextStyle(
+                                              fontSize: 18.0,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        const SizedBox(height: 5.0),
+                                        Text(
+                                          _user.name,
+                                          style:
+                                              const TextStyle(fontSize: 16.0),
+                                        ),
+                                        const SizedBox(height: 10.0),
+                                        const Text(
+                                          'Email:',
+                                          style: TextStyle(
+                                              fontSize: 18.0,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        const SizedBox(height: 5.0),
+                                        Text(
+                                          _user.email,
+                                          style:
+                                              const TextStyle(fontSize: 16.0),
+                                        ),
+                                        const SizedBox(height: 20.0),
+                                        const Text(
+                                          'Mobile No:',
+                                          style: TextStyle(
+                                              fontSize: 18.0,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        const SizedBox(height: 5.0),
+                                        Text(
+                                          _user.phoneNo,
+                                          style:
+                                              const TextStyle(fontSize: 16.0),
+                                        ),
+                                        const SizedBox(height: 20.0),
+                                        const Text(
+                                          'Address:',
+                                          style: TextStyle(
+                                              fontSize: 18.0,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        const SizedBox(height: 5.0),
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              25, 0, 25, 0),
+                                          child: Text(
+                                            _user.address,
+                                            style:
+                                                const TextStyle(fontSize: 16.0),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 20.0),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                                const SizedBox(height: 20.0),
-                              ],
+                              ),
                             ),
+                          );
+                        }
+                      }),
+              SizedBox(height: 20),
+              _isEditing
+                  ? Container(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.blue, // Text color
+                          elevation: 3, // Button elevation
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(50.0), // Rounded corners
                           ),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 16, horizontal: 24),
                         ),
+                        onPressed: _isEditing ? _updateUserData : null,
+                        child: const Text('Save Changes'),
                       ),
-                    ),
-              const SizedBox(height: 20),
-              Container(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.blue, // Button background color
-                    onPrimary: Colors.white, // Text color
-                    elevation: 3, // Button elevation
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(50.0), // Rounded corners
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 16, horizontal: 24),
-                  ),
-                  onPressed: _isEditing ? _updateUserData : null,
-                  child: const Text('Save Changes'),
-                ),
-              ),
+                    )
+                  : SizedBox(height: 20)
             ],
           ),
         ),

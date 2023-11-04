@@ -1,5 +1,4 @@
 import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -187,12 +186,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.all(18.0),
-                                      child: Text(
-                                        'Address : $address',
-                                        style: const TextStyle(
-                                            fontSize: 18,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.normal),
+                                      child: SingleChildScrollView(
+                                        child: Text(
+                                          'Address : $address',
+                                          style: const TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.normal),
+                                        ),
                                       ),
                                     ),
                                   ],

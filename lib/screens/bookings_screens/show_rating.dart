@@ -36,6 +36,7 @@ class _ShowRatingBarState extends State<ShowRatingBar> {
               return Icon(
                 isFilled ? Icons.star : Icons.star_border,
                 color: isFilled ? Colors.amber : Colors.grey,
+                size: 20,
               );
             },
           ),

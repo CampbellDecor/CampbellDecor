@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import '../../reusable/reusable_methods.dart';
 import '../../utils/color_util.dart';
 
 class BookingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print('userID is : ${FirebaseAuth.instance.currentUser?.uid}');
     return Scaffold(
       appBar: AppBar(
         title: const Text('Bookings'),
@@ -113,104 +112,227 @@ class BookingScreen extends StatelessWidget {
       DocumentSnapshot documentSnapshot, Color startColor, Color endColor) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(58, 10, 58, 10),
-      child: Container(
-        height: 200,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(50),
-          gradient: LinearGradient(
-            colors: [startColor, endColor],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: Card(
-          color: Colors.transparent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          elevation: 10,
-          child: Container(
-            height: 200,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Center(
-                  child: ListTile(
+      child: GestureDetector(
+        onTap: () async {
+          FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+          DocumentReference userDocRef =
+              firestore.collection('bookings').doc(documentSnapshot.id);
+          CollectionReference ordersCollectionRef =
+              userDocRef.collection('service');
+
+          QuerySnapshot querySnapshot = await ordersCollectionRef.get();
+
+          if (querySnapshot.docs.length > 0) {
+            Map<String, dynamic> service = {};
+
+            querySnapshot.docs.forEach((orderDoc) {
+              service = orderDoc.data() as Map<String, dynamic>;
+            });
+
+            List<Widget> listItems = [];
+
+            service.forEach((key, value) {
+              listItems.add(
+                ListTile(
+                  title: Text(key),
+                  subtitle: Text(value.toString()),
+                ),
+              );
+            });
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    shadowColor: Colors.black,
+                    elevation: 8,
+                    icon: const Icon(
+                      Icons.event,
+                      color: Colors.blue,
+                      size: 60,
+                    ),
                     title: Padding(
-                      padding: const EdgeInsets.fromLTRB(58, 10, 58, 0),
-                      child: Text(
-                        documentSnapshot['name'],
-                        style: const TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
+                      padding: EdgeInsets.all(4.0),
+                      child: Padding(
+                        padding: EdgeInsets.all(4.0),
+                        child: Text(
+                          "${documentSnapshot['name']}",
+                        ),
                       ),
                     ),
-                    // subtitle: Text('Upcoming on ${documentSnapshot.data[index].date.toString()}'),
-                  ),
-                ),
-                Center(
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.fromLTRB(58, 0, 58, 0),
-                      child: Text(
-                        DateFormat.yMd()
-                            .format(documentSnapshot['date'].toDate()),
-                        style: const TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    // subtitle: Text('Upcoming on ${documentSnapshot.data[index].date.toString()}'),
-                  ),
-                ),
-                const Divider(
-                  thickness: 5,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    width: 200,
-                    color: Colors.transparent,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        if (documentSnapshot['eventDate'].toDate().isAfter(
-                            DateTime.now().add(const Duration(days: 14)))) {
-                          String bookingId = documentSnapshot.id;
-
-                          try {
-                            cancelInformationAlert(
-                                context,
-                                'Are you Confirm cancel',
-                                BookingScreen(),
-                                bookingId);
-                          } catch (error) {
-                            print('Error deleting booking: $error');
-                          }
-                        } else {
-                          String bookingId = documentSnapshot.id;
-
-                          cancelInformationAlert(
-                              context,
-                              'You are not eligible to get a full refund',
-                              BookingScreen(),
-                              bookingId);
-                        }
-                      },
-                      child: const Text('Cancel'),
-                      style: ButtonStyle(
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50.0),
+                    content: SingleChildScrollView(
+                      child: Container(
+                        height: 350,
+                        width: 400,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                "Event Date : ${DateFormat.yMd().format(documentSnapshot['eventDate'].toDate())}",
+                                style: const TextStyle(
+                                    color: Colors.black, fontSize: 18),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                "Booking Date : ${DateFormat.yMd().format(documentSnapshot['date'].toDate())}",
+                                style: const TextStyle(
+                                    color: Colors.black, fontSize: 18),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                "Total Amount : ${documentSnapshot['paymentAmount']}",
+                                style: const TextStyle(
+                                    color: Colors.black, fontSize: 18),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                "Services : ",
+                                style: const TextStyle(
+                                    color: Colors.black, fontSize: 18),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(28.0),
+                                child: LimitedBox(
+                                  maxHeight: 200,
+                                  child: Container(
+                                    // decoration:
+                                    //     BoxDecoration(color: Colors.blue),
+                                    child: ListView(
+                                      children: listItems,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            Colors.transparent),
                       ),
                     ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        child: const Text('OK', style: TextStyle(fontSize: 16)),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                });
+          }
+        },
+        child: Container(
+          height: 200,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(50),
+            gradient: LinearGradient(
+              colors: [startColor, endColor],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: Card(
+            color: Colors.transparent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            elevation: 10,
+            child: Container(
+              height: 200,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Center(
+                    child: ListTile(
+                      title: Padding(
+                        padding: const EdgeInsets.fromLTRB(58, 10, 58, 0),
+                        child: Text(
+                          documentSnapshot['name'],
+                          style: const TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      // subtitle: Text('Upcoming on ${documentSnapshot.data[index].date.toString()}'),
+                    ),
                   ),
-                )
-              ],
+                  Center(
+                    child: ListTile(
+                      title: Padding(
+                        padding: const EdgeInsets.fromLTRB(58, 0, 58, 0),
+                        child: Text(
+                          DateFormat.yMd()
+                              .format(documentSnapshot['date'].toDate()),
+                          style: const TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      // subtitle: Text('Upcoming on ${documentSnapshot.data[index].date.toString()}'),
+                    ),
+                  ),
+                  const Divider(
+                    thickness: 5,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      width: 200,
+                      color: Colors.transparent,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          if (documentSnapshot['eventDate'].toDate().isAfter(
+                              DateTime.now().add(const Duration(days: 14)))) {
+                            String bookingId = documentSnapshot.id;
+
+                            try {
+                              cancelInformationAlert(
+                                  context,
+                                  'Are you Confirm cancel',
+                                  BookingScreen(),
+                                  bookingId);
+                            } catch (error) {
+                              print('Error deleting booking: $error');
+                            }
+                          } else {
+                            String bookingId = documentSnapshot.id;
+
+                            cancelInformationAlert(
+                                context,
+                                'You are not eligible to get a full refund',
+                                BookingScreen(),
+                                bookingId);
+                          }
+                        },
+                        child: const Text('Cancel'),
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50.0),
+                            ),
+                          ),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Colors.transparent),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),
@@ -220,61 +342,185 @@ class BookingScreen extends StatelessWidget {
 
   Widget buildBookingCard2(BuildContext context,
       DocumentSnapshot documentSnapshot, Color startColor, Color endColor) {
+    bool isFlipped = false;
     return Padding(
       padding: const EdgeInsets.fromLTRB(58, 10, 58, 10),
-      child: Container(
-        height: 150,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(50),
-          gradient: LinearGradient(
-            colors: [startColor, endColor],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: Card(
-          color: Colors.transparent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          elevation: 10,
-          child: Container(
-            height: 150,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(
-                  child: ListTile(
+      child: GestureDetector(
+        onTap: () async {
+          FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+          DocumentReference userDocRef =
+              firestore.collection('bookings').doc(documentSnapshot.id);
+          CollectionReference ordersCollectionRef =
+              userDocRef.collection('service');
+
+          QuerySnapshot querySnapshot = await ordersCollectionRef.get();
+
+          if (querySnapshot.docs.length > 0) {
+            Map<String, dynamic> service = {};
+
+            querySnapshot.docs.forEach((orderDoc) {
+              service = orderDoc.data() as Map<String, dynamic>;
+            });
+
+            List<Widget> listItems = [];
+
+            service.forEach((key, value) {
+              listItems.add(
+                ListTile(
+                  title: Text(key),
+                  subtitle: Text(value.toString()),
+                ),
+              );
+            });
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    shadowColor: Colors.black,
+                    elevation: 8,
+                    icon: const Icon(
+                      Icons.event,
+                      color: Colors.blue,
+                      size: 60,
+                    ),
                     title: Padding(
-                      padding: const EdgeInsets.fromLTRB(58, 0, 8, 0),
-                      child: Text(
-                        documentSnapshot['name'],
-                        style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
+                      padding: EdgeInsets.all(4.0),
+                      child: Padding(
+                        padding: EdgeInsets.all(4.0),
+                        child: Text(
+                          "${documentSnapshot['name']}",
+                        ),
                       ),
                     ),
-                    // subtitle: Text('Upcoming on ${documentSnapshot.data[index].date.toString()}'),
-                  ),
-                ),
-                Center(
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.fromLTRB(58, 0, 8, 0),
-                      child: Text(
-                        DateFormat.yMd()
-                            .format(documentSnapshot['date'].toDate()),
-                        style: const TextStyle(color: Colors.white),
+                    content: SingleChildScrollView(
+                      child: Container(
+                        height: 350,
+                        width: 400,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                "Event Date : ${DateFormat.yMd().format(documentSnapshot['eventDate'].toDate())}",
+                                style: const TextStyle(
+                                    color: Colors.black, fontSize: 18),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                "Booking Date : ${DateFormat.yMd().format(documentSnapshot['date'].toDate())}",
+                                style: const TextStyle(
+                                    color: Colors.black, fontSize: 18),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                "Total Amount : ${documentSnapshot['paymentAmount']}",
+                                style: const TextStyle(
+                                    color: Colors.black, fontSize: 18),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                "Services : ",
+                                style: const TextStyle(
+                                    color: Colors.black, fontSize: 18),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(28.0),
+                                child: LimitedBox(
+                                  maxHeight: 200,
+                                  child: Container(
+                                    // decoration:
+                                    //     BoxDecoration(color: Colors.blue),
+                                    child: ListView(
+                                      children: listItems,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
-                    trailing: Text(
-                      documentSnapshot['status'],
-                      style: TextStyle(color: Colors.white),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        child: const Text('OK', style: TextStyle(fontSize: 16)),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                });
+          }
+        },
+        child: Container(
+          height: 150,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(50),
+            gradient: LinearGradient(
+              colors: [startColor, endColor],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: Card(
+            color: Colors.transparent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            elevation: 10,
+            child: Container(
+              height: 150,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                    child: ListTile(
+                      title: Padding(
+                        padding: const EdgeInsets.fromLTRB(58, 0, 8, 0),
+                        child: Text(
+                          documentSnapshot['name'],
+                          style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
+                      ),
+                      // subtitle: Text('Upcoming on ${documentSnapshot.data[index].date.toString()}'),
                     ),
                   ),
-                ),
-              ],
+                  Center(
+                    child: ListTile(
+                      title: Padding(
+                        padding: const EdgeInsets.fromLTRB(58, 0, 8, 0),
+                        child: Text(
+                          DateFormat.yMd()
+                              .format(documentSnapshot['date'].toDate()),
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      trailing: Text(
+                        documentSnapshot['status'],
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -286,59 +532,182 @@ class BookingScreen extends StatelessWidget {
       DocumentSnapshot documentSnapshot, Color startColor, Color endColor) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(58, 10, 58, 10),
-      child: Container(
-        height: 150,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(50),
-          gradient: LinearGradient(
-            colors: [startColor, endColor],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: Card(
-          color: Colors.transparent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          elevation: 10,
-          child: Container(
-            height: 150,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(
-                  child: ListTile(
+      child: GestureDetector(
+        onTap: () async {
+          FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+          DocumentReference userDocRef =
+              firestore.collection('bookings').doc(documentSnapshot.id);
+          CollectionReference ordersCollectionRef =
+              userDocRef.collection('service');
+
+          QuerySnapshot querySnapshot = await ordersCollectionRef.get();
+
+          if (querySnapshot.docs.length > 0) {
+            Map<String, dynamic> service = {};
+
+            querySnapshot.docs.forEach((orderDoc) {
+              service = orderDoc.data() as Map<String, dynamic>;
+            });
+
+            List<Widget> listItems = [];
+
+            service.forEach((key, value) {
+              listItems.add(
+                ListTile(
+                  title: Text(key),
+                  subtitle: Text(value.toString()),
+                ),
+              );
+            });
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    shadowColor: Colors.black,
+                    elevation: 8,
+                    icon: const Icon(
+                      Icons.event,
+                      color: Colors.blue,
+                      size: 60,
+                    ),
                     title: Padding(
-                      padding: const EdgeInsets.fromLTRB(58, 0, 8, 0),
-                      child: Text(
-                        documentSnapshot['name'],
-                        style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
+                      padding: EdgeInsets.all(4.0),
+                      child: Padding(
+                        padding: EdgeInsets.all(4.0),
+                        child: Text(
+                          "${documentSnapshot['name']}",
+                        ),
                       ),
                     ),
-                    // subtitle: Text('Upcoming on ${documentSnapshot.data[index].date.toString()}'),
-                  ),
-                ),
-                Center(
-                  child: ListTile(
-                    title: Padding(
-                      padding: const EdgeInsets.fromLTRB(58, 0, 8, 0),
-                      child: Text(
-                        DateFormat.yMd()
-                            .format(documentSnapshot['date'].toDate()),
-                        style: const TextStyle(color: Colors.white),
+                    content: SingleChildScrollView(
+                      child: Container(
+                        height: 350,
+                        width: 400,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                "Event Date : ${DateFormat.yMd().format(documentSnapshot['eventDate'].toDate())}",
+                                style: const TextStyle(
+                                    color: Colors.black, fontSize: 18),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                "Booking Date : ${DateFormat.yMd().format(documentSnapshot['date'].toDate())}",
+                                style: const TextStyle(
+                                    color: Colors.black, fontSize: 18),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                "Total Amount : ${documentSnapshot['paymentAmount']}",
+                                style: const TextStyle(
+                                    color: Colors.black, fontSize: 18),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                "Services : ",
+                                style: const TextStyle(
+                                    color: Colors.black, fontSize: 18),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(28.0),
+                                child: LimitedBox(
+                                  maxHeight: 200,
+                                  child: Container(
+                                    // decoration:
+                                    //     BoxDecoration(color: Colors.blue),
+                                    child: ListView(
+                                      children: listItems,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
-                    trailing: Text(
-                      documentSnapshot['status'],
-                      style: TextStyle(color: Colors.white),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        child: const Text('OK', style: TextStyle(fontSize: 16)),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                });
+          }
+        },
+        child: Container(
+          height: 150,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(50),
+            gradient: LinearGradient(
+              colors: [startColor, endColor],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: Card(
+            color: Colors.transparent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            elevation: 10,
+            child: Container(
+              height: 150,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                    child: ListTile(
+                      title: Padding(
+                        padding: const EdgeInsets.fromLTRB(58, 0, 8, 0),
+                        child: Text(
+                          documentSnapshot['name'],
+                          style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
+                      ),
+                      // subtitle: Text('Upcoming on ${documentSnapshot.data[index].date.toString()}'),
                     ),
                   ),
-                ),
-              ],
+                  Center(
+                    child: ListTile(
+                      title: Padding(
+                        padding: const EdgeInsets.fromLTRB(58, 0, 8, 0),
+                        child: Text(
+                          DateFormat.yMd()
+                              .format(documentSnapshot['date'].toDate()),
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      trailing: Text(
+                        documentSnapshot['status'],
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

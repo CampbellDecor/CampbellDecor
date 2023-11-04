@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:campbelldecor/main.dart';
-import 'package:campbelldecor/screens/notifications/notificationscreen.dart';
+import 'package:campbelldecor/screens/notifications/notificationscreenForAdmin.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 

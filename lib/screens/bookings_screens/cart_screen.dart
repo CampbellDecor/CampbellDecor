@@ -248,7 +248,7 @@ class _AddToCartScreenState extends State<AddToCartScreen> {
             .doc(documentSnapshot.id)
             .update({'status': 'pending'});
         _isChecked.removeAt(i);
-        sendNotification(documentSnapshot.id);
+        sendNotificationForAdmin(documentSnapshot.id);
       }
     }
     setState(() {});
