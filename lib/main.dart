@@ -1,3 +1,5 @@
+import 'package:campbelldecor/screens/bookings_screens/qr.dart';
+import 'package:campbelldecor/screens/bookings_screens/qr_code_generator.dart';
 import 'package:campbelldecor/screens/dash_board/homescreen.dart';
 import 'package:campbelldecor/screens/notifications/notification_setup.dart';
 import 'package:campbelldecor/screens/notifications/notificationscreenForAdmin.dart';
@@ -7,6 +9,8 @@ import 'package:campbelldecor/screens/theme/theme_colors.dart';
 import 'package:campbelldecor/screens/theme/theme_manager.dart';
 import 'package:campbelldecor/screens/usercredential/otp_setup.dart';
 import 'package:campbelldecor/screens/usercredential/signinscreen.dart';
+import 'package:campbelldecor/screens/verification/phone.dart';
+import 'package:campbelldecor/screens/verification/verify.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -45,13 +49,14 @@ class _MyAppState extends State<MyApp> {
         child: Builder(
           builder: (BuildContext context) {
             final themeManager = Provider.of<ThemeManager>(context);
+
             return MaterialApp(
               debugShowCheckedModeBanner: false,
               title: 'Campbell',
               theme: ThemeClass.lightTheme,
               darkTheme: ThemeClass.darkTheme,
               themeMode: themeManager.themeMode,
-              home: HomeScreen(),
+              home: SignInScreen(),
               navigatorKey: navigatorKey,
               routes: {
                 NotificationScreen.route: (context) => NotificationScreen(),
