@@ -50,6 +50,7 @@ class _ResetScreenState extends State<ResetScreen> {
             padding: EdgeInsets.fromLTRB(
                 20, MediaQuery.of(context).size.height * 0.2, 20, 0),
             child: Column(children: <Widget>[
+              logoWidget("assets/images/forget2.png"),
               const SizedBox(
                 height: 20,
               ),
@@ -91,14 +92,12 @@ class _ResetScreenState extends State<ResetScreen> {
                     var userCheck = await FirebaseAuth.instance
                         .fetchSignInMethodsForEmail(emailController.text);
                     if (userCheck.isEmpty) {
-                      // ignore: use_build_context_synchronously
                       showErrorAlert(
                           context, 'No user found with this email address.');
                     } else {
                       // Send password reset email
                       await FirebaseAuth.instance
                           .sendPasswordResetEmail(email: emailController.text);
-                      // ignore: use_build_context_synchronously
                       showInformationAlert(
                         context,
                         'Password reset email sent. Check your inbox.',

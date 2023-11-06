@@ -53,15 +53,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 20, MediaQuery.of(context).size.height * 0.2, 20, 0),
             child: Column(
               children: <Widget>[
-                const SizedBox(
-                  height: 20,
-                ),
+                logoWidget("assets/images/signup.png"),
                 textField("Enter Your UserName", Icons.person_outlined, false,
                     _userTextController),
                 const SizedBox(
                   height: 20,
                 ),
-                textField("Enter Your Email", Icons.person_outlined, false,
+                textField("Enter Your Email", Icons.email_outlined, false,
                     _emailTextController),
                 const SizedBox(
                   height: 20,
@@ -71,7 +69,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 const SizedBox(
                   height: 20,
                 ),
-                textField("Confirm Password", Icons.lock_outlined, true,
+                textField("Confirm Password", Icons.lock_open_rounded, true,
                     _confirmpassTextController),
                 const SizedBox(
                   height: 20,

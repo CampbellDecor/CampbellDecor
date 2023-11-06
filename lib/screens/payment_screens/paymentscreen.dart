@@ -1,4 +1,5 @@
 import 'package:campbelldecor/reusable/reusable_methods.dart';
+import 'package:campbelldecor/screens/bookings_screens/qr_code_generator.dart';
 import 'package:campbelldecor/screens/dash_board/homescreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_paypal/flutter_paypal.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../utils/color_util.dart';
 
@@ -38,13 +40,19 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   /*--------------------Retrieve User Shipping Address------------------------------*/
-  Future<Map<String, dynamic>> retrieveUserShippingAddress() async {
+  Future<Map<String, dynamic>> bookingData() async {
     CollectionReference collectionReference =
         await FirebaseFirestore.instance.collection('bookings');
     DocumentSnapshot documentSnapshot =
         await collectionReference.doc(widget.id).get();
     return {
       'address': (documentSnapshot.data() as Map<String, dynamic>)['address'],
+      'date': (documentSnapshot.data() as Map<String, dynamic>)['date'],
+      'eventDate':
+          (documentSnapshot.data() as Map<String, dynamic>)['eventDate'],
+      'name': (documentSnapshot.data() as Map<String, dynamic>)['name'],
+      'amount':
+          (documentSnapshot.data() as Map<String, dynamic>)['paymentAmount'],
     };
   }
 
@@ -214,7 +222,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           child: Padding(
                             padding: EdgeInsets.all(18.0),
                             child: FutureBuilder<Map<String, dynamic>>(
-                                future: retrieveUserShippingAddress(),
+                                future: bookingData(),
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
@@ -428,7 +436,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                     note:
                                         "Contact us for any questions on your order.",
                                     onSuccess: (Map params) async {
+                                      Map<String, dynamic> qrMap =
+                                          bookingData() as Map<String, dynamic>;
+                                      generateQRCode(qrMap);
                                       _addBooking();
+                                      _addPaymentHistory(advance);
                                       sendNotificationForAdmin(widget.id);
                                       Navigator.of(context).pop();
                                       Navigator.of(context)
@@ -456,7 +468,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             } else if (selectedPaymentMethod ==
                                 'cash_on_hand') {
                               _addBooking();
-                              // sendNotification(widget.id);
+                              sendNotificationForAdmin(widget.id);
                               print('Id is : ${widget.id}');
                               Navigation(context, HomeScreen());
                               print('Cash on hand is Selected');
@@ -490,5 +502,26 @@ class _PaymentScreenState extends State<PaymentScreen> {
         .collection('bookings')
         .doc(widget.id)
         .update({'status': 'pending'});
+  }
+
+  void _addPaymentHistory(double price) async {
+    await FirebaseFirestore.instance
+        .collection('paymentDBHistory')
+        .doc(widget.id)
+        .set({'price': price, 'dateTime': DateTime.now()});
+  }
+
+  generateQRCode(Map<String, dynamic> data) {
+    Fluttertoast.showToast(
+        msg: data['name'],
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.white,
+        textColor: Colors.black);
+    // return QrImageView(
+    //   data: data['name'],
+    //   version: QrVersions.auto,
+    //   size: 200.0,
+    // );
   }
 }

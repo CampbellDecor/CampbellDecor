@@ -11,26 +11,11 @@ import '../screens/dash_board/homescreen.dart';
 import '../screens/searchbar/searchbar_widget.dart';
 import '../utils/color_util.dart';
 
-// Widget customAppBarw(String title) {
-//   return AppBar(
-//     title: Text(title),
-//     flexibleSpace: Container(
-//       decoration: BoxDecoration(
-//         gradient: LinearGradient(colors: [
-//           hexStringtoColor("CB2893"),
-//           hexStringtoColor("9546C4"),
-//           hexStringtoColor("5E61F4")
-//         ], begin: Alignment.bottomRight, end: Alignment.topLeft),
-//       ),
-//     ),
-//   );
-// }
-
 Container logoWidget(String imageName) {
   return Container(
-    width: 200, // Set the desired width
-    height: 200,
-    decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+    width: 350, // Set the desired width
+    height: 350,
+    // decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.blue),
     child: Image.asset(imageName),
   );
 }

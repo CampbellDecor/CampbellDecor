@@ -35,8 +35,8 @@ class _HomeScreenState extends State<HomeScreen> {
     notificationServices.firebaseInit(context);
     notificationServices.setupIneractMessage(context);
     notificationServices.getDeviceToken().then((value) {
-      // print('device Token');
-      // print('Device Token $value');
+      print('device Token');
+      print('Device Token $value');
     });
   }
 
@@ -115,11 +115,6 @@ class _HomeScreenState extends State<HomeScreen> {
             maxBlastForce: 100,
             gravity: 0.8,
           ),
-          // Image.asset(
-          //   'assets/images/back2.png', // Replace with your image path
-          //   fit: BoxFit.cover, // Adjust how the image fits the screen
-          // ),
-
           SingleChildScrollView(
             child: Center(
               child: Column(
@@ -151,160 +146,169 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 10),
                   StreamBuilder<QuerySnapshot>(
-                    stream: _packages.snapshots(),
-                    builder:
-                        (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-                      if (streamSnapshot.hasData) {
-                        return LimitedBox(
-                          maxHeight: 240,
-                          maxWidth: 900,
-                          child: CarouselSlider.builder(
-                            itemCount: 5,
-                            carouselController: carouselController,
-                            options: CarouselOptions(
-                              autoPlay: true,
-                              autoPlayInterval: Duration(seconds: 6),
-                              autoPlayAnimationDuration:
-                                  Duration(milliseconds: 3000),
-                              autoPlayCurve: Curves.fastOutSlowIn,
-                              enlargeCenterPage: true,
-                              aspectRatio: 2,
-                              onPageChanged: (index, realIndex) {
-                                setState(() {
-                                  _currentSlide = index;
-                                });
-                              },
-                            ),
-                            itemBuilder: (context, index, realIndex) {
-                              final DocumentSnapshot documentSnapshot =
-                                  streamSnapshot.data!.docs[index];
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                                child: Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  elevation: 10,
-                                  child: Container(
-                                    height: 200,
-                                    width: 300,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      image: DecorationImage(
-                                        image: NetworkImage(
-                                          documentSnapshot['imgURL'],
-                                        ),
-                                        fit: BoxFit.cover,
+                      stream: _packages.snapshots(),
+                      builder: (context,
+                          AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                        if (streamSnapshot.hasData) {
+                          return LimitedBox(
+                            maxHeight: 240,
+                            maxWidth: 900,
+                            child: CarouselSlider.builder(
+                              itemCount: 5,
+                              carouselController: carouselController,
+                              options: CarouselOptions(
+                                autoPlay: true,
+                                autoPlayInterval: Duration(seconds: 6),
+                                autoPlayAnimationDuration:
+                                    Duration(milliseconds: 3000),
+                                autoPlayCurve: Curves.fastOutSlowIn,
+                                enlargeCenterPage: true,
+                                aspectRatio: 2,
+                                onPageChanged: (index, realIndex) {
+                                  setState(() {
+                                    _currentSlide = index;
+                                  });
+                                },
+                              ),
+                              itemBuilder: (context, index, realIndex) {
+                                final DocumentSnapshot documentSnapshot =
+                                    streamSnapshot.data!.docs[index];
+                                return Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigation(context, PackageScreen());
+                                    },
+                                    child: Card(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
                                       ),
-                                    ),
-                                    child: Stack(
-                                      children: [
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            color:
-                                                Colors.black.withOpacity(0.2),
+                                      elevation: 10,
+                                      child: Container(
+                                        height: 200,
+                                        width: 300,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          image: DecorationImage(
+                                            image: NetworkImage(
+                                              documentSnapshot['imgURL'],
+                                            ),
+                                            fit: BoxFit.cover,
                                           ),
                                         ),
-                                        Align(
-                                          alignment: Alignment.center,
-                                          child: ListTile(
-                                            //----------------------Text Container background ----------------------//
-
-                                            title: Container(
-                                              height: 70,
-                                              width: 300,
-                                              alignment: Alignment.center,
+                                        child: Stack(
+                                          children: [
+                                            Container(
                                               decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(20),
                                                 color: Colors.black
-                                                    .withOpacity(0.5),
+                                                    .withOpacity(0.2),
                                               ),
-                                              //----------------------Text Editings----------------------//
-                                              child: Text(
-                                                documentSnapshot['packageName'],
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18,
-                                                  color: Colors.white,
+                                            ),
+                                            Align(
+                                              alignment: Alignment.center,
+                                              child: ListTile(
+                                                //----------------------Text Container background ----------------------//
+
+                                                title: Container(
+                                                  height: 70,
+                                                  width: 300,
+                                                  alignment: Alignment.center,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                    color: Colors.black
+                                                        .withOpacity(0.5),
+                                                  ),
+                                                  //----------------------Text Editings----------------------//
+                                                  child: Text(
+                                                    documentSnapshot[
+                                                        'packageName'],
+                                                    style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 18,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        ),
-                                        Align(
-                                          alignment: Alignment.bottomCenter,
-                                          child: ListTile(
-                                            //----------------------Text Container background ----------------------//
+                                            Align(
+                                              alignment: Alignment.bottomCenter,
+                                              child: ListTile(
+                                                //----------------------Text Container background ----------------------//
 
-                                            title: Container(
-                                              height: 40,
-                                              width: 300,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                                color: Colors.black
-                                                    .withOpacity(0.7),
-                                              ),
-                                              //----------------------Text Editings----------------------//
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Row(
+                                                title: Container(
+                                                  height: 40,
+                                                  width: 300,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                    color: Colors.black
+                                                        .withOpacity(0.7),
+                                                  ),
+                                                  //----------------------Text Editings----------------------//
+                                                  child: Column(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
                                                             .center,
                                                     children: [
-                                                      ShowRatingBar(
-                                                        maxRating: 5,
-                                                        initialRating:
-                                                            documentSnapshot[
-                                                                    'avg_rating']
-                                                                .toDouble(),
-                                                      ),
-                                                      const SizedBox(
-                                                        width: 16,
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(8.0),
-                                                        child: Text(
-                                                          documentSnapshot[
-                                                                  'rating_count']
-                                                              .toString(),
-                                                          style:
-                                                              const TextStyle(
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          ShowRatingBar(
+                                                            maxRating: 5,
+                                                            initialRating:
+                                                                documentSnapshot[
+                                                                        'avg_rating']
+                                                                    .toDouble(),
+                                                          ),
+                                                          const SizedBox(
+                                                            width: 16,
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child: Text(
+                                                              documentSnapshot[
+                                                                      'rating_count']
+                                                                  .toString(),
+                                                              style: const TextStyle(
                                                                   color: Colors
                                                                       .grey),
-                                                        ),
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
                                                     ],
                                                   ),
-                                                ],
+                                                ),
                                               ),
                                             ),
-                                          ),
+                                          ],
                                         ),
-                                      ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                                // ),
-                              );
-                            },
-                          ),
+                                  // ),
+                                );
+                              },
+                            ),
+                          );
+                        }
+                        return const Center(
+                          child: CircularProgressIndicator(),
                         );
-                      }
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    },
-                  ),
+                      }),
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.blue,

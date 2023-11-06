@@ -185,12 +185,33 @@ class _PackageScreenState extends State<PackageScreen> {
                                             ),
                                             actions: <Widget>[
                                               TextButton(
-                                                child: const Text('OK',
+                                                child: const Text('Cancel',
                                                     style: TextStyle(
                                                         fontSize: 16)),
                                                 onPressed: () {
                                                   Navigator.of(context).pop();
                                                 },
+                                              ),
+                                              TextButton(
+                                                onPressed: () async {
+                                                  SharedPreferences
+                                                      preferences =
+                                                      await SharedPreferences
+                                                          .getInstance();
+                                                  await preferences.setString(
+                                                      'package',
+                                                      documentSnapshot[
+                                                          'packageName']);
+                                                  await preferences.setDouble(
+                                                      'amount',
+                                                      documentSnapshot['price']
+                                                          .toDouble());
+                                                  Navigation(context,
+                                                      CalendarScreen());
+                                                },
+                                                child: const Text('OK',
+                                                    style: TextStyle(
+                                                        fontSize: 16)),
                                               ),
                                             ],
                                           );
