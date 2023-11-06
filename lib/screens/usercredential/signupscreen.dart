@@ -1,13 +1,16 @@
+import 'package:campbelldecor/screens/bookings_screens/otp_screen.dart';
 import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
 import 'package:campbelldecor/screens/dash_board/homescreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../../reusable/reusable_methods.dart';
 import '../../reusable/reusable_widgets.dart';
 import '../../utils/color_util.dart';
 import '../notifications/welcomeNotification.dart';
+import 'otp_setup.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -17,6 +20,11 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  String verificationId = '';
+  String otp = '';
+  bool isCodeSent = false;
+
   final CollectionReference collectionReference =
       FirebaseFirestore.instance.collection('users');
   TextEditingController _emailTextController = TextEditingController();
@@ -96,28 +104,134 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           _addressTextController.text.isNotEmpty) {
                         if (_passwordTextController.text ==
                             _confirmpassTextController.text) {
-                          await FirebaseAuth.instance
-                              .createUserWithEmailAndPassword(
-                                  email: _emailTextController.text,
-                                  password: _passwordTextController.text)
-                              .then((value) {
-                            insertUserData(
-                                _userTextController.text,
-                                _emailTextController.text,
-                                _phoneNoTextController.text,
-                                _addressTextController.text,
-                                FirebaseAuth.instance.currentUser!.uid);
-                            print("Create New Account");
-                            Navigation(context, HomeScreen()).then((value) {
-                              CreationNotificationService notificationService =
-                                  CreationNotificationService();
-                              notificationService.showNotification(
-                                  title: 'Create Account',
-                                  body: 'Welcome ${_userTextController.text}');
-                            });
-                          }).onError((error, stackTrace) {
-                            print("Error ${error.toString()}");
-                          });
+                          verifyPhoneNumber(_phoneNoTextController.text);
+                          await _verifyOTP();
+                          showModalBottomSheet(
+                              elevation: 10,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(50),
+                                  topRight: Radius.circular(50),
+                                ),
+                              ),
+                              backgroundColor: Colors.blue.shade400,
+                              context: context,
+                              builder: (BuildContext context) {
+                                return SingleChildScrollView(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(18.0),
+                                    child: SizedBox(
+                                      height: 800,
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 20,
+                                          ),
+                                          imgContainer('assets/images/otp.png',
+                                              200, 200),
+                                          // if (isCodeSent)
+                                          TextField(
+                                            decoration: InputDecoration(
+                                              prefixIcon: Icon(
+                                                Icons.verified_outlined,
+                                                color: Colors.black,
+                                              ),
+                                              labelText: "Enter OTP",
+                                              labelStyle: TextStyle(
+                                                  color: Colors.black
+                                                      .withOpacity(0.9)),
+                                              filled: true,
+                                              floatingLabelBehavior:
+                                                  FloatingLabelBehavior.never,
+                                              fillColor:
+                                                  Colors.white.withOpacity(0.3),
+                                              border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          30.0),
+                                                  borderSide: const BorderSide(
+                                                      width: 0,
+                                                      style: BorderStyle.none)),
+                                            ),
+                                            keyboardType: TextInputType.number,
+                                            onChanged: (value) {
+                                              otp = value;
+                                            },
+                                            cursorColor: Colors.white,
+                                            style: TextStyle(
+                                                color: Colors.white
+                                                    .withOpacity(0.9)),
+                                          ),
+                                          SizedBox(height: 20),
+                                          // if (isCodeSent)
+                                          SizedBox(
+                                            width: double.infinity,
+                                            height: 50,
+                                            child: ElevatedButton(
+                                                style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .resolveWith(
+                                                                (states) {
+                                                      if (states.contains(
+                                                          MaterialState
+                                                              .pressed)) {
+                                                        return Colors.black26;
+                                                      }
+                                                      return Colors.white;
+                                                    }),
+                                                    shape: MaterialStateProperty
+                                                        .all<
+                                                            RoundedRectangleBorder>(
+                                                      RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      (30))),
+                                                    )),
+                                                onPressed: () async {
+                                                  Navigator.of(context).pop();
+                                                  _verifyOTP();
+                                                },
+                                                child: Text(
+                                                  "VERIFY OTP",
+                                                  style: const TextStyle(
+                                                      color: Colors.black87,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 16),
+                                                )),
+                                          ),
+                                          SizedBox(height: 20),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              });
+                          // await FirebaseAuth.instance
+                          //     .createUserWithEmailAndPassword(
+                          //         email: _emailTextController.text,
+                          //         password: _passwordTextController.text)
+                          //     .then((value) {
+                          //   insertUserData(
+                          //       _userTextController.text,
+                          //       _emailTextController.text,
+                          //       _phoneNoTextController.text,
+                          //       _addressTextController.text,
+                          //       FirebaseAuth.instance.currentUser!.uid);
+                          //   print("Create New Account");
+                          //
+                          //   Navigation(context, HomeScreen()).then((value) {
+                          //     CreationNotificationService notificationService =
+                          //         CreationNotificationService();
+                          //     notificationService.showNotification(
+                          //         title: 'Create Account',
+                          //         body: 'Welcome ${_userTextController.text}');
+                          //   });
+                          // }).onError((error, stackTrace) {
+                          //   print("Error ${error.toString()}");
+                          // });
                         } else {
                           showErrorAlert(context,
                               'Password and Confirm password not Matched ');
@@ -129,16 +243,70 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     } catch (e) {
                       if (e is FirebaseAuthException) {
                         if (e.code == 'email-already-in-use') {
-                          print("pinthu");
                           print(e);
                         } else {
-                          print("gowshi");
                           print('Error: $e');
                         }
                       }
                     }
                   },
                 ),
+                // if (isCodeSent)
+                //   TextField(
+                //     decoration: InputDecoration(
+                //       prefixIcon: Icon(
+                //         Icons.verified_outlined,
+                //         color: Colors.white70,
+                //       ),
+                //       labelText: "Enter OTP",
+                //       labelStyle:
+                //           TextStyle(color: Colors.white.withOpacity(0.9)),
+                //       filled: true,
+                //       floatingLabelBehavior: FloatingLabelBehavior.never,
+                //       fillColor: Colors.white.withOpacity(0.3),
+                //       border: OutlineInputBorder(
+                //           borderRadius: BorderRadius.circular(30.0),
+                //           borderSide: const BorderSide(
+                //               width: 0, style: BorderStyle.none)),
+                //     ),
+                //     keyboardType: TextInputType.number,
+                //     onChanged: (value) {
+                //       otp = value;
+                //     },
+                //     cursorColor: Colors.white,
+                //     style: TextStyle(color: Colors.white.withOpacity(0.9)),
+                //   ),
+                // SizedBox(height: 20),
+                // if (isCodeSent)
+                //   SizedBox(
+                //     width: double.infinity,
+                //     height: 50,
+                //     child: ElevatedButton(
+                //         style: ButtonStyle(
+                //             backgroundColor:
+                //                 MaterialStateProperty.resolveWith((states) {
+                //               if (states.contains(MaterialState.pressed)) {
+                //                 return Colors.black26;
+                //               }
+                //               return Colors.white;
+                //             }),
+                //             shape: MaterialStateProperty.all<
+                //                 RoundedRectangleBorder>(
+                //               RoundedRectangleBorder(
+                //                   borderRadius: BorderRadius.circular((30))),
+                //             )),
+                //         onPressed: () async {
+                //           _verifyOTP();
+                //         },
+                //         child: Text(
+                //           "VERIFY OTP",
+                //           style: const TextStyle(
+                //               color: Colors.black87,
+                //               fontWeight: FontWeight.bold,
+                //               fontSize: 16),
+                //         )),
+                //   ),
+                // SizedBox(height: 20),
               ],
             ),
           ),
@@ -164,5 +332,94 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }).catchError((error) {
       print('Failed to store user data: $error');
     });
+  }
+
+  Future<void> verifyPhoneNumber(String phoneNumber) async {
+    verified(AuthCredential authResult) {
+      // Handle phone number verification automatically if possible
+      // (e.g., user has previously signed in with the same phone number).
+    }
+
+    verificationFailed(authException) {
+      // Handle verification failure (e.g., invalid number).
+      print('Verification failed: $authException');
+    }
+
+    codeSent(String verificationId, [int? forceResendingToken]) {
+      setState(() {
+        this.verificationId = verificationId;
+        this.isCodeSent = true;
+      });
+    }
+
+    codeAutoRetrievalTimeout(String verificationId) {
+      // Handle timeout here.
+      print('Verification timeout: $verificationId');
+    }
+
+    await _auth.verifyPhoneNumber(
+      phoneNumber: '+94 $phoneNumber',
+      timeout: const Duration(seconds: 60),
+      verificationCompleted: verified,
+      verificationFailed: verificationFailed,
+      codeSent: codeSent,
+      codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
+    );
+  }
+
+  Future<void> _verifyOTP() async {
+    final AuthCredential credential = PhoneAuthProvider.credential(
+      verificationId: verificationId,
+      smsCode: otp,
+    );
+
+    try {
+      final UserCredential userCredential =
+          await _auth.signInWithCredential(credential);
+      final User? user = userCredential.user;
+
+      if (user != null) {
+        Fluttertoast.showToast(
+            msg: 'Welcome',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.white,
+            textColor: Colors.black);
+        await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+                email: _emailTextController.text,
+                password: _passwordTextController.text)
+            .then((value) {
+          insertUserData(
+              _userTextController.text,
+              _emailTextController.text,
+              _phoneNoTextController.text,
+              _addressTextController.text,
+              FirebaseAuth.instance.currentUser!.uid);
+          print("Create New Account");
+          Navigation(context, HomeScreen()).then((value) {
+            CreationNotificationService notificationService =
+                CreationNotificationService();
+            notificationService.showNotification(
+                title: 'Create Account',
+                body: 'Welcome ${_userTextController.text}');
+          });
+        }).onError((error, stackTrace) {
+          print("Error ${error.toString()}");
+        });
+      } else {
+        // Handle the case where user is null.
+        print('User is null');
+      }
+    } catch (e) {
+      // Handle OTP verification failure.
+      print('OTP verification failed: $e');
+      Fluttertoast.showToast(
+          msg: '$e',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.white,
+          textColor: Colors.black);
+    }
   }
 }

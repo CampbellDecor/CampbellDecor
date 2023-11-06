@@ -19,7 +19,7 @@ class _OTPScreenState extends State<OTPScreen> {
   bool isCodeSent = false;
   TextEditingController countryController = TextEditingController();
 
-  Future<void> _verifyPhoneNumber(String phoneNumber) async {
+  Future<void> verifyPhoneNumber(String phoneNumber) async {
     verified(AuthCredential authResult) {
       // Handle phone number verification automatically if possible
       // (e.g., user has previously signed in with the same phone number).
@@ -118,81 +118,81 @@ class _OTPScreenState extends State<OTPScreen> {
               SizedBox(
                 height: 25,
               ),
-              Text(
-                "Phone Verification",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Text(
-                "We need to register your phone without getting started!",
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Container(
-                height: 55,
-                decoration: BoxDecoration(
-                    border: Border.all(width: 1, color: Colors.grey),
-                    borderRadius: BorderRadius.circular(10)),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 10,
-                    ),
-                    SizedBox(
-                      width: 40,
-                      child: TextField(
-                        controller: countryController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      "|",
-                      style: TextStyle(fontSize: 33, color: Colors.grey),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Expanded(
-                        child: TextField(
-                      onChanged: (value) {
-                        num = value;
-                      },
-                      keyboardType: TextInputType.phone,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Phone",
-                      ),
-                    ))
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              SizedBox(
-                width: double.infinity,
-                height: 45,
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        primary: Colors.green.shade600,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10))),
-                    onPressed: () async {
-                      _verifyPhoneNumber(countryController.text + num);
-                    },
-                    child: Text("Send the code")),
-              ),
+              // Text(
+              //   "Phone Verification",
+              //   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              // ),
+              // SizedBox(
+              //   height: 10,
+              // ),
+              // Text(
+              //   "We need to register your phone without getting started!",
+              //   style: TextStyle(
+              //     fontSize: 16,
+              //   ),
+              //   textAlign: TextAlign.center,
+              // ),
+              // SizedBox(
+              //   height: 30,
+              // ),
+              // Container(
+              //   height: 55,
+              //   decoration: BoxDecoration(
+              //       border: Border.all(width: 1, color: Colors.grey),
+              //       borderRadius: BorderRadius.circular(10)),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: [
+              //       SizedBox(
+              //         width: 10,
+              //       ),
+              //       SizedBox(
+              //         width: 40,
+              //         child: TextField(
+              //           controller: countryController,
+              //           keyboardType: TextInputType.number,
+              //           decoration: InputDecoration(
+              //             border: InputBorder.none,
+              //           ),
+              //         ),
+              //       ),
+              //       Text(
+              //         "|",
+              //         style: TextStyle(fontSize: 33, color: Colors.grey),
+              //       ),
+              //       SizedBox(
+              //         width: 10,
+              //       ),
+              //       Expanded(
+              //           child: TextField(
+              //         onChanged: (value) {
+              //           num = value;
+              //         },
+              //         keyboardType: TextInputType.phone,
+              //         decoration: InputDecoration(
+              //           border: InputBorder.none,
+              //           hintText: "Phone",
+              //         ),
+              //       ))
+              //     ],
+              //   ),
+              // ),
+              // SizedBox(
+              //   height: 20,
+              // ),
+              // SizedBox(
+              //   width: double.infinity,
+              //   height: 45,
+              //   child: ElevatedButton(
+              //       style: ElevatedButton.styleFrom(
+              //           primary: Colors.green.shade600,
+              //           shape: RoundedRectangleBorder(
+              //               borderRadius: BorderRadius.circular(10))),
+              //       onPressed: () async {
+              //         verifyPhoneNumber(countryController.text + num);
+              //       },
+              //       child: Text("Send the code")),
+              // ),
               // TextFormField(
               //   decoration: InputDecoration(labelText: 'Enter Phone Number'),
               //   keyboardType: TextInputType.phone,
@@ -201,27 +201,30 @@ class _OTPScreenState extends State<OTPScreen> {
               //   },
               // ),
               SizedBox(height: 20),
-              // if (isCodeSent)
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Enter OTP'),
-                keyboardType: TextInputType.number,
-                onChanged: (value) {
-                  // Store the OTP input.
-                  otp = value;
-                },
-              ),
-              SizedBox(height: 20),
-              SizedBox(height: 20),
-              // if (isCodeSent)
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      primary: Colors.blue.shade600,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10))),
-                  onPressed: () async {
-                    _verifyOTP();
+              if (isCodeSent)
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'Enter OTP'),
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    otp = value;
                   },
-                  child: Text("Verify OTP")),
+                ),
+              SizedBox(height: 20),
+              SizedBox(height: 20),
+              if (isCodeSent)
+                SizedBox(
+                  width: double.infinity,
+                  height: 45,
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.green.shade600,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10))),
+                      onPressed: () async {
+                        _verifyOTP();
+                      },
+                      child: Text("Verify OTP")),
+                ),
             ],
           ),
         ),
