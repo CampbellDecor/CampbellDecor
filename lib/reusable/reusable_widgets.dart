@@ -20,6 +20,15 @@ Container logoWidget(String imageName) {
   );
 }
 
+Container imgContainer(String imageName, double width, double height) {
+  return Container(
+    width: width, // Set the desired width
+    height: height,
+    // decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.blue),
+    child: Image.asset(imageName),
+  );
+}
+
 Container Profile(String userURL) {
   return Container(
     width: 120,
