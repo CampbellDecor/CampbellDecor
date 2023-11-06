@@ -25,8 +25,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
   //----------------------------------------
   Map<String, dynamic> data = {};
   Map<String, dynamic> myMap = {};
-  double? amount;
-  double totalAmount = 0;
+  double amount = 0;
+  double? packageAmount;
   String? event;
   String? package;
   final uid = FirebaseAuth.instance.currentUser!.uid;
@@ -158,6 +158,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      /**----------------------------------------Add to cart Button--------------------------------------------**/
                       Padding(
                         padding: const EdgeInsets.fromLTRB(40, 8, 0, 8),
                         child: Container(
@@ -174,14 +175,17 @@ class _ServicesScreenState extends State<ServicesScreen> {
                               myMap.forEach((key, value) {
                                 if (key.endsWith('price')) {
                                   print('$key: $value');
-                                  totalAmount = (value + totalAmount);
+                                  amount = (value + amount);
                                 }
                               });
-                              print(totalAmount);
-                              amount = await getDoubleData('amount');
+
+                              packageAmount =
+                                  await getDoubleData('packageAmount');
                               event = await getData('event');
                               package = await getData('package');
-                              /*---------------------insert Add to cart Collection---------------------*/
+                              print('Total Amount $amount');
+                              print('packageAmount $packageAmount');
+                              /**---------------------insert Add to cart Collection---------------------**/
                               if (amount != null && amount! > 0) {
                                 if (event != null) {
                                   await insertData(
@@ -191,7 +195,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                           uid,
                                           DateTime.now(),
                                           widget.eventDate,
-                                          totalAmount + amount!,
+                                          amount!,
                                           myMap)
                                       .then((value) async {
                                     Navigation(context, AddToCartScreen())
@@ -207,7 +211,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                           uid,
                                           DateTime.now(),
                                           widget.eventDate,
-                                          totalAmount + amount!,
+                                          packageAmount! + amount!,
                                           myMap)
                                       .then((value) async {
                                     Navigation(context, AddToCartScreen())
@@ -223,7 +227,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                           uid,
                                           DateTime.now(),
                                           widget.eventDate,
-                                          totalAmount + amount!,
+                                          amount,
                                           myMap)
                                       .then((value) async {
                                     Navigation(context, AddToCartScreen())
@@ -246,6 +250,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                           ),
                         ),
                       ),
+                      /**----------------------------------------Book Button--------------------------------------------**/
                       Padding(
                         padding: const EdgeInsets.fromLTRB(0, 8, 40, 8),
                         child: Container(
@@ -262,12 +267,12 @@ class _ServicesScreenState extends State<ServicesScreen> {
                               myMap.forEach((key, value) {
                                 if (key.endsWith('price')) {
                                   print('$key: $value');
-                                  totalAmount = (value + totalAmount);
+                                  amount = (value + amount);
                                 }
                               });
-                              print(totalAmount);
+                              print(amount);
                               event = await getData('event');
-                              amount = await getDoubleData('amount');
+                              packageAmount = await getDoubleData('amount');
                               package = await getData('package');
 
                               /*---------------------insert Booking Collection---------------------*/
@@ -280,7 +285,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                           uid,
                                           DateTime.now(),
                                           widget.eventDate,
-                                          totalAmount + amount!,
+                                          amount!,
                                           myMap)
                                       .then((value) async {
                                     final _book = FirebaseFirestore.instance
@@ -306,7 +311,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                           uid,
                                           DateTime.now(),
                                           widget.eventDate,
-                                          totalAmount + amount!,
+                                          packageAmount!,
                                           myMap)
                                       .then((value) async {
                                     final _book = FirebaseFirestore.instance
@@ -332,7 +337,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                           uid,
                                           DateTime.now(),
                                           widget.eventDate,
-                                          totalAmount + amount!,
+                                          amount!,
                                           myMap)
                                       .then((value) async {
                                     final _book = await FirebaseFirestore

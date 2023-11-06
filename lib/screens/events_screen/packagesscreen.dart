@@ -160,21 +160,6 @@ class _PackageScreenState extends State<PackageScreen> {
                                                         children: listItems,
                                                       ),
                                                     ),
-                                                    // ListView.builder(
-                                                    //     itemCount: 2,
-                                                    //     itemBuilder:
-                                                    //         (context, index) {
-                                                    //       final entry =
-                                                    //           serviceEntries[
-                                                    //               index];
-                                                    //       return ListTile(
-                                                    //         title:
-                                                    //             Text(entry.key),
-                                                    //         subtitle: Text(entry
-                                                    //             .value
-                                                    //             .toString()),
-                                                    //       );
-                                                    //     })
                                                   ],
                                                 ),
                                               ),
@@ -203,7 +188,7 @@ class _PackageScreenState extends State<PackageScreen> {
                                                       documentSnapshot[
                                                           'packageName']);
                                                   await preferences.setDouble(
-                                                      'amount',
+                                                      'packageAmount',
                                                       documentSnapshot['price']
                                                           .toDouble());
                                                   Navigation(context,

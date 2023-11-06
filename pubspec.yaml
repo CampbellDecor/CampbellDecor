@@ -54,9 +54,11 @@ dependencies:
   fluttertoast: ^8.0.3
   carousel_slider: ^4.2.1
   barcode_scan2: ^4.2.4
+  qr_code_scanner: ^1.0.1
   path_provider: ^2.1.1
   confetti: ^0.7.0
   pinput: ^3.0.1
+  pdf: ^3.10.5
   http:
   get:
 
