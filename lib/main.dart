@@ -2,6 +2,9 @@ import 'package:campbelldecor/screens/bookings_screens/pdfGenerater.dart';
 import 'package:campbelldecor/screens/bookings_screens/qr.dart';
 import 'package:campbelldecor/screens/bookings_screens/qr_code_generator.dart';
 import 'package:campbelldecor/screens/dash_board/homescreen.dart';
+import 'package:campbelldecor/screens/dash_board/viewer_screen.dart';
+import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
+import 'package:campbelldecor/screens/events_screen/packagesscreen.dart';
 import 'package:campbelldecor/screens/notifications/notification_setup.dart';
 import 'package:campbelldecor/screens/notifications/notificationscreenForAdmin.dart';
 import 'package:campbelldecor/screens/payment_screens/user_confirmUI.dart';
@@ -57,10 +60,11 @@ class _MyAppState extends State<MyApp> {
               theme: ThemeClass.lightTheme,
               darkTheme: ThemeClass.darkTheme,
               themeMode: themeManager.themeMode,
-              home: SignInScreen(),
+              home: ViewerScreen(),
               navigatorKey: navigatorKey,
               routes: {
                 NotificationScreen.route: (context) => NotificationScreen(),
+                '/eventScreen': (context) => EventsScreen(),
               },
             );
           },

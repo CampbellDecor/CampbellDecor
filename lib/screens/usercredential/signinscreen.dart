@@ -67,7 +67,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       print("Error ${error.toString()}");
                     });
                   } else {
-                    showErrorAlert(context, 'Please Fill the All feilds ');
+                    showErrorAlert(context, 'Please Fill the All fields ');
                   }
                 }),
                 signUpOption(),

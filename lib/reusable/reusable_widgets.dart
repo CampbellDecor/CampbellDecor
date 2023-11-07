@@ -123,7 +123,7 @@ Container reusableButton(BuildContext context, bool isLogin, Function onTap) {
             RoundedRectangleBorder(borderRadius: BorderRadius.circular((30))),
           )),
       child: Text(
-        isLogin ? 'LOG IN ' : 'SIGN UP',
+        isLogin ? 'LOGIN ' : 'SIGN UP',
         style: const TextStyle(
             color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 16),
       ),

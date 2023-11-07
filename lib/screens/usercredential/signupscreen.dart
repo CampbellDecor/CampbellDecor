@@ -238,7 +238,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           print('Password and Confirm password not Matched ');
                         }
                       } else {
-                        showErrorAlert(context, 'Please Fill the All feilds ');
+                        showErrorAlert(context, 'Please Fill the All fields ');
                       }
                     } catch (e) {
                       if (e is FirebaseAuthException) {
@@ -317,31 +317,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void insertUserData(
       String name, String email, String phoneNo, String address, String id) {
-    collectionReference.doc(id).set({
-      'name': name,
-      'email': email,
-      'phoneNo': phoneNo,
-      'address': address,
-    }).then((_) async {
-      print('User data stored successfully');
-      // NotificationService().showNotification(
-      //     title: 'Account Opening',
-      //     body: 'Wow You Success full create Account..');
-      // final _firebaseMessaging = FirebaseMessaging.instance;
-      // final fCMToken = await _firebaseMessaging.getToken();
-    }).catchError((error) {
-      print('Failed to store user data: $error');
-    });
+    collectionReference
+        .doc(id)
+        .set({
+          'name': name,
+          'email': email,
+          'phoneNo': phoneNo,
+          'isBlock': false,
+          'address': address,
+          'imgURL':
+              "https://firebasestorage.googleapis.com/v0/b/campbelldecor-c2d1f.appspot.com/o/Users%2Fuser.png?alt=media&token=af8768f7-68e4-4961-892f-400eee8bae5d"
+        })
+        .then((_) async {})
+        .catchError((error) {
+          print('Failed to store user data: $error');
+        });
   }
 
   Future<void> verifyPhoneNumber(String phoneNumber) async {
-    verified(AuthCredential authResult) {
-      // Handle phone number verification automatically if possible
-      // (e.g., user has previously signed in with the same phone number).
-    }
+    verified(AuthCredential authResult) {}
 
     verificationFailed(authException) {
-      // Handle verification failure (e.g., invalid number).
       print('Verification failed: $authException');
     }
 
@@ -353,7 +349,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
 
     codeAutoRetrievalTimeout(String verificationId) {
-      // Handle timeout here.
       print('Verification timeout: $verificationId');
     }
 

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 class FilterScreen extends StatefulWidget {
   final PackageFilter packageFilter;
   final Function() applyFilters;
-
   FilterScreen({required this.packageFilter, required this.applyFilters});
 
   @override
@@ -14,9 +13,7 @@ class PackageFilter {
   double? minPrice;
   double? maxPrice;
   bool ascendingOrder = true;
-  String? eventName; // Add a property to store event name
-  double? minRating; // Add a property for minimum rating
-  double? maxRating; // Add a property for maximum rating
+  String? eventName;
 }
 
 class _FilterScreenState extends State<FilterScreen> {
@@ -39,7 +36,7 @@ class _FilterScreenState extends State<FilterScreen> {
                 widget.packageFilter.maxPrice ?? 100,
               ),
               min: 0,
-              max: 100,
+              max: 100000,
               onChanged: (RangeValues values) {
                 setState(() {
                   widget.packageFilter.minPrice = values.start;
@@ -53,8 +50,6 @@ class _FilterScreenState extends State<FilterScreen> {
             Text(
               'Max: \$${widget.packageFilter.maxPrice?.toStringAsFixed(2) ?? "N/A"}',
             ),
-
-            // Event Name Filter
             SizedBox(height: 16),
             Text('Event Name'),
             TextField(
@@ -67,8 +62,6 @@ class _FilterScreenState extends State<FilterScreen> {
                 hintText: 'Enter Event Name',
               ),
             ),
-
-            // Order By Filter
             SizedBox(height: 16),
             Text('Order By'),
             Row(
@@ -95,16 +88,18 @@ class _FilterScreenState extends State<FilterScreen> {
                 Text('Descending'),
               ],
             ),
-
-            // Apply and Clear Buttons
             SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    widget.applyFilters();
-                    Navigator.of(context).pop();
+                    try {
+                      widget.applyFilters();
+                      // Navigator.of(context).pop();
+                    } catch (e) {
+                      print(e);
+                    }
                   },
                   child: Text('Apply Filters'),
                 ),
@@ -114,8 +109,7 @@ class _FilterScreenState extends State<FilterScreen> {
                     widget.packageFilter.minPrice = null;
                     widget.packageFilter.maxPrice = null;
                     widget.packageFilter.ascendingOrder = true;
-                    widget.packageFilter.eventName =
-                        null; // Clear event name filter
+                    widget.packageFilter.eventName = null;
                     Navigator.of(context).pop();
                   },
                   child: Text('Clear Filters'),

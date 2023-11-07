@@ -403,10 +403,12 @@ Future<void> showErrorAlert(BuildContext context, String errorMessage) async {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
+        backgroundColor: Colors.white.withOpacity(0.7),
         shadowColor: Colors.black,
         elevation: 8,
         icon: const Icon(
           Icons.error_rounded,
+          size: 40,
           color: Colors.red,
         ),
         title: const Text('Error'),
@@ -415,7 +417,7 @@ Future<void> showErrorAlert(BuildContext context, String errorMessage) async {
           style: const TextStyle(color: Colors.red, fontSize: 18),
         ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15.0),
+          borderRadius: BorderRadius.circular(25.0),
         ),
         actions: <Widget>[
           TextButton(
