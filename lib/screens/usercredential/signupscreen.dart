@@ -3,12 +3,14 @@ import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
 import 'package:campbelldecor/screens/dash_board/homescreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../reusable/reusable_methods.dart';
 import '../../reusable/reusable_widgets.dart';
 import '../../utils/color_util.dart';
+import '../notifications/notification_services.dart';
 import '../notifications/welcomeNotification.dart';
 import 'otp_setup.dart';
 
@@ -21,8 +23,10 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  NotificationServices notificationServices = NotificationServices();
   String verificationId = '';
   String otp = '';
+  String token = '';
   bool isCodeSent = false;
 
   final CollectionReference collectionReference =
@@ -96,158 +100,144 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   context,
                   false,
                   () async {
-                    try {
-                      if (_userTextController.text.isNotEmpty &&
-                          _emailTextController.text.isNotEmpty &&
-                          _passwordTextController.text.isNotEmpty &&
-                          _phoneNoTextController.text.isNotEmpty &&
-                          _addressTextController.text.isNotEmpty) {
-                        if (_passwordTextController.text ==
-                            _confirmpassTextController.text) {
-                          verifyPhoneNumber(_phoneNoTextController.text);
-                          await _verifyOTP();
-                          showModalBottomSheet(
-                              elevation: 10,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(50),
-                                  topRight: Radius.circular(50),
-                                ),
+                    if (_userTextController.text.isNotEmpty &&
+                        _emailTextController.text.isNotEmpty &&
+                        _passwordTextController.text.isNotEmpty &&
+                        _phoneNoTextController.text.isNotEmpty &&
+                        _addressTextController.text.isNotEmpty) {
+                      if (_passwordTextController.text ==
+                          _confirmpassTextController.text) {
+                        // try {
+                        verifyPhoneNumber(_phoneNoTextController.text);
+                        await _verifyOTP();
+                        showModalBottomSheet(
+                            elevation: 10,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(50),
+                                topRight: Radius.circular(50),
                               ),
-                              backgroundColor: Colors.blue.shade400,
-                              context: context,
-                              builder: (BuildContext context) {
-                                return SingleChildScrollView(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(18.0),
-                                    child: SizedBox(
-                                      height: 800,
-                                      child: Column(
-                                        children: [
-                                          SizedBox(
-                                            height: 20,
-                                          ),
-                                          imgContainer('assets/images/otp.png',
-                                              200, 200),
-                                          // if (isCodeSent)
-                                          TextField(
-                                            decoration: InputDecoration(
-                                              prefixIcon: Icon(
-                                                Icons.verified_outlined,
-                                                color: Colors.black,
-                                              ),
-                                              labelText: "Enter OTP",
-                                              labelStyle: TextStyle(
-                                                  color: Colors.black
-                                                      .withOpacity(0.9)),
-                                              filled: true,
-                                              floatingLabelBehavior:
-                                                  FloatingLabelBehavior.never,
-                                              fillColor:
-                                                  Colors.white.withOpacity(0.3),
-                                              border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          30.0),
-                                                  borderSide: const BorderSide(
-                                                      width: 0,
-                                                      style: BorderStyle.none)),
+                            ),
+                            backgroundColor: Colors.blue.shade400,
+                            context: context,
+                            builder: (BuildContext context) {
+                              return SingleChildScrollView(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(18.0),
+                                  child: SizedBox(
+                                    height: 800,
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        imgContainer(
+                                            'assets/images/otp.png', 200, 200),
+                                        // if (isCodeSent)
+                                        TextField(
+                                          decoration: InputDecoration(
+                                            prefixIcon: Icon(
+                                              Icons.verified_outlined,
+                                              color: Colors.black,
                                             ),
-                                            keyboardType: TextInputType.number,
-                                            onChanged: (value) {
-                                              otp = value;
-                                            },
-                                            cursorColor: Colors.white,
-                                            style: TextStyle(
-                                                color: Colors.white
+                                            labelText: "Enter OTP",
+                                            labelStyle: TextStyle(
+                                                color: Colors.black
                                                     .withOpacity(0.9)),
+                                            filled: true,
+                                            floatingLabelBehavior:
+                                                FloatingLabelBehavior.never,
+                                            fillColor:
+                                                Colors.white.withOpacity(0.3),
+                                            border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(30.0),
+                                                borderSide: const BorderSide(
+                                                    width: 0,
+                                                    style: BorderStyle.none)),
                                           ),
-                                          SizedBox(height: 20),
-                                          // if (isCodeSent)
-                                          SizedBox(
-                                            width: double.infinity,
-                                            height: 50,
-                                            child: ElevatedButton(
-                                                style: ButtonStyle(
-                                                    backgroundColor:
-                                                        MaterialStateProperty
-                                                            .resolveWith(
-                                                                (states) {
-                                                      if (states.contains(
-                                                          MaterialState
-                                                              .pressed)) {
-                                                        return Colors.black26;
-                                                      }
-                                                      return Colors.white;
-                                                    }),
-                                                    shape: MaterialStateProperty
-                                                        .all<
-                                                            RoundedRectangleBorder>(
-                                                      RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      (30))),
-                                                    )),
-                                                onPressed: () async {
-                                                  Navigator.of(context).pop();
-                                                  _verifyOTP();
-                                                },
-                                                child: Text(
-                                                  "VERIFY OTP",
-                                                  style: const TextStyle(
-                                                      color: Colors.black87,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 16),
-                                                )),
-                                          ),
-                                          SizedBox(height: 20),
-                                        ],
-                                      ),
+                                          keyboardType: TextInputType.number,
+                                          onChanged: (value) {
+                                            otp = value;
+                                          },
+                                          cursorColor: Colors.white,
+                                          style: TextStyle(
+                                              color: Colors.white
+                                                  .withOpacity(0.9)),
+                                        ),
+                                        SizedBox(height: 20),
+                                        // if (isCodeSent)
+                                        SizedBox(
+                                          width: double.infinity,
+                                          height: 50,
+                                          child: ElevatedButton(
+                                              style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty
+                                                          .resolveWith(
+                                                              (states) {
+                                                    if (states.contains(
+                                                        MaterialState
+                                                            .pressed)) {
+                                                      return Colors.black26;
+                                                    }
+                                                    return Colors.white;
+                                                  }),
+                                                  shape:
+                                                      MaterialStateProperty.all<
+                                                          RoundedRectangleBorder>(
+                                                    RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                                    (30))),
+                                                  )),
+                                              onPressed: () async {
+                                                Navigator.of(context).pop();
+                                                _verifyOTP();
+                                              },
+                                              child: Text(
+                                                "VERIFY OTP",
+                                                style: const TextStyle(
+                                                    color: Colors.black87,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16),
+                                              )),
+                                        ),
+                                        SizedBox(height: 20),
+                                      ],
                                     ),
                                   ),
-                                );
-                              });
-                          // await FirebaseAuth.instance
-                          //     .createUserWithEmailAndPassword(
-                          //         email: _emailTextController.text,
-                          //         password: _passwordTextController.text)
-                          //     .then((value) {
-                          //   insertUserData(
-                          //       _userTextController.text,
-                          //       _emailTextController.text,
-                          //       _phoneNoTextController.text,
-                          //       _addressTextController.text,
-                          //       FirebaseAuth.instance.currentUser!.uid);
-                          //   print("Create New Account");
-                          //
-                          //   Navigation(context, HomeScreen()).then((value) {
-                          //     CreationNotificationService notificationService =
-                          //         CreationNotificationService();
-                          //     notificationService.showNotification(
-                          //         title: 'Create Account',
-                          //         body: 'Welcome ${_userTextController.text}');
-                          //   });
-                          // }).onError((error, stackTrace) {
-                          //   print("Error ${error.toString()}");
-                          // });
-                        } else {
-                          showErrorAlert(context,
-                              'Password and Confirm password not Matched ');
-                          print('Password and Confirm password not Matched ');
-                        }
+                                ),
+                              );
+                            });
+                        // } catch (e) {
+                        //   print('fffffffffffffffffffffffffffffffffffffffffffff'
+                        //       'ffffffffffffffffffffffffffffffffffffffffffffffffff'
+                        //       'ffffffffffffffffffffffffffffffffffffffffffffffffr: $e');
+                        //   // if (e is FirebaseAuthException) {
+                        //   //   if (e.code ==
+                        //   //       'The email address is already in use by another account.') {
+                        //   //     print(e);
+                        //   //     print(
+                        //   //         'Errorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr'
+                        //   //         'rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr'
+                        //   //         'rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr: $e');
+                        //   //   } else {
+                        //   //     print(
+                        //   //         'dddddddddddddddddddddddddddddddddddddddddddddddd'
+                        //   //         'rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr'
+                        //   //         'rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr: $e');
+                        //   //   }
+                        //   // }
+                        // }
                       } else {
-                        showErrorAlert(context, 'Please Fill the All feilds ');
+                        showErrorAlert(context,
+                            'Password and Confirm password not Matched ');
+                        print('Password and Confirm password not Matched ');
                       }
-                    } catch (e) {
-                      if (e is FirebaseAuthException) {
-                        if (e.code == 'email-already-in-use') {
-                          print(e);
-                        } else {
-                          print('Error: $e');
-                        }
-                      }
+                    } else {
+                      showErrorAlert(context, 'Please Fill the All fields ');
                     }
                   },
                 ),
@@ -317,31 +307,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void insertUserData(
       String name, String email, String phoneNo, String address, String id) {
-    collectionReference.doc(id).set({
-      'name': name,
-      'email': email,
-      'phoneNo': phoneNo,
-      'address': address,
-    }).then((_) async {
-      print('User data stored successfully');
-      // NotificationService().showNotification(
-      //     title: 'Account Opening',
-      //     body: 'Wow You Success full create Account..');
-      // final _firebaseMessaging = FirebaseMessaging.instance;
-      // final fCMToken = await _firebaseMessaging.getToken();
-    }).catchError((error) {
-      print('Failed to store user data: $error');
+    notificationServices.getDeviceToken().then((value) {
+      token = value;
     });
+    collectionReference
+        .doc(id)
+        .set({
+          'name': name,
+          'email': email,
+          'phoneNo': phoneNo,
+          'isBlock': false,
+          'address': address,
+          'imgURL':
+              "https://firebasestorage.googleapis.com/v0/b/campbelldecor-c2d1f.appspot.com/o/Users%2Fuser.png?alt=media&token=af8768f7-68e4-4961-892f-400eee8bae5d",
+          'deviceTokenForNotification': token
+        })
+        .then((_) async {})
+        .catchError((error) {
+          print('Failed to store user data: $error');
+        });
   }
 
   Future<void> verifyPhoneNumber(String phoneNumber) async {
-    verified(AuthCredential authResult) {
-      // Handle phone number verification automatically if possible
-      // (e.g., user has previously signed in with the same phone number).
-    }
+    verified(AuthCredential authResult) {}
 
     verificationFailed(authException) {
-      // Handle verification failure (e.g., invalid number).
       print('Verification failed: $authException');
     }
 
@@ -353,7 +343,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
 
     codeAutoRetrievalTimeout(String verificationId) {
-      // Handle timeout here.
       print('Verification timeout: $verificationId');
     }
 
@@ -377,14 +366,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       final UserCredential userCredential =
           await _auth.signInWithCredential(credential);
       final User? user = userCredential.user;
-
       if (user != null) {
-        Fluttertoast.showToast(
-            msg: 'Welcome',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: Colors.white,
-            textColor: Colors.black);
         await FirebaseAuth.instance
             .createUserWithEmailAndPassword(
                 email: _emailTextController.text,
@@ -396,7 +378,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
               _phoneNoTextController.text,
               _addressTextController.text,
               FirebaseAuth.instance.currentUser!.uid);
-          print("Create New Account");
           Navigation(context, HomeScreen()).then((value) {
             CreationNotificationService notificationService =
                 CreationNotificationService();
@@ -405,21 +386,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 body: 'Welcome ${_userTextController.text}');
           });
         }).onError((error, stackTrace) {
-          print("Error ${error.toString()}");
+          if (error.toString() ==
+              '[firebase_auth/email-already-in-use] The email address is already in use by another account.') {
+            showInformation(context,
+                'The email address is already in use by another account.');
+          }
         });
       } else {
-        // Handle the case where user is null.
         print('User is null');
       }
     } catch (e) {
-      // Handle OTP verification failure.
-      print('OTP verification failed: $e');
-      Fluttertoast.showToast(
-          msg: '$e',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.white,
-          textColor: Colors.black);
+      if (e.toString() ==
+          '[firebase_auth/too-many-requests] We have blocked all requests from this device due to unusual activity. Try again later.') {
+        showInformation(context,
+            'We have blocked all requests from this device due to too many attempts. Try again later.');
+      } else if (e.toString() ==
+          '[firebase_auth/session-expired] The sms code has expired. Please re-send the verification code to try again.') {
+        showInformation(context,
+            'The sms code has expired. Please re-send the verification code to try again.');
+      }
     }
   }
 }

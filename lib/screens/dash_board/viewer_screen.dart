@@ -1,47 +1,24 @@
-import 'dart:math';
-
 import 'package:campbelldecor/reusable/reusable_methods.dart';
-import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
-import 'package:campbelldecor/screens/notifications/notification_services.dart';
-import 'package:campbelldecor/screens/theme/theme_manager.dart';
 import 'package:campbelldecor/screens/usercredential/signinscreen.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:confetti/confetti.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../../reusable/reusable_widgets.dart';
 import '../../utils/color_util.dart';
-import '../bookings_screens/date_view.dart';
 import '../bookings_screens/show_rating.dart';
-import '../events_screen/packagesscreen.dart';
-import 'header_nav.dart';
-import 'package:flutter/cupertino.dart';
 
-class HomeScreen extends StatefulWidget {
+class ViewerScreen extends StatefulWidget {
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<ViewerScreen> createState() => _ViewerScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  NotificationServices notificationServices = NotificationServices();
+class _ViewerScreenState extends State<ViewerScreen> {
   bool isplaying = false;
   final controller = ConfettiController();
   @override
   void initState() {
     super.initState();
     controller.play();
-    setOutDatedBooking();
-    updateDeviceTokenForNotification(FirebaseAuth.instance.currentUser!.uid);
-    notificationServices.requestNotificationPermission();
-    notificationServices.firebaseInit(context);
-    notificationServices.setupIneractMessage(context);
-    notificationServices.getDeviceToken().then((value) {
-      print('device Token');
-      print('Device Token $value');
-    });
   }
 
   @override
@@ -58,13 +35,11 @@ class _HomeScreenState extends State<HomeScreen> {
         FirebaseFirestore.instance.collection('events');
     final CollectionReference _services =
         FirebaseFirestore.instance.collection('services');
-
-    final themeManager = Provider.of<ThemeManager>(context);
     CarouselController carouselController = CarouselController();
     int _currentSlide = 0;
     return Scaffold(
-      drawer: MyDrawer(),
       appBar: AppBar(
+        leading: Image.asset("assets/images/appLogo1.png"),
         title: const Text('Campbell Decor'),
         flexibleSpace: Container(
           decoration: BoxDecoration(
@@ -75,33 +50,25 @@ class _HomeScreenState extends State<HomeScreen> {
             ], begin: Alignment.bottomRight, end: Alignment.topLeft),
           ),
         ),
-        /* Dark mood and Light mode button */
         actions: [
-          Switch(
-            value: themeManager.themeMode == ThemeMode.dark,
-            onChanged: (newValue) {
-              setState(() {
-                themeManager.toggleTheme(newValue);
-              });
-            },
-            inactiveTrackColor: Colors.yellow[200],
-            activeColor: Colors.blue[900],
-            inactiveThumbColor: Colors.yellow,
-            inactiveThumbImage: const AssetImage('assets/images/sun1.png'),
-            activeThumbImage: const AssetImage('assets/images/moon.png'),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
+            child: TextButton(
+                onPressed: () {
+                  // Navigator.pop(context);
+                  Navigation(context, const SignInScreen());
+                },
+                child: Text(
+                  'Login',
+                  style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900),
+                )),
           ),
-          IconButton(
-            icon: const Icon(Icons.notifications_active_rounded),
-            onPressed: () {
-              // Navigation(context, NotificationView());
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () {
-              Navigator.pop(context);
-              Navigation(context, const SignInScreen());
-            },
+          Icon(
+            Icons.login_sharp,
+            color: Colors.white70,
           ),
         ],
       ),
@@ -182,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       const EdgeInsets.fromLTRB(10, 10, 10, 10),
                                   child: GestureDetector(
                                     onTap: () {
-                                      Navigation(context, PackageScreen());
+                                      Navigation(context, SignInScreen());
                                     },
                                     child: Card(
                                       shape: RoundedRectangleBorder(
@@ -331,14 +298,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => PackageScreen()),
+                        MaterialPageRoute(builder: (context) => SignInScreen()),
                       );
                     },
                   ),
                   const SizedBox(height: 20),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(18, 8, 8, 8),
+                    padding: const EdgeInsets.all(8.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -378,73 +344,61 @@ class _HomeScreenState extends State<HomeScreen> {
                                 return Padding(
                                   padding:
                                       const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                                  child: GestureDetector(
-                                    onTap: () async {
-                                      SharedPreferences preferences =
-                                          await SharedPreferences.getInstance();
-                                      preferences.setString(
-                                          'event', documentSnapshot['name']);
-                                      Navigation(context, CalendarScreen());
-                                    },
-                                    child: Card(
-                                      shape: RoundedRectangleBorder(
+                                  child: Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    elevation: 10,
+                                    child: Container(
+                                      height: 150,
+                                      width: 300,
+                                      decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      elevation: 10,
-                                      child: Container(
-                                        height: 150,
-                                        width: 300,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          image: DecorationImage(
-                                            image: NetworkImage(
-                                              documentSnapshot['imgURL'],
-                                            ),
-                                            fit: BoxFit.cover,
+                                        image: DecorationImage(
+                                          image: NetworkImage(
+                                            documentSnapshot['imgURL'],
                                           ),
+                                          fit: BoxFit.cover,
                                         ),
-                                        child: Stack(
-                                          children: [
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                                color: Colors.black
-                                                    .withOpacity(0.4),
-                                              ),
+                                      ),
+                                      child: Stack(
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              color:
+                                                  Colors.black.withOpacity(0.4),
                                             ),
-                                            Align(
-                                              alignment: Alignment.center,
-                                              child: ListTile(
-                                                //----------------------Text Container background ----------------------//
+                                          ),
+                                          Align(
+                                            alignment: Alignment.center,
+                                            child: ListTile(
+                                              //----------------------Text Container background ----------------------//
 
-                                                title: Container(
-                                                  height: 70,
-                                                  width: 300,
-                                                  alignment: Alignment.center,
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20),
-                                                    color: Colors.black
-                                                        .withOpacity(0.5),
-                                                  ),
-                                                  //----------------------Text Editings----------------------//
-                                                  child: Text(
-                                                    documentSnapshot['name'],
-                                                    style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 20,
-                                                      color: Colors.white,
-                                                    ),
+                                              title: Container(
+                                                height: 70,
+                                                width: 300,
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  color: Colors.black
+                                                      .withOpacity(0.5),
+                                                ),
+                                                //----------------------Text Editings----------------------//
+                                                child: Text(
+                                                  documentSnapshot['name'],
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 20,
+                                                    color: Colors.white,
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
@@ -474,16 +428,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontSize: 18),
                     ),
                     onPressed: () {
-                      Navigation(
-                          context,
-                          EventsScreen(
-                            name: 'more',
-                          ));
+                      Navigation(context, SignInScreen());
                     },
                   ),
                   const SizedBox(height: 20),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(18, 8, 8, 8),
+                    padding: const EdgeInsets.all(8.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -522,69 +472,61 @@ class _HomeScreenState extends State<HomeScreen> {
                                 return Padding(
                                   padding:
                                       const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigation(context, CalendarScreen());
-                                    },
-                                    child: Card(
-                                      shape: RoundedRectangleBorder(
+                                  child: Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    elevation: 10,
+                                    child: Container(
+                                      height: 150,
+                                      width: 300,
+                                      decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      elevation: 10,
-                                      child: Container(
-                                        height: 150,
-                                        width: 300,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          image: DecorationImage(
-                                            image: NetworkImage(
-                                              documentSnapshot['imgURL'],
-                                            ),
-                                            fit: BoxFit.cover,
+                                        image: DecorationImage(
+                                          image: NetworkImage(
+                                            documentSnapshot['imgURL'],
                                           ),
+                                          fit: BoxFit.cover,
                                         ),
-                                        child: Stack(
-                                          children: [
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                                color: Colors.black
-                                                    .withOpacity(0.5),
-                                              ),
+                                      ),
+                                      child: Stack(
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              color:
+                                                  Colors.black.withOpacity(0.5),
                                             ),
-                                            Align(
-                                              alignment: Alignment.center,
-                                              child: ListTile(
-                                                //----------------------Text Container background ----------------------//
+                                          ),
+                                          Align(
+                                            alignment: Alignment.center,
+                                            child: ListTile(
+                                              //----------------------Text Container background ----------------------//
 
-                                                title: Container(
-                                                  height: 70,
-                                                  width: 300,
-                                                  alignment: Alignment.center,
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20),
-                                                    color: Colors.black
-                                                        .withOpacity(0.5),
-                                                  ),
-                                                  //----------------------Text Editings----------------------//
-                                                  child: Text(
-                                                    documentSnapshot['name'],
-                                                    style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 20,
-                                                      color: Colors.white,
-                                                    ),
+                                              title: Container(
+                                                height: 70,
+                                                width: 300,
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  color: Colors.black
+                                                      .withOpacity(0.5),
+                                                ),
+                                                //----------------------Text Editings----------------------//
+                                                child: Text(
+                                                  documentSnapshot['name'],
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 20,
+                                                    color: Colors.white,
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
@@ -615,7 +557,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontSize: 18),
                     ),
                     onPressed: () {
-                      Navigation(context, CalendarScreen());
+                      Navigation(context, SignInScreen());
                     },
                   ),
                 ],
@@ -624,7 +566,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: bottom_Bar(context),
     );
   }
 }

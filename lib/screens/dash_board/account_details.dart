@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../../reusable/reusable_methods.dart';
 import '../../reusable/reusable_widgets.dart';
 import '../../utils/color_util.dart';
@@ -21,34 +22,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   bool _isEditing = false;
-  late String userURL =
-      'https://firebasestorage.googleapis.com/v0/b/campbelldecor-c2d1f.appspot.com/o/Users%2Fuser.png?alt=media&token=af8768f7-68e4-4961-892f-400eee8bae5d';
-
-  // Future<void> _loadUserData() async {
-  //   final User user = _auth.currentUser!;
-  //   final UserModel? userData = await _firestoreService.getUserData(user.uid);
-  //   _user = userData ??
-  //       UserModel(
-  //         id: '',
-  //         name: 'Loading...',
-  //         imgURL:
-  //             'https://firebasestorage.googleapis.com/v0/b/campbelldecor-c2d1f.appspot.com/o/Users%2Fuser.png?alt=media&token=af8768f7-68e4-4961-892f-400eee8bae5d',
-  //         email: '',
-  //         address: '',
-  //         phoneNo: '',
-  //       );
-  //
-  //   if (userData != null) {
-  //     setState(() {
-  //       _user = userData;
-  //       _nameController.text = _user.name;
-  //       _emailController.text = _user.email;
-  //       _phoneNoController.text = _user.phoneNo;
-  //       _addressController.text = _user.address;
-  //     });
-  //   }
-  // }
-
+  late String userURL;
   Future<Map<String, dynamic>> _loadUserData() async {
     final User user = _auth.currentUser!;
     final UserModel? userData = await _firestoreService.getUserData(user.uid);
@@ -81,20 +55,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       };
     }
   }
-
-  // Future<void> _loadUserData() async {
-  //   final User user = _auth.currentUser!;
-  //   final UserModel? userData = await _firestoreService.getUserData(user.uid);
-  //   if (userData != null) {
-  //     setState(() {
-  //       _user = userData;
-  //       _nameController.text = _user.name;
-  //       _emailController.text = _user.email;
-  //       _phoneNoController.text = _user.phoneNo;
-  //       _addressController.text = _user.address;
-  //     });
-  //   }
-  // }
 
   Future<void> _updateUserData() async {
     final String newName = _nameController.text.trim();
@@ -255,10 +215,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return CircularProgressIndicator(); // Show a loading indicator while fetching data.
+                          return CircularProgressIndicator();
                         } else if (snapshot.hasError) {
                           return Text('Error: ${snapshot.error}');
                         } else {
+                          Fluttertoast.showToast(
+                              msg: '${snapshot.data!['email']}',
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              backgroundColor: Colors.white,
+                              textColor: Colors.black);
                           _nameController.text = snapshot.data!['name'];
                           _emailController.text = snapshot.data!['email'];
                           _phoneNoController.text = snapshot.data!['phone'];

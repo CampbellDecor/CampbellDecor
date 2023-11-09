@@ -442,7 +442,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                       _addBooking();
                                       _addPaymentHistory(advance);
                                       sendNotificationForAdmin(widget.id);
-                                      Navigator.of(context).pop();
                                       Navigator.of(context)
                                           .pushReplacement(MaterialPageRoute(
                                         builder: (context) => HomeScreen(),
@@ -468,6 +467,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             } else if (selectedPaymentMethod ==
                                 'cash_on_hand') {
                               _addBooking();
+
+                              sendNotificationForAdmin(widget.id);
                               sendNotificationForAdmin(widget.id);
                               print('Id is : ${widget.id}');
                               Navigation(context, HomeScreen());

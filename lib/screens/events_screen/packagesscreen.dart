@@ -6,7 +6,7 @@ import '../../reusable/reusable_widgets.dart';
 import '../../utils/color_util.dart';
 import '../bookings_screens/date_view.dart';
 import '../bookings_screens/show_rating.dart';
-import '../filter_section/filter.dart';
+import '../filter_section/filterForPackages.dart';
 
 class PackageScreen extends StatefulWidget {
   @override
@@ -16,10 +16,6 @@ class PackageScreen extends StatefulWidget {
 class _PackageScreenState extends State<PackageScreen> {
   final CollectionReference _packages =
       FirebaseFirestore.instance.collection('packages');
-  final CollectionReference _services = FirebaseFirestore.instance
-      .collection('packages')
-      .doc()
-      .collection("services");
   PackageFilter _currentFilter = PackageFilter();
 
   @override
@@ -47,10 +43,9 @@ class _PackageScreenState extends State<PackageScreen> {
                 MaterialPageRoute(
                   builder: (context) => FilterScreen(
                     packageFilter: _currentFilter,
-                    applyFilters: () {
-                      // Apply filters and update UI when the filter screen is closed
-                      applyFilters();
-                      Navigator.of(context).pop(); // Close the filter screen
+                    apply: () {
+                      applyFilters(_currentFilter);
+                      Navigator.of(context).pop();
                     },
                   ),
                 ),
@@ -64,281 +59,263 @@ class _PackageScreenState extends State<PackageScreen> {
         children: [
           StreamBuilder<QuerySnapshot>(
             stream: _packages.snapshots(),
-            builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+            builder: (context, streamSnapshot) {
               if (streamSnapshot.hasData) {
-                // Apply filters to the data here
                 final filteredPackages = applyFiltersToPackages(
                   streamSnapshot.data!.docs,
-                  _currentFilter, // Pass the current filter
+                  _currentFilter,
                 );
+                if (filteredPackages.length > 0) {
+                  return LimitedBox(
+                      maxHeight: 713,
+                      child: ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          itemCount: filteredPackages.length,
+                          itemBuilder: (context, index) {
+                            final DocumentSnapshot documentSnapshot =
+                                filteredPackages[index];
+                            final Map<String, dynamic> service =
+                                documentSnapshot['services'];
 
-                return StreamBuilder<QuerySnapshot>(
-                  stream: _packages.snapshots(),
-                  builder:
-                      (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-                    if (streamSnapshot.hasData) {
-                      return LimitedBox(
-                        maxHeight: 713,
-                        child: ListView.builder(
-                            scrollDirection: Axis.vertical,
-                            itemCount: streamSnapshot.data!.docs.length,
-                            itemBuilder: (context, index) {
-                              final DocumentSnapshot documentSnapshot =
-                                  streamSnapshot.data!.docs[index];
-                              final Map<String, dynamic> service =
-                                  documentSnapshot['services'];
-                              List<MapEntry<String, dynamic>> serviceEntries =
-                                  service.entries.toList();
+                            List<Widget> listItems = [];
 
-                              List<Widget> listItems = [];
-
-                              service.forEach((key, value) {
-                                listItems.add(
-                                  ListTile(
-                                    title: Text(key),
-                                    subtitle: Text(value.toString()),
-                                  ),
-                                );
-                              });
-                              return Padding(
+                            service.forEach((key, value) {
+                              listItems.add(
+                                ListTile(
+                                  title: Text(key),
+                                  subtitle: Text(value.toString()),
+                                ),
+                              );
+                            });
+                            return Padding(
                                 padding:
                                     const EdgeInsets.fromLTRB(30, 10, 30, 10),
                                 child: GestureDetector(
-                                  onTap: () {
-                                    showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            shadowColor: Colors.black,
-                                            elevation: 8,
-                                            icon: const Icon(
-                                              Icons.event,
-                                              color: Colors.blue,
-                                              size: 60,
-                                            ),
-                                            title: Padding(
-                                              padding: EdgeInsets.all(4.0),
-                                              child: Padding(
+                                    onTap: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              shadowColor: Colors.black,
+                                              elevation: 8,
+                                              icon: const Icon(
+                                                Icons.event,
+                                                color: Colors.blue,
+                                                size: 60,
+                                              ),
+                                              title: Padding(
                                                 padding: EdgeInsets.all(4.0),
-                                                child: Text(
-                                                  "${documentSnapshot['packageName']}",
+                                                child: Padding(
+                                                  padding: EdgeInsets.all(4.0),
+                                                  child: Text(
+                                                    "${documentSnapshot['packageName']}",
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                            content: Container(
-                                              height: 350,
-                                              width: 300,
-                                              child: SingleChildScrollView(
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    SizedBox(
-                                                      height: 20,
-                                                    ),
-                                                    Text(
-                                                      "Total Amount : ${documentSnapshot['price']}",
-                                                      style: const TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 18),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 20,
-                                                    ),
-                                                    Text(
-                                                      "Services : ",
-                                                      style: const TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 18),
-                                                    ),
-                                                    LimitedBox(
-                                                      maxHeight: 300,
-                                                      child: ListView(
-                                                        children: listItems,
+                                              content: Container(
+                                                height: 350,
+                                                width: 300,
+                                                child: SingleChildScrollView(
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      SizedBox(
+                                                        height: 20,
                                                       ),
-                                                    ),
-                                                  ],
+                                                      Text(
+                                                        "Total Amount : ${documentSnapshot['price']}",
+                                                        style: const TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 18),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 20,
+                                                      ),
+                                                      Text(
+                                                        "Services : ",
+                                                        style: const TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 18),
+                                                      ),
+                                                      LimitedBox(
+                                                        maxHeight: 300,
+                                                        child: ListView(
+                                                          children: listItems,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(15.0),
-                                            ),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                child: const Text('Cancel',
-                                                    style: TextStyle(
-                                                        fontSize: 16)),
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(15.0),
                                               ),
-                                              TextButton(
-                                                onPressed: () async {
-                                                  SharedPreferences
-                                                      preferences =
-                                                      await SharedPreferences
-                                                          .getInstance();
-                                                  await preferences.setString(
-                                                      'package',
-                                                      documentSnapshot[
-                                                          'packageName']);
-                                                  await preferences.setDouble(
-                                                      'packageAmount',
-                                                      documentSnapshot['price']
-                                                          .toDouble());
-                                                  Navigation(context,
-                                                      CalendarScreen());
-                                                },
-                                                child: const Text('OK',
-                                                    style: TextStyle(
-                                                        fontSize: 16)),
-                                              ),
-                                            ],
-                                          );
-                                        });
-                                    // SharedPreferences preferences =
-                                    //     await SharedPreferences.getInstance();
-                                    // await preferences.setString('package',
-                                    //     documentSnapshot['packageName']);
-                                    // await preferences.setDouble('amount',
-                                    //     documentSnapshot['price'].toDouble());
-                                    // Navigation(context, CalendarScreen());
-                                  },
-                                  child: Card(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    elevation: 10,
-                                    child: Container(
-                                      height: 200,
-                                      width: 350,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        image: DecorationImage(
-                                          image: NetworkImage(
-                                            documentSnapshot['imgURL'],
-                                          ),
-                                          fit: BoxFit.cover,
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  child: const Text('Cancel',
+                                                      style: TextStyle(
+                                                          fontSize: 16)),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                                TextButton(
+                                                  onPressed: () async {
+                                                    SharedPreferences
+                                                        preferences =
+                                                        await SharedPreferences
+                                                            .getInstance();
+                                                    await preferences.setString(
+                                                        'package',
+                                                        documentSnapshot[
+                                                            'packageName']);
+                                                    await preferences.setDouble(
+                                                        'packageAmount',
+                                                        documentSnapshot[
+                                                                'price']
+                                                            .toDouble());
+                                                    Navigation(context,
+                                                        CalendarScreen());
+                                                  },
+                                                  child: const Text('OK',
+                                                      style: TextStyle(
+                                                          fontSize: 16)),
+                                                ),
+                                              ],
+                                            );
+                                          });
+                                    },
+                                    child: Card(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
                                         ),
-                                      ),
-                                      child: Stack(
-                                        children: [
-                                          Container(
+                                        elevation: 10,
+                                        child: Container(
+                                            height: 200,
+                                            width: 350,
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(20),
-                                              color:
-                                                  Colors.black.withOpacity(0.2),
+                                              image: DecorationImage(
+                                                image: NetworkImage(
+                                                  documentSnapshot['imgURL'],
+                                                ),
+                                                fit: BoxFit.cover,
+                                              ),
                                             ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.center,
-                                            child: ListTile(
-                                              //----------------------Text Container background ----------------------//
-
-                                              title: Container(
-                                                height: 70,
-                                                width: 300,
-                                                alignment: Alignment.center,
+                                            child: Stack(children: [
+                                              Container(
                                                 decoration: BoxDecoration(
                                                   borderRadius:
                                                       BorderRadius.circular(20),
                                                   color: Colors.black
-                                                      .withOpacity(0.5),
+                                                      .withOpacity(0.2),
                                                 ),
-                                                //----------------------Text Editings----------------------//
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Text(
-                                                    documentSnapshot[
-                                                        'packageName'],
-                                                    style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 20,
-                                                      color: Colors.white,
+                                              ),
+                                              Align(
+                                                alignment: Alignment.center,
+                                                child: ListTile(
+                                                  //----------------------Text Container background ----------------------//
+
+                                                  title: Container(
+                                                    height: 70,
+                                                    width: 300,
+                                                    alignment: Alignment.center,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20),
+                                                      color: Colors.black
+                                                          .withOpacity(0.5),
+                                                    ),
+                                                    //----------------------Text Editings----------------------//
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: Text(
+                                                        documentSnapshot[
+                                                            'packageName'],
+                                                        style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 20,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.bottomCenter,
-                                            child: ListTile(
-                                              //----------------------Text Container background ----------------------//
+                                              Align(
+                                                  alignment:
+                                                      Alignment.bottomCenter,
+                                                  child: ListTile(
+                                                      //----------------------Text Container background ----------------------//
 
-                                              title: Container(
-                                                height: 40,
-                                                width: 300,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                  color: Colors.black
-                                                      .withOpacity(0.7),
-                                                ),
-                                                //----------------------Text Editings----------------------//
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        ShowRatingBar(
-                                                          maxRating: 5,
-                                                          initialRating:
-                                                              documentSnapshot[
-                                                                      'avg_rating']
-                                                                  .toDouble(),
-                                                        ),
-                                                        const SizedBox(
-                                                          width: 16,
-                                                        ),
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(5.0),
-                                                          child: Text(
-                                                            documentSnapshot[
-                                                                    'rating_count']
-                                                                .toString(),
-                                                            style:
-                                                                const TextStyle(
-                                                                    color: Colors
-                                                                        .grey),
+                                                      title: Container(
+                                                          height: 40,
+                                                          width: 300,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20),
+                                                            color: Colors.black
+                                                                .withOpacity(
+                                                                    0.7),
                                                           ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                // ),
-                              );
-                            }),
-                      );
-                    }
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  },
-                );
+                                                          //----------------------Text Editings----------------------//
+                                                          child: Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .center,
+                                                                    children: [
+                                                                      ShowRatingBar(
+                                                                        maxRating:
+                                                                            5,
+                                                                        initialRating:
+                                                                            documentSnapshot['avg_rating'].toDouble(),
+                                                                      ),
+                                                                      const SizedBox(
+                                                                        width:
+                                                                            16,
+                                                                      ),
+                                                                      Padding(
+                                                                          padding: const EdgeInsets
+                                                                              .all(
+                                                                              5.0),
+                                                                          child:
+                                                                              Text(
+                                                                            documentSnapshot['rating_count'].toString(),
+                                                                            style:
+                                                                                const TextStyle(color: Colors.grey),
+                                                                          ))
+                                                                    ])
+                                                              ]))))
+                                            ])))));
+                          }));
+                } else {
+                  return const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(18.0),
+                      child: Text("No packages Available"),
+                    ),
+                  );
+                }
               }
               return const Center(
                 child: CircularProgressIndicator(),
@@ -351,21 +328,12 @@ class _PackageScreenState extends State<PackageScreen> {
     );
   }
 
-  // Function to apply filters to packages
   List<DocumentSnapshot> applyFiltersToPackages(
     List<QueryDocumentSnapshot> packages,
     PackageFilter filter,
   ) {
     var filteredPackages = packages;
 
-    // Apply event name filter
-    if (filter.eventName != null) {
-      filteredPackages = filteredPackages
-          .where((package) => package['packageName'] == filter.eventName)
-          .toList();
-    }
-
-    // Apply price range filter
     if (filter.minPrice != null) {
       filteredPackages = filteredPackages
           .where((package) => package['price'] >= filter.minPrice!)
@@ -376,18 +344,23 @@ class _PackageScreenState extends State<PackageScreen> {
           .where((package) => package['price'] <= filter.maxPrice!)
           .toList();
     }
-
+    if (filter.eventName != null) {
+      filteredPackages = filteredPackages
+          .where((package) => package['packageName'] == filter.eventName)
+          .toList();
+    }
+    //
     // Apply rating range filter
-    if (filter.minRating != null) {
-      filteredPackages = filteredPackages
-          .where((package) => package['rating'] >= filter.minRating!)
-          .toList();
-    }
-    if (filter.maxRating != null) {
-      filteredPackages = filteredPackages
-          .where((package) => package['rating'] <= filter.maxRating!)
-          .toList();
-    }
+    // if (filter.minRating != null) {
+    //   filteredPackages = filteredPackages
+    //       .where((package) => package['rating'] >= filter.minRating!)
+    //       .toList();
+    // }
+    // if (filter.maxRating != null) {
+    //   filteredPackages = filteredPackages
+    //       .where((package) => package['rating'] <= filter.maxRating!)
+    //       .toList();
+    // }
 
     // Apply order by
     if (filter.ascendingOrder) {
@@ -400,64 +373,9 @@ class _PackageScreenState extends State<PackageScreen> {
   }
 
   // Function to apply filters when filter screen is closed
-  void applyFilters() {
+  void applyFilters(PackageFilter filter) {
     setState(() {
-      // This function will be called when the filter screen is closed.
-      //  filter criteria.
+      _currentFilter = filter;
     });
   }
-//StreamBuilder<
-//                                                         QuerySnapshot>(
-//                                                       stream:
-//                                                           _services.snapshots(),
-//                                                       builder: (context,
-//                                                           AsyncSnapshot<
-//                                                                   QuerySnapshot>
-//                                                               streamSnapshotServices) {
-//                                                         if (streamSnapshotServices
-//                                                             .hasData) {
-//                                                           return Container(
-//                                                             child: Column(
-//                                                               children: [
-//                                                                 Text(
-//                                                                     "Services"),
-//                                                                 ListView
-//                                                                     .builder(
-//                                                                         itemCount: streamSnapshotServices
-//                                                                             .data!
-//                                                                             .docs
-//                                                                             .length,
-//                                                                         itemBuilder:
-//                                                                             (context,
-//                                                                                 index) {
-//                                                                           final DocumentSnapshot
-//                                                                               documentSnapshotServices =
-//                                                                               streamSnapshot.data!.docs[index];
-//                                                                           return Padding(
-//                                                                             padding: const EdgeInsets.fromLTRB(
-//                                                                                 30,
-//                                                                                 10,
-//                                                                                 30,
-//                                                                                 10),
-//                                                                             child:
-//                                                                                 Column(
-//                                                                               children: [
-//                                                                                 Text(
-//                                                                                   "Package name : ${documentSnapshotServices['name']}",
-//                                                                                   style: const TextStyle(color: Colors.blue, fontSize: 18),
-//                                                                                 ),
-//                                                                               ],
-//                                                                             ),
-//                                                                           );
-//                                                                         })
-//                                                               ],
-//                                                             ),
-//                                                           );
-//                                                         }
-//                                                         return const Center(
-//                                                           child:
-//                                                               CircularProgressIndicator(),
-//                                                         );
-//                                                       },
-//                                                     ),
 }

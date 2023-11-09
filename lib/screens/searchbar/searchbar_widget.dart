@@ -131,10 +131,8 @@
 //   }
 // }
 /****************************************************/
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../../utils/color_util.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -145,30 +143,17 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   TextEditingController _searchController = TextEditingController();
   List<QuerySnapshot> _searchResultsList = [];
-  String _selectedFilter = 'All'; // Default filter
-
   void _performSearch(String searchQuery) async {
     if (searchQuery.isNotEmpty) {
       List<Future<QuerySnapshot>> searchFutures = [];
-
-      // Perform search in each collection reference based on the selected filter
       for (var collectionReference in collectionReferences) {
         var query = collectionReference
             .where('name', isGreaterThanOrEqualTo: searchQuery)
             .where('name', isLessThan: searchQuery + 'z');
-
-        if (_selectedFilter != 'All') {
-          query = query.where('type', isEqualTo: _selectedFilter);
-        }
-
         searchFutures.add(query.get());
       }
-
-      // Wait for all search queries to complete
       List<QuerySnapshot> results = await Future.wait(searchFutures);
-
       setState(() {
-        // Merge the results into a single list
         _searchResultsList = results;
       });
     } else {
@@ -181,53 +166,56 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Search'),
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-              hexStringtoColor("CB2893"),
-              hexStringtoColor("9546C4"),
-              hexStringtoColor("5E61F4")
-            ], begin: Alignment.bottomRight, end: Alignment.topLeft),
-          ),
-        ),
-        actions: [
-          // Add a filter dropdown button
-          DropdownButton<String>(
-            value: _selectedFilter,
-            onChanged: (String? newValue) {
-              setState(() {
-                _selectedFilter = newValue!;
-              });
-
-              // Perform a new search based on the selected filter
-              _performSearch(_searchController.text);
-            },
-            items: ['All', 'Events', 'Services', 'Packages']
-                .map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(
-                  value,
-                  style: TextStyle(color: Colors.white),
-                ),
-              );
-            }).toList(),
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          TextField(
-            controller: _searchController,
-            onChanged: _performSearch,
-            decoration: InputDecoration(
-              hintText: 'Search...',
+        appBar: AppBar(
+          title: Text('Search'),
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [
+                hexStringtoColor("CB2893"),
+                hexStringtoColor("9546C4"),
+                hexStringtoColor("5E61F4")
+              ], begin: Alignment.bottomRight, end: Alignment.topLeft),
             ),
           ),
-          Expanded(
-            child: ListView.builder(
+        ),
+        body: Column(
+          children: [
+            Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  controller: _searchController,
+                  onChanged: _performSearch,
+                  decoration: InputDecoration(
+                    hintText: 'Search here...',
+                    prefixIcon: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(
+                        Icons.search_outlined,
+                        size: 35,
+                      ),
+                    ),
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        _searchController.text = '';
+                      },
+                      child: Icon(
+                        Icons.clear,
+                        color: Colors.red,
+                      ),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50),
+                      borderSide: BorderSide(color: Colors.blue),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50.0),
+                      borderSide: BorderSide(color: Colors.green),
+                    ),
+                    contentPadding: EdgeInsets.all(16.0),
+                  ),
+                )),
+            Expanded(
+                child: ListView.builder(
               itemCount: _searchResultsList.length,
               itemBuilder: (context, collectionIndex) {
                 var searchResults = _searchResultsList[collectionIndex];
@@ -236,25 +224,22 @@ class _SearchScreenState extends State<SearchScreen> {
                   children: searchResults.docs.map((doc) {
                     Map<String, dynamic> data =
                         doc.data() as Map<String, dynamic>;
-
                     return ListTile(
                       title: Text(data['name'] ?? 'Title not found'),
                       onTap: () {
-                        // Add navigation logic here
+                        Navigator.pushNamed(context, '/eventScreen',
+                            arguments: data['name']);
                       },
                     );
                   }).toList(),
                 );
               },
-            ),
-          ),
-        ],
-      ),
-    );
+            ))
+          ],
+        ));
   }
 }
 
 List<CollectionReference> collectionReferences = [
   FirebaseFirestore.instance.collection('events'),
-  FirebaseFirestore.instance.collection('services'),
 ];

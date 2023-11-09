@@ -1,22 +1,16 @@
-import 'package:campbelldecor/screens/bookings_screens/pdfGenerater.dart';
-import 'package:campbelldecor/screens/bookings_screens/qr.dart';
-import 'package:campbelldecor/screens/bookings_screens/qr_code_generator.dart';
-import 'package:campbelldecor/screens/dash_board/homescreen.dart';
+import 'package:campbelldecor/screens/bookings_screens/show_rating.dart';
+import 'package:campbelldecor/screens/dash_board/viewer_screen.dart';
+import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
 import 'package:campbelldecor/screens/notifications/notification_setup.dart';
 import 'package:campbelldecor/screens/notifications/notificationscreenForAdmin.dart';
-import 'package:campbelldecor/screens/payment_screens/user_confirmUI.dart';
-import 'package:campbelldecor/screens/test04.dart';
 import 'package:campbelldecor/screens/theme/theme_colors.dart';
 import 'package:campbelldecor/screens/theme/theme_manager.dart';
-import 'package:campbelldecor/screens/usercredential/otp_setup.dart';
-import 'package:campbelldecor/screens/usercredential/signinscreen.dart';
-import 'package:campbelldecor/screens/verification/phone.dart';
-import 'package:campbelldecor/screens/verification/verify.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
+import 'screens/bookings_screens/custom_rating.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
@@ -57,10 +51,14 @@ class _MyAppState extends State<MyApp> {
               theme: ThemeClass.lightTheme,
               darkTheme: ThemeClass.darkTheme,
               themeMode: themeManager.themeMode,
-              home: SignInScreen(),
+              home: ViewerScreen(),
               navigatorKey: navigatorKey,
               routes: {
                 NotificationScreen.route: (context) => NotificationScreen(),
+                '/eventScreen': (context) {
+                  final args = ModalRoute.of(context)!.settings.arguments;
+                  return EventsScreen(name: args as String);
+                },
               },
             );
           },
