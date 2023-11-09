@@ -23,31 +23,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final TextEditingController _emailController = TextEditingController();
   bool _isEditing = false;
   late String userURL;
-  // Future<void> _loadUserData() async {
-  //   final User user = _auth.currentUser!;
-  //   final UserModel? userData = await _firestoreService.getUserData(user.uid);
-  //   _user = userData ??
-  //       UserModel(
-  //         id: '',
-  //         name: 'Loading...',
-  //         imgURL:
-  //             'https://firebasestorage.googleapis.com/v0/b/campbelldecor-c2d1f.appspot.com/o/Users%2Fuser.png?alt=media&token=af8768f7-68e4-4961-892f-400eee8bae5d',
-  //         email: '',
-  //         address: '',
-  //         phoneNo: '',
-  //       );
-  //
-  //   if (userData != null) {
-  //     setState(() {
-  //       _user = userData;
-  //       _nameController.text = _user.name;
-  //       _emailController.text = _user.email;
-  //       _phoneNoController.text = _user.phoneNo;
-  //       _addressController.text = _user.address;
-  //     });
-  //   }
-  // }
-
   Future<Map<String, dynamic>> _loadUserData() async {
     final User user = _auth.currentUser!;
     final UserModel? userData = await _firestoreService.getUserData(user.uid);

@@ -143,7 +143,6 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   TextEditingController _searchController = TextEditingController();
   List<QuerySnapshot> _searchResultsList = [];
-  String _selectedFilter = 'All';
   void _performSearch(String searchQuery) async {
     if (searchQuery.isNotEmpty) {
       List<Future<QuerySnapshot>> searchFutures = [];
@@ -151,9 +150,6 @@ class _SearchScreenState extends State<SearchScreen> {
         var query = collectionReference
             .where('name', isGreaterThanOrEqualTo: searchQuery)
             .where('name', isLessThan: searchQuery + 'z');
-        if (_selectedFilter != 'All') {
-          query = query.where('type', isEqualTo: _selectedFilter);
-        }
         searchFutures.add(query.get());
       }
       List<QuerySnapshot> results = await Future.wait(searchFutures);
@@ -181,49 +177,43 @@ class _SearchScreenState extends State<SearchScreen> {
               ], begin: Alignment.bottomRight, end: Alignment.topLeft),
             ),
           ),
-          actions: [
-            DropdownButton<String>(
-              borderRadius: BorderRadius.circular(20),
-              dropdownColor: Colors.blue,
-              value: _selectedFilter,
-              onChanged: (String? newValue) {
-                setState(() {
-                  _selectedFilter = newValue!;
-                });
-                _performSearch(_searchController.text);
-              },
-              items: ['All', 'Events', 'Services', 'Packages']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                        child: Text(
-                          value,
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      Divider(
-                        thickness: 2,
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
-            ),
-          ],
         ),
         body: Column(
           children: [
-            TextField(
-              controller: _searchController,
-              onChanged: _performSearch,
-              decoration: InputDecoration(
-                hintText: 'Search...',
-              ),
-            ),
+            Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  controller: _searchController,
+                  onChanged: _performSearch,
+                  decoration: InputDecoration(
+                    hintText: 'Search here...',
+                    prefixIcon: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(
+                        Icons.search_outlined,
+                        size: 35,
+                      ),
+                    ),
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        _searchController.text = '';
+                      },
+                      child: Icon(
+                        Icons.clear,
+                        color: Colors.red,
+                      ),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50),
+                      borderSide: BorderSide(color: Colors.blue),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50.0),
+                      borderSide: BorderSide(color: Colors.green),
+                    ),
+                    contentPadding: EdgeInsets.all(16.0),
+                  ),
+                )),
             Expanded(
                 child: ListView.builder(
               itemCount: _searchResultsList.length,

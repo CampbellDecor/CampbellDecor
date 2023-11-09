@@ -1,6 +1,7 @@
 import 'package:campbelldecor/reusable/reusable_methods.dart';
 import 'package:campbelldecor/screens/dash_board/contactUs.dart';
 import 'package:campbelldecor/screens/bookings_screens/booking_details_screen.dart';
+import 'package:campbelldecor/screens/usercredential/signupscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -141,9 +142,67 @@ class _MyDrawerState extends State<MyDrawer> {
           ),
           ListTile(
             title: const Text('Contact Us'),
-            leading: const Icon(Icons.mail),
+            leading: const Icon(Icons.mail_outline_outlined),
             onTap: () {
               Navigation(context, ContactUs());
+            },
+          ),
+          const Divider(
+            height: 0.1,
+            thickness: 1.5,
+            indent: 20,
+            endIndent: 20,
+          ),
+          ListTile(
+            title: const Text('Delete My Account'),
+            leading: const Icon(Icons.delete_outline_outlined),
+            onTap: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      shadowColor: Colors.black,
+                      elevation: 8,
+                      icon: const Icon(
+                        Icons.info_outline_rounded,
+                        color: Colors.blue,
+                        size: 40,
+                      ),
+                      title: const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text('Information'),
+                        ),
+                      ),
+                      content: Text(
+                        "Do you want to delete your account?",
+                        style:
+                            const TextStyle(color: Colors.blue, fontSize: 18),
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          child: const Text('Cancel',
+                              style: TextStyle(fontSize: 16)),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        TextButton(
+                          child:
+                              const Text('OK', style: TextStyle(fontSize: 16)),
+                          onPressed: () {
+                            _deleteAccount();
+                            Navigator.of(context).pop();
+                            Navigation(context, SignUpScreen());
+                          },
+                        ),
+                      ],
+                    );
+                  });
             },
           ),
           const Divider(
@@ -155,5 +214,21 @@ class _MyDrawerState extends State<MyDrawer> {
         ],
       ),
     );
+  }
+
+  Future<void> _deleteAccount() async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .delete();
+
+        await user.delete();
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
   }
 }

@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:campbelldecor/reusable/reusable_methods.dart';
-import 'package:campbelldecor/screens/bookings_screens/booking_screen.dart';
 import 'package:campbelldecor/screens/bookings_screens/cart_screen.dart';
 import 'package:campbelldecor/screens/events_screen/serviceselectscreen.dart';
 import 'package:campbelldecor/screens/payment_screens/checkoutscreen.dart';
@@ -183,10 +182,12 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                   await getDoubleData('packageAmount');
                               event = await getData('event');
                               package = await getData('package');
-                              print('Total Amount $amount');
+                              print(' Amount $amount');
                               print('packageAmount $packageAmount');
                               /**---------------------insert Add to cart Collection---------------------**/
-                              if (amount != null && amount! > 0) {
+                              if ((amount != null && amount! > 0) ||
+                                  (packageAmount != null &&
+                                      packageAmount! > 0)) {
                                 if (event != null) {
                                   await insertData(
                                           'bookings',
@@ -236,7 +237,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                     });
                                   });
                                 }
-                              } else if (amount == null) {
+                              } else {
                                 showInformation(
                                     context, 'Please Select Services');
                               }
@@ -276,7 +277,9 @@ class _ServicesScreenState extends State<ServicesScreen> {
                               package = await getData('package');
 
                               /*---------------------insert Booking Collection---------------------*/
-                              if (amount != null && amount! > 0) {
+                              if ((amount != null && amount! > 0) ||
+                                  (packageAmount != null &&
+                                      packageAmount! > 0)) {
                                 if (event != null) {
                                   await insertData(
                                           'bookings',

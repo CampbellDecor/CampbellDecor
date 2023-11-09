@@ -1,21 +1,11 @@
-import 'dart:math';
 import 'package:campbelldecor/reusable/reusable_methods.dart';
-import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
-import 'package:campbelldecor/screens/notifications/notification_services.dart';
-import 'package:campbelldecor/screens/theme/theme_manager.dart';
 import 'package:campbelldecor/screens/usercredential/signinscreen.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../reusable/reusable_widgets.dart';
 import '../../utils/color_util.dart';
-import '../bookings_screens/date_view.dart';
 import '../bookings_screens/show_rating.dart';
-import '../events_screen/packagesscreen.dart';
-import 'header_nav.dart';
-import 'package:flutter/cupertino.dart';
 
 class ViewerScreen extends StatefulWidget {
   @override
@@ -61,15 +51,25 @@ class _ViewerScreenState extends State<ViewerScreen> {
           ),
         ),
         actions: [
-          TextButton(
-              onPressed: () {
-                // Navigator.pop(context);
-                Navigation(context, const SignInScreen());
-              },
-              child: Text(
-                'Login',
-                style: TextStyle(fontSize: 18),
-              )),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
+            child: TextButton(
+                onPressed: () {
+                  // Navigator.pop(context);
+                  Navigation(context, const SignInScreen());
+                },
+                child: Text(
+                  'Login',
+                  style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900),
+                )),
+          ),
+          Icon(
+            Icons.login_sharp,
+            color: Colors.white70,
+          ),
         ],
       ),
       body: Stack(
@@ -92,7 +92,7 @@ class _ViewerScreenState extends State<ViewerScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(8, 20, 8, 0),
+                    padding: const EdgeInsets.fromLTRB(18, 20, 8, 0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [

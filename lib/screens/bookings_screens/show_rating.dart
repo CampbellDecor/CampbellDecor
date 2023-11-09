@@ -24,24 +24,26 @@ class _ShowRatingBarState extends State<ShowRatingBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: List.generate(
-            widget.maxRating,
-            (index) {
-              double fillPercentage = (index + 1) * 20;
-              bool isFilled = _rating >= fillPercentage;
-              return Icon(
-                isFilled ? Icons.star : Icons.star_border,
-                color: isFilled ? Colors.amber : Colors.grey,
-                size: 20,
-              );
-            },
+    return Center(
+      child: Column(
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: List.generate(
+              widget.maxRating,
+              (index) {
+                double fillPercentage = (index + 1) * 20;
+                bool isFilled = _rating >= fillPercentage;
+                return Icon(
+                  isFilled ? Icons.star : Icons.star_border,
+                  color: isFilled ? Colors.amber : Colors.grey,
+                  size: 20,
+                );
+              },
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

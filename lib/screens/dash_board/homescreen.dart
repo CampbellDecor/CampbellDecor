@@ -8,8 +8,10 @@ import 'package:campbelldecor/screens/usercredential/signinscreen.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:confetti/confetti.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../reusable/reusable_widgets.dart';
 import '../../utils/color_util.dart';
 import '../bookings_screens/date_view.dart';
@@ -31,6 +33,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     controller.play();
+    setOutDatedBooking();
+    updateDeviceTokenForNotification(FirebaseAuth.instance.currentUser!.uid);
     notificationServices.requestNotificationPermission();
     notificationServices.firebaseInit(context);
     notificationServices.setupIneractMessage(context);
@@ -121,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(8, 20, 8, 0),
+                    padding: const EdgeInsets.fromLTRB(18, 20, 8, 0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -334,7 +338,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 20),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.fromLTRB(18, 8, 8, 8),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -374,61 +378,73 @@ class _HomeScreenState extends State<HomeScreen> {
                                 return Padding(
                                   padding:
                                       const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                                  child: Card(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    elevation: 10,
-                                    child: Container(
-                                      height: 150,
-                                      width: 300,
-                                      decoration: BoxDecoration(
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      SharedPreferences preferences =
+                                          await SharedPreferences.getInstance();
+                                      preferences.setString(
+                                          'event', documentSnapshot['name']);
+                                      Navigation(context, CalendarScreen());
+                                    },
+                                    child: Card(
+                                      shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(20),
-                                        image: DecorationImage(
-                                          image: NetworkImage(
-                                            documentSnapshot['imgURL'],
-                                          ),
-                                          fit: BoxFit.cover,
-                                        ),
                                       ),
-                                      child: Stack(
-                                        children: [
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                              color:
-                                                  Colors.black.withOpacity(0.4),
+                                      elevation: 10,
+                                      child: Container(
+                                        height: 150,
+                                        width: 300,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          image: DecorationImage(
+                                            image: NetworkImage(
+                                              documentSnapshot['imgURL'],
                                             ),
+                                            fit: BoxFit.cover,
                                           ),
-                                          Align(
-                                            alignment: Alignment.center,
-                                            child: ListTile(
-                                              //----------------------Text Container background ----------------------//
+                                        ),
+                                        child: Stack(
+                                          children: [
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                color: Colors.black
+                                                    .withOpacity(0.4),
+                                              ),
+                                            ),
+                                            Align(
+                                              alignment: Alignment.center,
+                                              child: ListTile(
+                                                //----------------------Text Container background ----------------------//
 
-                                              title: Container(
-                                                height: 70,
-                                                width: 300,
-                                                alignment: Alignment.center,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                  color: Colors.black
-                                                      .withOpacity(0.5),
-                                                ),
-                                                //----------------------Text Editings----------------------//
-                                                child: Text(
-                                                  documentSnapshot['name'],
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 20,
-                                                    color: Colors.white,
+                                                title: Container(
+                                                  height: 70,
+                                                  width: 300,
+                                                  alignment: Alignment.center,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                    color: Colors.black
+                                                        .withOpacity(0.5),
+                                                  ),
+                                                  //----------------------Text Editings----------------------//
+                                                  child: Text(
+                                                    documentSnapshot['name'],
+                                                    style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 20,
+                                                      color: Colors.white,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -458,12 +474,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontSize: 18),
                     ),
                     onPressed: () {
-                      Navigation(context, EventsScreen());
+                      Navigation(
+                          context,
+                          EventsScreen(
+                            name: 'more',
+                          ));
                     },
                   ),
                   const SizedBox(height: 20),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.fromLTRB(18, 8, 8, 8),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -502,61 +522,69 @@ class _HomeScreenState extends State<HomeScreen> {
                                 return Padding(
                                   padding:
                                       const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                                  child: Card(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    elevation: 10,
-                                    child: Container(
-                                      height: 150,
-                                      width: 300,
-                                      decoration: BoxDecoration(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigation(context, CalendarScreen());
+                                    },
+                                    child: Card(
+                                      shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(20),
-                                        image: DecorationImage(
-                                          image: NetworkImage(
-                                            documentSnapshot['imgURL'],
-                                          ),
-                                          fit: BoxFit.cover,
-                                        ),
                                       ),
-                                      child: Stack(
-                                        children: [
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                              color:
-                                                  Colors.black.withOpacity(0.5),
+                                      elevation: 10,
+                                      child: Container(
+                                        height: 150,
+                                        width: 300,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          image: DecorationImage(
+                                            image: NetworkImage(
+                                              documentSnapshot['imgURL'],
                                             ),
+                                            fit: BoxFit.cover,
                                           ),
-                                          Align(
-                                            alignment: Alignment.center,
-                                            child: ListTile(
-                                              //----------------------Text Container background ----------------------//
+                                        ),
+                                        child: Stack(
+                                          children: [
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                color: Colors.black
+                                                    .withOpacity(0.5),
+                                              ),
+                                            ),
+                                            Align(
+                                              alignment: Alignment.center,
+                                              child: ListTile(
+                                                //----------------------Text Container background ----------------------//
 
-                                              title: Container(
-                                                height: 70,
-                                                width: 300,
-                                                alignment: Alignment.center,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                  color: Colors.black
-                                                      .withOpacity(0.5),
-                                                ),
-                                                //----------------------Text Editings----------------------//
-                                                child: Text(
-                                                  documentSnapshot['name'],
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 20,
-                                                    color: Colors.white,
+                                                title: Container(
+                                                  height: 70,
+                                                  width: 300,
+                                                  alignment: Alignment.center,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                    color: Colors.black
+                                                        .withOpacity(0.5),
+                                                  ),
+                                                  //----------------------Text Editings----------------------//
+                                                  child: Text(
+                                                    documentSnapshot['name'],
+                                                    style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 20,
+                                                      color: Colors.white,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),

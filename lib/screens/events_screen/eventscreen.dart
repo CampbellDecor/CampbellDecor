@@ -1,46 +1,61 @@
 import 'package:campbelldecor/screens/bookings_screens/date_view.dart';
-import 'package:campbelldecor/screens/events_screen/religion.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../reusable/reusable_methods.dart';
 import '../../reusable/reusable_widgets.dart';
 import '../../utils/color_util.dart';
 
 class EventsScreen extends StatefulWidget {
+  final String name;
+  EventsScreen({required this.name});
+
   @override
   State<EventsScreen> createState() => _EventsScreenState();
+}
+
+class EventFilter {
+  String? eventName;
 }
 
 class _EventsScreenState extends State<EventsScreen> {
   final CollectionReference _events =
       FirebaseFirestore.instance.collection('events');
-  /************----***************/
-  List<DocumentSnapshot> filteredEvents = [];
+  EventFilter _currentFilter = EventFilter();
+
+  @override
+  void initState() {
+    super.initState();
+
+    ();
+  }
 
   void filterEvents(String data) {
-    Fluttertoast.showToast(
-        msg: "your message",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.white,
-        textColor: Colors.black);
-    final query = data.toLowerCase();
-    _events
-        .where('names', isGreaterThanOrEqualTo: query)
-        .get()
-        .then((querySnapshot) {
-      setState(() {
-        filteredEvents = querySnapshot.docs;
-      });
+    setState(() {
+      _currentFilter.eventName = widget.name;
     });
   }
 
-  /************----***************/
+  List<DocumentSnapshot> applyFiltersToEvents(
+    List<QueryDocumentSnapshot> events,
+    EventFilter filter,
+  ) {
+    var filteredEvents = events;
+    if (filter.eventName != null) {
+      if (filter.eventName == 'more') {
+      } else {
+        filteredEvents = filteredEvents
+            .where((event) => event['name'] == filter.eventName)
+            .toList();
+      }
+    }
+
+    return filteredEvents;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final String data = ModalRoute.of(context)!.settings.arguments.toString();
+    final String data = widget.name;
     filterEvents(data);
 
     return Scaffold(
@@ -64,15 +79,19 @@ class _EventsScreenState extends State<EventsScreen> {
             child: Column(children: [
           StreamBuilder<QuerySnapshot>(
               stream: _events.snapshots(),
-              builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+              builder: (context, streamSnapshot) {
                 if (streamSnapshot.hasData) {
+                  final filteredEvents = applyFiltersToEvents(
+                    streamSnapshot.data!.docs,
+                    _currentFilter,
+                  );
                   return LimitedBox(
                     maxHeight: 720,
                     child: ListView.builder(
-                        itemCount: streamSnapshot.data!.docs.length,
+                        itemCount: filteredEvents.length,
                         itemBuilder: (context, index) {
                           final DocumentSnapshot documentSnapshot =
-                              streamSnapshot.data!.docs[index];
+                              filteredEvents[index];
                           return Padding(
                               padding:
                                   const EdgeInsets.fromLTRB(50, 10, 50, 10),
@@ -140,9 +159,7 @@ class _EventsScreenState extends State<EventsScreen> {
                                                     ),
                                                   ),
                                                 ))
-                                          ]))))
-                              // ),
-                              );
+                                          ])))));
                         }),
                   );
                 }

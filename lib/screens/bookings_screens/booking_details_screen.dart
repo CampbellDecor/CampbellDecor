@@ -5,8 +5,34 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../reusable/reusable_methods.dart';
 import '../../utils/color_util.dart';
+import 'custom_rating.dart';
 
-class BookingScreen extends StatelessWidget {
+class BookingScreen extends StatefulWidget {
+  @override
+  State<BookingScreen> createState() => _BookingScreenState();
+}
+
+class _BookingScreenState extends State<BookingScreen> {
+  late String packageId;
+  late String bookingId;
+
+  Future<void> getPackage(String packageName, String id) async {
+    try {
+      CollectionReference collectionReference =
+          FirebaseFirestore.instance.collection("packages");
+      QuerySnapshot snapshot = await collectionReference
+          .where('packageName', isEqualTo: packageName)
+          .get();
+      setState(() {
+        packageId = snapshot.docs.first.id;
+        bookingId = id;
+      });
+      print(snapshot.docs.first.id);
+    } catch (e) {
+      print('Erorr$e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,7 +98,7 @@ class BookingScreen extends StatelessWidget {
               } else if (index <= activeBookings.length) {
                 final doc = activeBookings[index - 1];
                 return buildBookingCard1(
-                    context, doc, Colors.blue, Colors.pink);
+                    context, doc, Colors.deepPurpleAccent, Colors.pinkAccent);
               } else if (index == activeBookings.length + 1) {
                 return const Padding(
                   padding: EdgeInsets.all(8.0),
@@ -99,7 +125,7 @@ class BookingScreen extends StatelessWidget {
                 final doc = expiredBookings[
                     index - activeBookings.length - pendingBookings.length - 3];
                 return buildBookingCard3(
-                    context, doc, Colors.deepPurpleAccent, Colors.pinkAccent);
+                    context, doc, Colors.blue, Colors.pink);
               }
             },
           );
@@ -111,7 +137,7 @@ class BookingScreen extends StatelessWidget {
   Widget buildBookingCard1(BuildContext context,
       DocumentSnapshot documentSnapshot, Color startColor, Color endColor) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(58, 10, 58, 10),
+      padding: const EdgeInsets.fromLTRB(50, 10, 50, 10),
       child: GestureDetector(
         onTap: () async {
           FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -163,7 +189,239 @@ class BookingScreen extends StatelessWidget {
                     content: SingleChildScrollView(
                       child: Container(
                         height: 350,
-                        width: 400,
+                        width: 500,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                "Event Date : ${DateFormat.yMd().format(documentSnapshot['eventDate'].toDate())}",
+                                style: const TextStyle(
+                                    color: Colors.black, fontSize: 18),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                "Booking Date : ${DateFormat.yMd().format(documentSnapshot['date'].toDate())}",
+                                style: const TextStyle(
+                                    color: Colors.black, fontSize: 18),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                "Total Amount : ${documentSnapshot['paymentAmount']}",
+                                style: const TextStyle(
+                                    color: Colors.black, fontSize: 18),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                "Services : ",
+                                style: const TextStyle(
+                                    color: Colors.black, fontSize: 18),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(28.0),
+                                child: LimitedBox(
+                                  maxHeight: 200,
+                                  child: Container(
+                                    // decoration:
+                                    //     BoxDecoration(color: Colors.blue),
+                                    child: ListView(
+                                      children: listItems,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        child: const Text('OK', style: TextStyle(fontSize: 16)),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                });
+          }
+        },
+        child: Container(
+          height: 250,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(50),
+            gradient: LinearGradient(
+              colors: [startColor, endColor],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: Card(
+            color: Colors.transparent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            elevation: 10,
+            child: Container(
+              height: 250,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Center(
+                    child: ListTile(
+                      title: Padding(
+                        padding: const EdgeInsets.fromLTRB(50, 10, 50, 0),
+                        child: Text(
+                          documentSnapshot['name'],
+                          style: const TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      // subtitle: Text('Upcoming on ${documentSnapshot.data[index].date.toString()}'),
+                    ),
+                  ),
+                  Center(
+                    child: ListTile(
+                      title: Padding(
+                        padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
+                        child: Text(
+                          DateFormat.yMd()
+                              .format(documentSnapshot['date'].toDate()),
+                          style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      // subtitle: Text('Upcoming on ${documentSnapshot.data[index].date.toString()}'),
+                    ),
+                  ),
+                  const Divider(
+                    thickness: 3,
+                    height: 0.1,
+                    indent: 20,
+                    endIndent: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      width: 150,
+                      color: Colors.transparent,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          if (documentSnapshot['eventDate'].toDate().isAfter(
+                              DateTime.now().add(const Duration(days: 14)))) {
+                            String bookingId = documentSnapshot.id;
+
+                            try {
+                              cancelInformationAlert(
+                                  context, 'Are you Confirm cancel', bookingId);
+                            } catch (error) {
+                              print('Error deleting booking: $error');
+                            }
+                          } else {
+                            String bookingId = documentSnapshot.id;
+
+                            cancelInformationAlert(
+                                context,
+                                'You are not eligible to get a full refund',
+                                bookingId);
+                          }
+                        },
+                        child: const Text('Cancel'),
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50.0),
+                            ),
+                          ),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Colors.transparent),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildBookingCard2(BuildContext context,
+      DocumentSnapshot documentSnapshot, Color startColor, Color endColor) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(50, 10, 50, 10),
+      child: GestureDetector(
+        onTap: () async {
+          FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+          DocumentReference userDocRef =
+              firestore.collection('bookings').doc(documentSnapshot.id);
+          CollectionReference ordersCollectionRef =
+              userDocRef.collection('service');
+
+          QuerySnapshot querySnapshot = await ordersCollectionRef.get();
+
+          if (querySnapshot.docs.length > 0) {
+            Map<String, dynamic> service = {};
+
+            querySnapshot.docs.forEach((orderDoc) {
+              service = orderDoc.data() as Map<String, dynamic>;
+            });
+
+            List<Widget> listItems = [];
+            service.forEach((key, value) {
+              listItems.add(
+                ListTile(
+                  title: Text(key),
+                  subtitle: Text(value.toString()),
+                ),
+              );
+            });
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    shadowColor: Colors.black,
+                    elevation: 8,
+                    icon: const Icon(
+                      Icons.event,
+                      color: Colors.blue,
+                      size: 60,
+                    ),
+                    title: Padding(
+                      padding: EdgeInsets.all(4.0),
+                      child: Padding(
+                        padding: EdgeInsets.all(4.0),
+                        child: Text(
+                          "${documentSnapshot['name']}",
+                        ),
+                      ),
+                    ),
+                    content: SingleChildScrollView(
+                      child: Container(
+                        height: 350,
+                        width: 500,
                         child: SingleChildScrollView(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -253,18 +511,18 @@ class BookingScreen extends StatelessWidget {
             child: Container(
               height: 200,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Center(
                     child: ListTile(
                       title: Padding(
-                        padding: const EdgeInsets.fromLTRB(58, 10, 58, 0),
+                        padding: const EdgeInsets.fromLTRB(50, 0, 8, 0),
                         child: Text(
                           documentSnapshot['name'],
                           style: const TextStyle(
-                              fontSize: 20,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
                         ),
                       ),
                       // subtitle: Text('Upcoming on ${documentSnapshot.data[index].date.toString()}'),
@@ -273,24 +531,29 @@ class BookingScreen extends StatelessWidget {
                   Center(
                     child: ListTile(
                       title: Padding(
-                        padding: const EdgeInsets.fromLTRB(58, 0, 58, 0),
+                        padding: const EdgeInsets.fromLTRB(50, 0, 8, 0),
                         child: Text(
                           DateFormat.yMd()
                               .format(documentSnapshot['date'].toDate()),
                           style: const TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
                         ),
                       ),
-                      // subtitle: Text('Upcoming on ${documentSnapshot.data[index].date.toString()}'),
+                      trailing: Text(
+                        documentSnapshot['status'],
+                        style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white70),
+                      ),
                     ),
-                  ),
-                  const Divider(
-                    thickness: 5,
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
-                      width: 200,
+                      width: 150,
                       color: Colors.transparent,
                       child: ElevatedButton(
                         onPressed: () async {
@@ -300,10 +563,7 @@ class BookingScreen extends StatelessWidget {
 
                             try {
                               cancelInformationAlert(
-                                  context,
-                                  'Are you Confirm cancel',
-                                  BookingScreen(),
-                                  bookingId);
+                                  context, 'Are you Confirm cancel', bookingId);
                             } catch (error) {
                               print('Error deleting booking: $error');
                             }
@@ -313,7 +573,6 @@ class BookingScreen extends StatelessWidget {
                             cancelInformationAlert(
                                 context,
                                 'You are not eligible to get a full refund',
-                                BookingScreen(),
                                 bookingId);
                           }
                         },
@@ -340,198 +599,10 @@ class BookingScreen extends StatelessWidget {
     );
   }
 
-  Widget buildBookingCard2(BuildContext context,
-      DocumentSnapshot documentSnapshot, Color startColor, Color endColor) {
-    bool isFlipped = false;
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(58, 10, 58, 10),
-      child: GestureDetector(
-        onTap: () async {
-          FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-          DocumentReference userDocRef =
-              firestore.collection('bookings').doc(documentSnapshot.id);
-          CollectionReference ordersCollectionRef =
-              userDocRef.collection('service');
-
-          QuerySnapshot querySnapshot = await ordersCollectionRef.get();
-
-          if (querySnapshot.docs.length > 0) {
-            Map<String, dynamic> service = {};
-
-            querySnapshot.docs.forEach((orderDoc) {
-              service = orderDoc.data() as Map<String, dynamic>;
-            });
-
-            List<Widget> listItems = [];
-
-            service.forEach((key, value) {
-              listItems.add(
-                ListTile(
-                  title: Text(key),
-                  subtitle: Text(value.toString()),
-                ),
-              );
-            });
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    shadowColor: Colors.black,
-                    elevation: 8,
-                    icon: const Icon(
-                      Icons.event,
-                      color: Colors.blue,
-                      size: 60,
-                    ),
-                    title: Padding(
-                      padding: EdgeInsets.all(4.0),
-                      child: Padding(
-                        padding: EdgeInsets.all(4.0),
-                        child: Text(
-                          "${documentSnapshot['name']}",
-                        ),
-                      ),
-                    ),
-                    content: SingleChildScrollView(
-                      child: Container(
-                        height: 350,
-                        width: 400,
-                        child: SingleChildScrollView(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                height: 20,
-                              ),
-                              Text(
-                                "Event Date : ${DateFormat.yMd().format(documentSnapshot['eventDate'].toDate())}",
-                                style: const TextStyle(
-                                    color: Colors.black, fontSize: 18),
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              Text(
-                                "Booking Date : ${DateFormat.yMd().format(documentSnapshot['date'].toDate())}",
-                                style: const TextStyle(
-                                    color: Colors.black, fontSize: 18),
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              Text(
-                                "Total Amount : ${documentSnapshot['paymentAmount']}",
-                                style: const TextStyle(
-                                    color: Colors.black, fontSize: 18),
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              Text(
-                                "Services : ",
-                                style: const TextStyle(
-                                    color: Colors.black, fontSize: 18),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(28.0),
-                                child: LimitedBox(
-                                  maxHeight: 200,
-                                  child: Container(
-                                    // decoration:
-                                    //     BoxDecoration(color: Colors.blue),
-                                    child: ListView(
-                                      children: listItems,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        child: const Text('OK', style: TextStyle(fontSize: 16)),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  );
-                });
-          }
-        },
-        child: Container(
-          height: 150,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(50),
-            gradient: LinearGradient(
-              colors: [startColor, endColor],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-          child: Card(
-            color: Colors.transparent,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            elevation: 10,
-            child: Container(
-              height: 150,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Center(
-                    child: ListTile(
-                      title: Padding(
-                        padding: const EdgeInsets.fromLTRB(58, 0, 8, 0),
-                        child: Text(
-                          documentSnapshot['name'],
-                          style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
-                        ),
-                      ),
-                      // subtitle: Text('Upcoming on ${documentSnapshot.data[index].date.toString()}'),
-                    ),
-                  ),
-                  Center(
-                    child: ListTile(
-                      title: Padding(
-                        padding: const EdgeInsets.fromLTRB(58, 0, 8, 0),
-                        child: Text(
-                          DateFormat.yMd()
-                              .format(documentSnapshot['date'].toDate()),
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      trailing: Text(
-                        documentSnapshot['status'],
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget buildBookingCard3(BuildContext context,
       DocumentSnapshot documentSnapshot, Color startColor, Color endColor) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(58, 10, 58, 10),
+      padding: const EdgeInsets.fromLTRB(50, 10, 50, 10),
       child: GestureDetector(
         onTap: () async {
           FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -583,7 +654,7 @@ class BookingScreen extends StatelessWidget {
                     content: SingleChildScrollView(
                       child: Container(
                         height: 350,
-                        width: 400,
+                        width: 500,
                         child: SingleChildScrollView(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -643,6 +714,35 @@ class BookingScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(15.0),
                     ),
                     actions: <Widget>[
+                      if (documentSnapshot['isRated'] == false)
+                        TextButton(
+                          child: const Text('FeedBack',
+                              style: TextStyle(fontSize: 16)),
+                          onPressed: () async {
+                            await getPackage(
+                                documentSnapshot['name'], documentSnapshot.id);
+                            Navigation(
+                                context,
+                                CustomRatingBar(
+                                  onRatingChanged: (double) {},
+                                  pid: packageId,
+                                  bid: bookingId,
+                                ));
+                          },
+                        ),
+                      if (documentSnapshot['isRated'] == true)
+                        TextButton(
+                          child: const Text('FeedBack',
+                              style: TextStyle(fontSize: 16)),
+                          onPressed: () {
+                            Fluttertoast.showToast(
+                                msg: "Already feedback",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                backgroundColor: Colors.white,
+                                textColor: Colors.black);
+                          },
+                        ),
                       TextButton(
                         child: const Text('OK', style: TextStyle(fontSize: 16)),
                         onPressed: () {
@@ -678,11 +778,11 @@ class BookingScreen extends StatelessWidget {
                   Center(
                     child: ListTile(
                       title: Padding(
-                        padding: const EdgeInsets.fromLTRB(58, 0, 8, 0),
+                        padding: const EdgeInsets.fromLTRB(50, 0, 8, 0),
                         child: Text(
                           documentSnapshot['name'],
                           style: const TextStyle(
-                              fontSize: 20,
+                              fontSize: 18,
                               fontWeight: FontWeight.bold,
                               color: Colors.white),
                         ),
@@ -693,16 +793,22 @@ class BookingScreen extends StatelessWidget {
                   Center(
                     child: ListTile(
                       title: Padding(
-                        padding: const EdgeInsets.fromLTRB(58, 0, 8, 0),
+                        padding: const EdgeInsets.fromLTRB(50, 0, 8, 0),
                         child: Text(
                           DateFormat.yMd()
                               .format(documentSnapshot['date'].toDate()),
-                          style: const TextStyle(color: Colors.white),
+                          style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
                         ),
                       ),
                       trailing: Text(
                         documentSnapshot['status'],
-                        style: TextStyle(color: Colors.white),
+                        style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white70),
                       ),
                     ),
                   ),
