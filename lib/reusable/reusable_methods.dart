@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,7 +9,13 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import '../api/pdf_api.dart';
+import '../api/pdf_invoice_api.dart';
+import '../models/invoice.dart';
+import '../models/supplier.dart';
+import '../models/user_model.dart';
 import '../screens/notifications/notification_services.dart';
+import 'package:pdf/widgets.dart' as pw;
 
 Future<int> getCollectionCount(String collectionName) async {
   try {
@@ -605,3 +612,92 @@ Future<void> outDatedBookings(String id) async {
       .doc(id)
       .update({'status': 'expired'});
 }
+//
+// Future<void> savePdfForFirebase(File file, String id) async {
+//   await FirebaseFirestore.instance
+//       .collection('bookings')
+//       .doc(id)
+//       .update({'pdf': 'expired'});
+// }
+
+Future<void> savePdfForFirebase(File file, String id) async {
+  Reference storageReference =
+      FirebaseStorage.instance.ref().child('pdfs').child('$id.pdf');
+  UploadTask uploadTask = storageReference.putFile(file);
+  await uploadTask.whenComplete(() async {
+    String downloadURL = await storageReference.getDownloadURL();
+    await FirebaseFirestore.instance
+        .collection('bookings')
+        .doc(id)
+        .update({'pdf': downloadURL});
+  });
+}
+
+Future<pw.Image> imageGenerate() async {
+  final img = await rootBundle.load('assets/images/appLogo1.png');
+  final imageBytes = img.buffer.asUint8List();
+  pw.Image image = pw.Image(pw.MemoryImage(imageBytes));
+  return pw.Image(pw.MemoryImage(imageBytes));
+}
+
+Future<void> GeneratePDFInvoice(String customer, String address,
+    Map<String, dynamic> event, pw.Image image) async {
+  final date = DateTime.now();
+
+  final invoice = Invoice(
+    supplier: const Supplier(
+      name: 'Campbell Decor',
+      address: 'Campbell Town,\nNSW,\nAustralia,2560.',
+      paymentInfo: 'https://paypal.me/campbellDecor',
+      phone: '+61 410 734 436.',
+      email: 'campbelldecorau@gmail.com.',
+      website: 'http://www.campbelldecor.com.au/',
+    ),
+    customer: Customer(
+      name: customer,
+      address: address,
+    ),
+    info: InvoiceInfo(
+      description: 'Description',
+      number:
+          '${DateTime.now().year}-${DateTime.now().minute}${DateTime.now().microsecond}',
+      date: date,
+    ),
+    items: [
+      InvoiceItem(
+        description: event['name'],
+        amount: event['price'],
+        eventDate: event['date'],
+      ),
+    ],
+    image: image,
+  );
+  final pdfFile = await PdfInvoiceApi.generate(invoice);
+}
+
+Future<void> updateData(String collection_name, String document_id,
+    String field_name, String value) async {
+  try {
+    await FirebaseFirestore.instance
+        .collection(collection_name)
+        .doc(document_id)
+        .update({field_name: value});
+  } catch (e) {
+    print('Error Updating: $e');
+  }
+}
+
+/**---------------------------important-------------------------------**/
+// LoadingIndicator(
+// indicatorType: Indicator.lineScale,
+// colors: const [
+// Colors.pink,
+// Colors.yellowAccent,
+// Colors.lightGreenAccent,
+// Colors.blue,
+// Colors.orange,
+// ],
+// strokeWidth: 1,
+// backgroundColor: Colors.transparent,
+// pathBackgroundColor: Colors.blue,
+// ),

@@ -59,7 +59,10 @@ dependencies:
   confetti: ^0.7.0
   emojis: ^0.9.9
   pinput: ^3.0.1
-  pdf: ^3.10.5
+  pdf: ^3.10.6
+  open_file: ^3.3.2
+  intl: ^0.18.1
+  loading_indicator: ^3.1.1
   http:
   get:
 
@@ -112,10 +115,19 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
+
+  fonts:
+     - family: OpenSans
+       fonts:
+         - asset: assets/fonts/OpenSans-Bold.ttf
+         - asset: assets/fonts/OpenSans-BoldItalic.ttf
+         - asset: assets/fonts/OpenSans-Italic.ttf
+         - asset: assets/fonts/OpenSans-Regular.ttf
+     - family: Montserrat
+       fonts:
+         - asset: assets/fonts/Helvetica.ttf
+         - asset: assets/fonts/Helvetica-Bold.ttf
+         - asset: assets/fonts/Courier.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

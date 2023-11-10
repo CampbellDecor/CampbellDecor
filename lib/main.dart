@@ -1,8 +1,9 @@
-import 'package:campbelldecor/screens/bookings_screens/show_rating.dart';
 import 'package:campbelldecor/screens/dash_board/viewer_screen.dart';
 import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
+import 'package:campbelldecor/screens/ltest1.dart';
 import 'package:campbelldecor/screens/notifications/notification_setup.dart';
 import 'package:campbelldecor/screens/notifications/notificationscreenForAdmin.dart';
+import 'package:campbelldecor/screens/pdf_generater/pdf_screen.dart';
 import 'package:campbelldecor/screens/theme/theme_colors.dart';
 import 'package:campbelldecor/screens/theme/theme_manager.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -10,7 +11,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
-import 'screens/bookings_screens/custom_rating.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 void main() async {

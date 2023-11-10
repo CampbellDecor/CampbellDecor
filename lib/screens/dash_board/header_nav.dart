@@ -46,173 +46,187 @@ class _MyDrawerState extends State<MyDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: Wrap(
-        runSpacing: 14,
-        children: [
-          UserAccountsDrawerHeader(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [
-                hexStringtoColor("CB2893"),
-                hexStringtoColor("9546C4"),
-                hexStringtoColor("5E61F4")
-              ], begin: Alignment.bottomRight, end: Alignment.topLeft),
-            ),
-            currentAccountPicture: CircleAvatar(
-              backgroundColor: Colors.white,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Container(
-                    width: 120,
-                    height: 120,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Colors.blueGrey,
-                        width: 2.0,
+      child: Container(
+        color: Colors.white70.withOpacity(0.5),
+        child: Wrap(
+          runSpacing: 14,
+          children: [
+            UserAccountsDrawerHeader(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [
+                  hexStringtoColor("CB2893"),
+                  hexStringtoColor("9546C4"),
+                  hexStringtoColor("5E61F4")
+                ], begin: Alignment.bottomRight, end: Alignment.topLeft),
+              ),
+              currentAccountPicture: CircleAvatar(
+                backgroundColor: Colors.white,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      width: 120,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.blueGrey,
+                          width: 2.0,
+                        ),
                       ),
+                      child: userDataLoaded
+                          ? ClipOval(
+                              child: Image.network(
+                                imgURL,
+                                width: 150,
+                                height: 150,
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          : ClipOval(child: CircularProgressIndicator()),
                     ),
-                    child: userDataLoaded
-                        ? ClipOval(
-                            child: Image.network(
-                              imgURL,
-                              width: 150,
-                              height: 150,
-                              fit: BoxFit.cover,
-                            ),
-                          )
-                        : ClipOval(child: CircularProgressIndicator()),
-                  ),
-                ],
+                  ],
+                ),
+              ),
+              accountName: userDataLoaded
+                  ? Text(
+                      name,
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w800),
+                    )
+                  : Text('loading...'),
+              accountEmail: Text(
+                email!,
+                style: TextStyle(fontSize: 14, color: Colors.white),
               ),
             ),
-            accountName: userDataLoaded ? Text(name) : Text('loading...'),
-            accountEmail: Text(email!),
-          ),
-          ListTile(
-            title: const Text('View Account'),
-            leading: const Icon(Icons.account_box),
-            onTap: () {
-              Navigation(context, ProfileScreen());
-            },
-          ),
-          const Divider(
-            height: 0.1,
-            thickness: 1.5,
-            indent: 20,
-            endIndent: 20,
-          ),
-          ListTile(
-            title: const Text('View Histroy'),
-            leading: const Icon(Icons.history),
-            onTap: () {
-              Navigation(context, BookingScreen());
-            },
-          ),
-          const Divider(
-            height: 0.1,
-            thickness: 1.5,
-            indent: 20,
-            endIndent: 20,
-          ),
-          ListTile(
-            title: const Text('View To Do List'),
-            leading: const Icon(Icons.list),
-            onTap: () {
-              Navigation(context, TodoListScreen());
-            },
-          ),
-          const Divider(
-            height: 0.1,
-            thickness: 1.5,
-            indent: 20,
-            endIndent: 20,
-          ),
-          ListTile(
-            title: const Text('About Us'),
-            leading: const Icon(Icons.people),
-            onTap: () {
-              Navigation(context, AboutUs());
-            },
-          ),
-          const Divider(
-            height: 0.1,
-            thickness: 1.5,
-            indent: 20,
-            endIndent: 20,
-          ),
-          ListTile(
-            title: const Text('Contact Us'),
-            leading: const Icon(Icons.mail_outline_outlined),
-            onTap: () {
-              Navigation(context, ContactUs());
-            },
-          ),
-          const Divider(
-            height: 0.1,
-            thickness: 1.5,
-            indent: 20,
-            endIndent: 20,
-          ),
-          ListTile(
-            title: const Text('Delete My Account'),
-            leading: const Icon(Icons.delete_outline_outlined),
-            onTap: () {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      shadowColor: Colors.black,
-                      elevation: 8,
-                      icon: const Icon(
-                        Icons.info_outline_rounded,
-                        color: Colors.blue,
-                        size: 40,
-                      ),
-                      title: const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Padding(
+            ListTile(
+              title: const Text('View Account'),
+              leading: const Icon(Icons.account_box),
+              onTap: () {
+                Navigation(context, ProfileScreen());
+              },
+            ),
+            const Divider(
+              height: 0.1,
+              thickness: 1.5,
+              indent: 20,
+              endIndent: 20,
+            ),
+            ListTile(
+              title: const Text('View Histroy'),
+              leading: const Icon(Icons.history),
+              onTap: () {
+                Navigation(context, BookingScreen());
+              },
+            ),
+            const Divider(
+              height: 0.1,
+              thickness: 1.5,
+              indent: 20,
+              endIndent: 20,
+            ),
+            ListTile(
+              title: const Text('View To Do List'),
+              leading: const Icon(Icons.list),
+              onTap: () {
+                Navigation(context, TodoListScreen());
+              },
+            ),
+            const Divider(
+              height: 0.1,
+              thickness: 1.5,
+              indent: 20,
+              endIndent: 20,
+            ),
+            ListTile(
+              title: const Text('About Us'),
+              leading: const Icon(Icons.people),
+              onTap: () {
+                Navigation(context, AboutUs());
+              },
+            ),
+            const Divider(
+              height: 0.1,
+              thickness: 1.5,
+              indent: 20,
+              endIndent: 20,
+            ),
+            ListTile(
+              title: const Text('Contact Us'),
+              leading: const Icon(Icons.mail_outline_outlined),
+              onTap: () {
+                Navigation(context, ContactUs());
+              },
+            ),
+            const Divider(
+              height: 0.1,
+              thickness: 1.5,
+              indent: 20,
+              endIndent: 20,
+            ),
+            ListTile(
+              title: const Text('Delete My Account'),
+              leading: const Icon(Icons.delete_outline_outlined),
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        shadowColor: Colors.black,
+                        elevation: 8,
+                        icon: const Icon(
+                          Icons.info_outline_rounded,
+                          color: Colors.blue,
+                          size: 40,
+                        ),
+                        title: const Padding(
                           padding: EdgeInsets.all(8.0),
-                          child: Text('Information'),
+                          child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text('Information'),
+                          ),
                         ),
-                      ),
-                      content: Text(
-                        "Do you want to delete your account?",
-                        style:
-                            const TextStyle(color: Colors.blue, fontSize: 18),
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      actions: <Widget>[
-                        TextButton(
-                          child: const Text('Cancel',
-                              style: TextStyle(fontSize: 16)),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
+                        content: Text(
+                          "Do you want to delete your account?",
+                          style:
+                              const TextStyle(color: Colors.blue, fontSize: 18),
                         ),
-                        TextButton(
-                          child:
-                              const Text('OK', style: TextStyle(fontSize: 16)),
-                          onPressed: () {
-                            _deleteAccount();
-                            Navigator.pop(context);
-                            Navigation(context, SignInScreen());
-                          },
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
                         ),
-                      ],
-                    );
-                  });
-            },
-          ),
-          const Divider(
-            height: 0.1,
-            thickness: 1.5,
-            indent: 20,
-            endIndent: 20,
-          ),
-        ],
+                        actions: <Widget>[
+                          TextButton(
+                            child: const Text('Cancel',
+                                style: TextStyle(fontSize: 16)),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          TextButton(
+                            child: const Text('OK',
+                                style: TextStyle(fontSize: 16)),
+                            onPressed: () async {
+                              _deleteAccount();
+                              await FirebaseAuth.instance.signOut();
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    });
+              },
+            ),
+            const Divider(
+              height: 0.1,
+              thickness: 1.5,
+              indent: 20,
+              endIndent: 20,
+            ),
+          ],
+        ),
       ),
     );
   }

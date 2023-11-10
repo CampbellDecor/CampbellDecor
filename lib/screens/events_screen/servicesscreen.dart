@@ -388,12 +388,4 @@ class _ServicesScreenState extends State<ServicesScreen> {
       ),
     );
   }
-
-  // Future<void> getID() async {
-  //   // final _book = FirebaseFirestore.instance
-  //   //     .collection("bookings")
-  //   //     .where('status', isEqualTo: 'pending')
-  //   //     .where('userID', isEqualTo: FirebaseAuth.instance.currentUser?.uid);
-  //   // DocumentSnapshot documentSnapshot = (await _book.get()).docs[1];
-  // }
 }

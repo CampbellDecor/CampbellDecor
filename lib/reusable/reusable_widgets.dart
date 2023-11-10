@@ -159,14 +159,14 @@ Container reuseButton(BuildContext context, String text, Function onTap) {
 }
 
 /*----------------------- Data show as Container List ---------------------------------*/
-Widget reuseContainerList(
-    String imgName, double height, double width, String name, DateTime date) {
+Widget reuseContainerList(String imgName, double height, double width,
+    String name, DateTime date, BuildContext context) {
   return Padding(
     padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
     child: SingleChildScrollView(
       child: Container(
         height: 120,
-        width: 450,
+        width: 500,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           gradient: const LinearGradient(
@@ -186,9 +186,13 @@ Widget reuseContainerList(
               children: [
                 Padding(
                     padding: const EdgeInsets.fromLTRB(15, 30, 15, 15),
-                    child: Text(
-                      name,
-                      style: const TextStyle(fontSize: 20, color: Colors.white),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      child: Text(
+                        name,
+                        style:
+                            const TextStyle(fontSize: 18, color: Colors.white),
+                      ),
                     )),
                 Padding(
                     padding: const EdgeInsets.all(5),

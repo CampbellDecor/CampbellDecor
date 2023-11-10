@@ -1,10 +1,7 @@
-import 'dart:math';
-
 import 'package:campbelldecor/reusable/reusable_methods.dart';
 import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
 import 'package:campbelldecor/screens/notifications/notification_services.dart';
 import 'package:campbelldecor/screens/theme/theme_manager.dart';
-import 'package:campbelldecor/screens/usercredential/signinscreen.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:confetti/confetti.dart';
@@ -18,7 +15,6 @@ import '../bookings_screens/date_view.dart';
 import '../bookings_screens/show_rating.dart';
 import '../events_screen/packagesscreen.dart';
 import 'header_nav.dart';
-import 'package:flutter/cupertino.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -98,9 +94,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () {
-              Navigator.pop(context);
-              Navigation(context, const SignInScreen());
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              Navigator.of(context).pop();
             },
           ),
         ],

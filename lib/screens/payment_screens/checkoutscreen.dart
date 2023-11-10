@@ -59,8 +59,13 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        reuseContainerList('assets/images/logo2.png', 100, 100,
-                            '${data!['name']}', data!['eventDate'].toDate()),
+                        reuseContainerList(
+                            'assets/images/logo2.png',
+                            100,
+                            100,
+                            '${data!['name']}',
+                            data!['eventDate'].toDate(),
+                            context),
                         SizedBox(
                           height: 200,
                         ),
