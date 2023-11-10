@@ -219,12 +219,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         } else if (snapshot.hasError) {
                           return Text('Error: ${snapshot.error}');
                         } else {
-                          Fluttertoast.showToast(
-                              msg: '${snapshot.data!['email']}',
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              backgroundColor: Colors.white,
-                              textColor: Colors.black);
                           _nameController.text = snapshot.data!['name'];
                           _emailController.text = snapshot.data!['email'];
                           _phoneNoController.text = snapshot.data!['phone'];
@@ -233,9 +227,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           return SingleChildScrollView(
                             child: Center(
                               child: Card(
+                                color: Colors.white70.withOpacity(0.5),
                                 elevation: 5.0,
                                 margin: const EdgeInsets.all(20.0),
                                 child: Container(
+                                  color: Colors.white70.withOpacity(0.5),
                                   width: 300,
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
@@ -277,7 +273,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               right: -10,
                                               child: IconButton(
                                                 icon: Icon(
-                                                    Icons.camera_alt_outlined),
+                                                  Icons.camera_alt_outlined,
+                                                  color: Colors.black,
+                                                  size: 30,
+                                                ),
                                                 onPressed: () {
                                                   userImagePicker(context)
                                                       .then((_) {

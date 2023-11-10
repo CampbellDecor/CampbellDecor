@@ -61,7 +61,7 @@ class _UserChatScreenState extends State<UserChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('User Chat'),
+        title: Text('Customer care'),
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(colors: [
@@ -71,15 +71,6 @@ class _UserChatScreenState extends State<UserChatScreen> {
             ], begin: Alignment.bottomRight, end: Alignment.topLeft),
           ),
         ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: () async {
-              await _auth.signOut();
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
       ),
       body: Column(
         children: <Widget>[
@@ -106,9 +97,16 @@ class _UserChatScreenState extends State<UserChatScreen> {
                   );
                   messageWidgets.add(messageWidget);
                 }
-                return ListView(
-                  reverse: true,
-                  children: messageWidgets,
+                return Container(
+                  decoration:
+                      BoxDecoration(color: Colors.blue.withOpacity(0.5)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: ListView(
+                      reverse: true,
+                      children: messageWidgets,
+                    ),
+                  ),
                 );
               },
             ),
@@ -118,18 +116,42 @@ class _UserChatScreenState extends State<UserChatScreen> {
             child: Row(
               children: <Widget>[
                 Expanded(
-                  child: TextField(
-                    controller: _messageController,
-                    decoration: InputDecoration(
-                      hintText: 'Type a message...',
+                  child: Material(
+                    color: Colors.blue.withOpacity(0.6),
+                    borderRadius: BorderRadius.circular(15),
+                    elevation: 5,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      child: TextField(
+                        textCapitalization: TextCapitalization.words,
+                        controller: _messageController,
+                        decoration: InputDecoration(
+                            hintText: 'Type a message...',
+                            border: InputBorder.none),
+                      ),
                     ),
                   ),
                 ),
-                IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: () {
-                    _sendMessage(_messageController.text);
-                  },
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.blue.shade700,
+                    ),
+                    child: Center(
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.send,
+                          color: Colors.white,
+                          size: 25,
+                        ),
+                        onPressed: () {
+                          _sendMessage(_messageController.text);
+                        },
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -154,7 +176,20 @@ class MessageWidget extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(8.0),
       alignment: isSentByUser ? Alignment.centerRight : Alignment.centerLeft,
-      child: Text(text),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(90, 0, 0, 0),
+        child: Material(
+            elevation: 3,
+            color: Colors.blue.withOpacity(0.9),
+            borderRadius: BorderRadius.circular(15),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(15, 10, 15, 10.0),
+              child: Text(
+                text,
+                style: TextStyle(fontSize: 18),
+              ),
+            )),
+      ),
     );
   }
 }

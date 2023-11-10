@@ -30,7 +30,8 @@ class _AddToCartScreenState extends State<AddToCartScreen> {
     await prefs.remove('amount');
     await prefs.remove('events');
     await prefs.remove('package');
-    await BottomNavigationForHome(context, HomeScreen());
+    Navigator.of(context).pop();
+    BottomNavigationForHome(context, HomeScreen());
   }
 
   @override

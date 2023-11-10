@@ -54,21 +54,26 @@ class _ViewerScreenState extends State<ViewerScreen> {
           Padding(
             padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
             child: TextButton(
-                onPressed: () {
-                  // Navigator.pop(context);
-                  Navigation(context, const SignInScreen());
-                },
-                child: Text(
-                  'Login',
-                  style: TextStyle(
+              onPressed: () {
+                Navigation(context, const SignInScreen());
+              },
+              child: Row(
+                children: [
+                  Text(
+                    'Login',
+                    style: TextStyle(
                       color: Colors.white70,
                       fontSize: 18,
-                      fontWeight: FontWeight.w900),
-                )),
-          ),
-          Icon(
-            Icons.login_sharp,
-            color: Colors.white70,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                  Icon(
+                    Icons.login_sharp,
+                    color: Colors.white70,
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
