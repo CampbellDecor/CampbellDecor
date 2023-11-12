@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 class ThemeClass {
 /*----------------Light Theme Colors------------------*/
   static ThemeData lightTheme = ThemeData(
-      brightness: Brightness.light,
-      primaryColor: Colors.white70.withOpacity(0.5));
+    brightness: Brightness.light,
+  );
 
   // ThemeData.dark().copyWith(
   // primaryColor: Colors.white, // Accent color

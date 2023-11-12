@@ -10,64 +10,45 @@ import 'package:intl/intl.dart';
 
 import '../../utils/color_util.dart';
 
-class NotificationScreen extends StatefulWidget {
-  NotificationScreen({super.key});
-  static const route = '/notificationscreen';
+class NotificationDetailsScreen extends StatefulWidget {
+  final String id;
+  NotificationDetailsScreen({super.key, required this.id});
 
   @override
-  State<NotificationScreen> createState() => _NotificationScreenState();
+  State<NotificationDetailsScreen> createState() =>
+      _NotificationDetailsScreenState();
 }
 
-class _NotificationScreenState extends State<NotificationScreen> {
-  bool isDataVisible = false;
+class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
   String? userName;
   String? address;
   Map<String, dynamic> service = Map();
-  List<Map<String, dynamic>> subcollectionData = [];
+  Map<String, dynamic> notificationData = Map();
 
   @override
   void initState() {
     super.initState();
-    getDatas();
-  }
-
-  void getDatas() async {
-    final email = 'pinthushan71998@gmail.com';
-
-    try {
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .where('email', isEqualTo: email)
-          .limit(1)
-          .get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        setState(() {
-          userName = querySnapshot.docs.first['name'];
-          address = querySnapshot.docs.first['address'];
-        });
-      }
-      print(userName);
-    } catch (e) {
-      print('Error getting user data: $e');
-    }
+    Future.delayed(Duration.zero, () {
+      getDocumentData(widget.id);
+    });
   }
 
   Future<void> getDocumentData(dynamic docID) async {
     var documentSnapshot = await FirebaseFirestore.instance
-        .collection('bookings')
+        .collection('notification')
         .doc(docID)
         .get();
 
     if (documentSnapshot.exists) {
-      Map<String, dynamic> data =
-          documentSnapshot.data() as Map<String, dynamic>;
+      setState(() {
+        notificationData = documentSnapshot.data() as Map<String, dynamic>;
+      });
     } else {
       print('Document does not exist');
     }
   }
 
-  Future<void> getSubcollectionData(dynamic docID) async {
+  Future<Map<String, dynamic>> getSubcollectionData(dynamic docID) async {
     var subcollectionSnapshot = await FirebaseFirestore.instance
         .collection('bookings')
         .doc(docID)
@@ -76,46 +57,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
     subcollectionSnapshot.docs.forEach((orderDoc) {
       service = orderDoc.data() as Map<String, dynamic>;
     });
-  }
-
-  void toggleDataVisibility() {
-    setState(() {
-      isDataVisible = !isDataVisible;
-    });
+    return service;
   }
 
   @override
   Widget build(BuildContext context) {
-    final message = ModalRoute.of(context)!.settings.arguments as RemoteMessage;
-    Map<String, dynamic> messageData = message.data;
-
-    getSubcollectionData(messageData['id']);
-    List<Widget> listItems = [];
-    service.forEach((key, value) {
-      listItems.add(
-        ListTile(
-          title: Text(
-            key,
-            style: const TextStyle(
-                fontSize: 16,
-                color: Colors.white70,
-                fontFamily: 'OpenSans',
-                fontWeight: FontWeight.bold),
-          ),
-          subtitle: Padding(
-            padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-            child: Text(
-              value.toString(),
-              style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.white54,
-                  fontFamily: 'OpenSans',
-                  fontWeight: FontWeight.normal),
-            ),
-          ),
-        ),
-      );
-    });
     return Scaffold(
       appBar: AppBar(
         title: const Text("Notifications"),
@@ -137,7 +83,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection('bookings')
-                    .doc(messageData['id'].toString())
+                    .doc(notificationData['bookId'])
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -160,8 +106,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           borderRadius: BorderRadius.circular(20),
                           elevation: 8,
                           child: Container(
-                            height: 800,
-                            width: 450,
+                            constraints: BoxConstraints(minHeight: 350),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
                               gradient: const LinearGradient(
@@ -174,13 +119,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               padding: const EdgeInsets.all(30),
                               child: Column(
                                 children: [
-                                  Text(message.data.values.first.toString()),
                                   Row(
                                     children: [
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text(
-                                          '${messageData['head'].toString()}',
+                                          '${notificationData['head'].toString()}',
                                           style: const TextStyle(
                                               fontSize: 18,
                                               color: Colors.white,
@@ -201,7 +145,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                             padding: const EdgeInsets.fromLTRB(
                                                 18.0, 0, 0, 0),
                                             child: Text(
-                                              '${messageData['body'].toString()}',
+                                              '${notificationData['body'].toString()}',
                                               style: const TextStyle(
                                                   fontSize: 18,
                                                   color: Colors.white70,
@@ -229,62 +173,88 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                   ),
                                   Row(
                                     children: [
-                                      keyLable('Address : '),
-                                      Expanded(
-                                        child: Container(
-                                            width: 300,
-                                            child: valueLable('$address')),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
                                       keyLable('Total amount : '),
                                       valueLable(
                                           'Rs.${data!['paymentAmount']}0'),
                                     ],
                                   ),
-                                  Row(
-                                    children: [keyLable('Services : ')],
-                                  ),
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: LimitedBox(
                                       maxWidth: 300,
-                                      maxHeight: 250,
+                                      maxHeight: 400,
                                       child: Container(
                                         // decoration:
-                                        child: ListView(
-                                          children: listItems,
+                                        child:
+                                            FutureBuilder<Map<String, dynamic>>(
+                                          future: getSubcollectionData(
+                                              notificationData['bookId']),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              // If the Future is still running, show a loading indicator
+                                              return CircularProgressIndicator();
+                                            } else if (snapshot.hasError) {
+                                              return Text(
+                                                  'Error: ${snapshot.error}');
+                                            } else {
+                                              List<Widget> listItems = [];
+                                              service.forEach((key, value) {
+                                                listItems.add(
+                                                  ListTile(
+                                                    title: Text(
+                                                      key,
+                                                      style: const TextStyle(
+                                                          fontSize: 16,
+                                                          color: Colors.white70,
+                                                          fontFamily:
+                                                              'OpenSans',
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                    subtitle: Padding(
+                                                      padding: const EdgeInsets
+                                                          .fromLTRB(8, 0, 0, 0),
+                                                      child: Text(
+                                                        value.toString(),
+                                                        style: const TextStyle(
+                                                            fontSize: 16,
+                                                            color:
+                                                                Colors.white54,
+                                                            fontFamily:
+                                                                'OpenSans',
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .normal),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              });
+                                              if (service.length != 0)
+                                                return Container(
+                                                  child: Column(
+                                                    children: [
+                                                      keyLable('Services : '),
+                                                      LimitedBox(
+                                                        maxWidth: 300,
+                                                        maxHeight: 350,
+                                                        child: Container(
+                                                          // decoration:
+                                                          child: ListView(
+                                                            children: listItems,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              return SizedBox();
+                                            }
+                                          },
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      ElevatedButton(
-                                          onPressed: () async {
-                                            showInformationAlert(context,
-                                                'If you cancel that is not save',
-                                                () {
-                                              Navigator.pop(context);
-                                            });
-                                          },
-                                          child: const Text('Cancel')),
-                                      ElevatedButton(
-                                          onPressed: () async {
-                                            saveNotification(
-                                              messageData['id'],
-                                              messageData['head'],
-                                              messageData['body'],
-                                              DateTime.parse(
-                                                  messageData['dateTime']),
-                                            );
-                                          },
-                                          child: const Text('save')),
-                                    ],
                                   ),
                                 ],
                               ),

@@ -36,8 +36,8 @@ Future<void> Navigation(BuildContext context, dynamic function) async {
     PageTransition(
       type: PageTransitionType.rightToLeft,
       child: function,
-      duration: Duration(milliseconds: 600),
-      reverseDuration: Duration(milliseconds: 500),
+      duration: Duration(milliseconds: 300),
+      reverseDuration: Duration(milliseconds: 150),
     ),
     // PageRouteBuilder(
     //   pageBuilder: (context, animation, secondaryAnimation) {
@@ -298,6 +298,7 @@ Future<void> showInformation(BuildContext context, String inform) async {
         icon: const Icon(
           Icons.info_outline_rounded,
           color: Colors.blue,
+          size: 40,
         ),
         title: const Padding(
           padding: EdgeInsets.all(8.0),
@@ -494,7 +495,8 @@ Future<void> updateDeviceTokenForNotification(String userId) async {
   });
 }
 
-Future<void> sendNotificationForAdmin(String id) async {
+Future<void> sendNotificationForAdmin(
+    String id, String heading, String details) async {
   var data = {
     'to':
         'c89jyGQ8SaSiy3H05Lmp3N:APA91bFKipKaz3IzkUFP7KjlYu90NJPBS87wyWkX6e5mMf6EtNnqldXjJJp-Db32vaJutwqofS'
@@ -504,7 +506,12 @@ Future<void> sendNotificationForAdmin(String id) async {
       'title': 'Booking Confirmation',
       'body': 'Update My Booking',
     },
-    'data': {'id': id}
+    'data': {
+      'id': id,
+      'head': heading,
+      'body': details,
+      'dateTime': DateTime.now().toString()
+    }
   };
   await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
       body: jsonEncode(data),
@@ -684,6 +691,31 @@ Future<void> updateData(String collection_name, String document_id,
         .update({field_name: value});
   } catch (e) {
     print('Error Updating: $e');
+  }
+}
+
+String shortenString(String input, int maxLength) {
+  if (input.length <= maxLength) {
+    return input;
+  } else {
+    return '${input.substring(0, maxLength)}...';
+  }
+}
+
+Future<void> saveNotification(
+    String id, String head, String body, DateTime dateTime) async {
+  CollectionReference notification =
+      await FirebaseFirestore.instance.collection('notification');
+  try {
+    await notification.add({
+      'bookId': id,
+      'head': head,
+      'body': body,
+      'dateTime': dateTime,
+      'uid': FirebaseAuth.instance.currentUser!.uid
+    });
+  } catch (e) {
+    print(e);
   }
 }
 

@@ -111,7 +111,8 @@ class _MyDrawerState extends State<MyDrawer> {
             ),
             const Divider(
               height: 0.1,
-              thickness: 1.5,
+              thickness: 0.5,
+              color: Colors.black87,
               indent: 20,
               endIndent: 20,
             ),
@@ -124,7 +125,8 @@ class _MyDrawerState extends State<MyDrawer> {
             ),
             const Divider(
               height: 0.1,
-              thickness: 1.5,
+              thickness: 0.5,
+              color: Colors.black87,
               indent: 20,
               endIndent: 20,
             ),
@@ -137,7 +139,8 @@ class _MyDrawerState extends State<MyDrawer> {
             ),
             const Divider(
               height: 0.1,
-              thickness: 1.5,
+              thickness: 0.5,
+              color: Colors.black87,
               indent: 20,
               endIndent: 20,
             ),
@@ -150,7 +153,8 @@ class _MyDrawerState extends State<MyDrawer> {
             ),
             const Divider(
               height: 0.1,
-              thickness: 1.5,
+              thickness: 0.5,
+              color: Colors.black87,
               indent: 20,
               endIndent: 20,
             ),
@@ -163,7 +167,8 @@ class _MyDrawerState extends State<MyDrawer> {
             ),
             const Divider(
               height: 0.1,
-              thickness: 1.5,
+              thickness: 0.5,
+              color: Colors.black87,
               indent: 20,
               endIndent: 20,
             ),
@@ -221,7 +226,8 @@ class _MyDrawerState extends State<MyDrawer> {
             ),
             const Divider(
               height: 0.1,
-              thickness: 1.5,
+              thickness: 0.5,
+              color: Colors.black87,
               indent: 20,
               endIndent: 20,
             ),

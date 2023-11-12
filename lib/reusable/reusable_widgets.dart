@@ -210,8 +210,8 @@ Widget reuseContainerList(String imgName, double height, double width,
 }
 
 /*----------------------- Data show as Container List ---------------------------------*/
-Widget reusePaymentContainer(
-    String id, double price, BuildContext context, Function onTap) {
+Widget reusePaymentContainer(String id, String name, double price,
+    BuildContext context, Function onTap) {
   double bondmoney = (price / 100) * 10;
   double total = price + bondmoney;
 
@@ -220,78 +220,84 @@ Widget reusePaymentContainer(
     children: [
       Padding(
         padding: const EdgeInsets.fromLTRB(20, 300, 20, 0),
-        child: Container(
-          height: 120,
-          width: 360,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            gradient: LinearGradient(colors: [
-              hexStringtoColor("5Ed1F4"),
-              hexStringtoColor("CB28ee"),
-              hexStringtoColor("9546d4"),
-            ], begin: Alignment.bottomRight, end: Alignment.topLeft),
-          ),
-          child: Row(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
-                      child: Text(
-                        "Price Amount : Rs.${price.toStringAsFixed(2)}",
-                        style:
-                            const TextStyle(fontSize: 14, color: Colors.white),
-                      )),
-                  Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                      child: Text(
-                        "Bond Money : Rs.${bondmoney.toStringAsFixed(2)}",
-                        style:
-                            const TextStyle(fontSize: 14, color: Colors.white),
-                      )),
-                  Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                      child: Text(
-                        "Total Amount : Rs.${total.toStringAsFixed(2)}",
-                        style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                      )),
-                ],
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => PaymentScreen(
-                                      price: total,
-                                      id: id,
-                                    )));
-                      },
-                      style: ElevatedButton.styleFrom(
-                          primary: Colors.red[400],
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15))),
-                      child: const Padding(
-                        padding: EdgeInsets.fromLTRB(10, 8, 10, 8),
+        child: Material(
+          borderRadius: BorderRadius.circular(20),
+          elevation: 8,
+          color: CupertinoColors.white.withOpacity(0.6),
+          child: Container(
+            height: 120,
+            width: 360,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              // gradient: LinearGradient(colors: [
+              //   hexStringtoColor("5Ed1F4"),
+              //   hexStringtoColor("CB28ee"),
+              //   hexStringtoColor("9546d4"),
+              // ], begin: Alignment.bottomRight, end: Alignment.topLeft),
+            ),
+            child: Row(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
                         child: Text(
-                          "Pay",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      )),
-                ],
-              )
-            ],
+                          "Price Amount : Rs.${price.toStringAsFixed(2)}",
+                          style: const TextStyle(
+                              fontSize: 14, color: Colors.black87),
+                        )),
+                    Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                        child: Text(
+                          "Bond Money : Rs.${bondmoney.toStringAsFixed(2)}",
+                          style: const TextStyle(
+                              fontSize: 14, color: Colors.black87),
+                        )),
+                    Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                        child: Text(
+                          "Total Amount : Rs.${total.toStringAsFixed(2)}",
+                          style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87),
+                        )),
+                  ],
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Navigation(
+                              context,
+                              PaymentScreen(
+                                price: total,
+                                id: id,
+                                name: name,
+                              ));
+                        },
+                        style: ElevatedButton.styleFrom(
+                            primary: Colors.red[400],
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15))),
+                        child: const Padding(
+                          padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+                          child: Text(
+                            "Pay",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        )),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -332,6 +338,34 @@ Widget reusePaymentContainer(
 //   );
 // }
 /**************************/
+
+Widget keyLable(String text) {
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Text(
+      text,
+      style: const TextStyle(
+          fontSize: 18,
+          color: Colors.white,
+          fontFamily: 'OpenSans',
+          fontWeight: FontWeight.normal),
+    ),
+  );
+}
+
+Widget valueLable(String text) {
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Text(
+      text,
+      style: const TextStyle(
+          fontSize: 16,
+          color: Colors.white70,
+          fontFamily: 'OpenSans',
+          fontWeight: FontWeight.normal),
+    ),
+  );
+}
 
 Widget bottom_Bar(BuildContext context) {
   return Container(

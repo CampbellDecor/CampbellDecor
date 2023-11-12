@@ -14,6 +14,7 @@ import '../../utils/color_util.dart';
 import '../bookings_screens/date_view.dart';
 import '../bookings_screens/show_rating.dart';
 import '../events_screen/packagesscreen.dart';
+import '../notifications/notification_history.dart';
 import 'header_nav.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -33,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
     updateDeviceTokenForNotification(FirebaseAuth.instance.currentUser!.uid);
     notificationServices.requestNotificationPermission();
     notificationServices.firebaseInit(context);
-    notificationServices.setupIneractMessage(context);
+    // notificationServices.setupIneractMessage(context);
     notificationServices.getDeviceToken().then((value) {
       print('device Token');
       print('Device Token $value');
@@ -89,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             icon: const Icon(Icons.notifications_active_rounded),
             onPressed: () {
-              // Navigation(context, NotificationView());
+              Navigation(context, NotificationHistory());
             },
           ),
           IconButton(
