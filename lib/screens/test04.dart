@@ -21,33 +21,13 @@ class _testState extends State<test> {
       body: Center(
         child: ElevatedButton(
             onPressed: () {
-              sendNotificationForAdmin('QBBkWO2Xet8eferxz8Wb');
+              sendNotificationForAdmin(
+                  '2pYvBFGBeLNBGgsNagqR',
+                  'Booking request',
+                  'Your booking request has been received. We will notify you shortly with our response.');
             },
             child: Text('SendNotification')),
       ),
     );
   }
-  //
-  // void sendNotification(String id) {
-  //   final NotificationServices notificationServices = NotificationServices();
-  //   notificationServices.getDeviceToken().then((value) async {
-  //     var data = {
-  //       'to':
-  //           'cvrV5c-5RtqsP7FPHCVzPT:APA91bGTcrOBac4dY3cUuDuC1nz83674veRvnAWpifQ6m74ZHAd3Fm5DMi2leYEEWf7Cnps9sFC7KHEBFZ-hIq4e2OQtcxB2IZ2xnv6zwYmS5CTTsAELyghwzq6UvrWCyGj6OOXapl3E',
-  //       'priority': 'high',
-  //       'notification': {
-  //         'title': 'Booking Confirmation',
-  //         'body': 'Update My Booking',
-  //       },
-  //       'data': {'id': id}
-  //     };
-  //     await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
-  //         body: jsonEncode(data),
-  //         headers: {
-  //           'Content-Type': 'application/json; charset=UTF-8',
-  //           'Authorization':
-  //               'key=AAAAliCh-R8:APA91bGSDvwcL3obmsYq7k3A3ueBbHm-SNDdKt8Y9RMqA7Ywi2U4o72j6WRZMiEQF4GPhuYsNlqwH6-RMgvigiQbuXTq42sjuG4zySquDBk0gN-zyHbCeIwHMHNXhHxrfLDKG02tgrKt'
-  //         });
-  //   });
-  // }
 }

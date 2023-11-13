@@ -78,21 +78,31 @@ class _AddToCartScreenState extends State<AddToCartScreen> {
                             ),
                             elevation: 4,
                             margin: const EdgeInsets.fromLTRB(30, 10, 30, 10),
-                            // colorr: Color.fromARGB(100, 260, 250, 254),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: CheckboxListTile(
+                                checkColor: Colors.blue.shade900,
+                                checkboxShape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      18.0), // Adjust the radius as needed
+                                ),
                                 title: Row(
                                   children: [
                                     Expanded(
                                         child: Text(
                                       documentSnapshot['name'],
-                                      style: const TextStyle(fontSize: 18),
+                                      style: const TextStyle(
+                                          fontSize: 18,
+                                          fontFamily: 'OpenSans',
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.pink),
                                     )),
                                     Text(
                                       DateFormat.yMd().format(
                                           documentSnapshot['date'].toDate()),
-                                    ), // Custom trailing icon
+                                      style: TextStyle(
+                                          color: Colors.green.shade900),
+                                    ),
                                   ],
                                 ),
                                 subtitle: Padding(
@@ -134,62 +144,63 @@ class _AddToCartScreenState extends State<AddToCartScreen> {
                     child: ElevatedButton(
                       onPressed: _deleteSelected,
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            Colors.redAccent), // Background color
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.redAccent),
                         padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
                           const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 12), // Padding
+                              horizontal: 20, vertical: 12),
                         ),
                         shape:
                             MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(15.0), // Border radius
+                            borderRadius: BorderRadius.circular(15.0),
                           ),
                         ),
                         textStyle: MaterialStateProperty.all<TextStyle>(
                           const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold), // Text style
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                       ),
-                      child: const Text('Delete'), // Button text
+                      child: const Text('Delete'),
                     )),
                 Container(
                     height: 45,
                     width: 130,
                     child: ElevatedButton(
                       onPressed: () async {
+                        double j = 0;
                         for (int i = _isChecked.length - 1; i >= 0; i--) {
+                          j++;
+
                           if (_isChecked[i]) {
+                            print(_isChecked[i]);
                             final documentSnapshot =
                                 (await _cart.get()).docs[i];
                             Navigation(context,
                                 CheckOutScreen(id: documentSnapshot.id));
                           }
                         }
+                        print(" pinthu $j");
                       },
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            Colors.blue), // Background color
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.blue),
                         padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
                           const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 12), // Padding
+                              horizontal: 20, vertical: 12),
                         ),
                         shape:
                             MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(15.0), // Border radius
+                            borderRadius: BorderRadius.circular(15.0),
                           ),
                         ),
                         textStyle: MaterialStateProperty.all<TextStyle>(
                           const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold), // Text style
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                       ),
-                      child: const Text('Book'), // Button text
+                      child: const Text('Book'),
                     )),
               ],
             )
@@ -240,18 +251,18 @@ class _AddToCartScreenState extends State<AddToCartScreen> {
     setState(() {});
   }
 
-  void _addBooking() async {
-    for (int i = _isChecked.length - 1; i >= 0; i--) {
-      if (_isChecked[i]) {
-        final documentSnapshot = (await _cart.get()).docs[i];
-        await FirebaseFirestore.instance
-            .collection('bookings')
-            .doc(documentSnapshot.id)
-            .update({'status': 'pending'});
-        _isChecked.removeAt(i);
-        sendNotificationForAdmin(documentSnapshot.id);
-      }
-    }
-    setState(() {});
-  }
+  // void _addBooking() async {
+  //   for (int i = _isChecked.length - 1; i >= 0; i--) {
+  //     if (_isChecked[i]) {
+  //       final documentSnapshot = (await _cart.get()).docs[i];
+  //       await FirebaseFirestore.instance
+  //           .collection('bookings')
+  //           .doc(documentSnapshot.id)
+  //           .update({'status': 'pending'});
+  //       _isChecked.removeAt(i);
+  //       sendNotificationForAdmin(documentSnapshot.id);
+  //     }
+  //   }
+  //   setState(() {});
+  // }
 }

@@ -5,14 +5,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_paypal/flutter_paypal.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:loading_indicator/loading_indicator.dart';
-
 import '../../utils/color_util.dart';
 
 class PaymentScreen extends StatefulWidget {
   final double price;
   final String id;
-  PaymentScreen({required this.id, required this.price});
+  final String name;
+  PaymentScreen({required this.id, required this.price, required this.name});
 
   @override
   _PaymentScreenState createState() => _PaymentScreenState();
@@ -70,6 +69,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white.withOpacity(0.9),
       appBar: AppBar(
         title: Text('Pay'),
         flexibleSpace: Container(
@@ -98,11 +98,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     ),
                     width: 350,
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(colors: [
-                        Colors.blue.shade800,
-                        Colors.red.shade400,
-                        Colors.orange.shade400,
-                      ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+                      color: Colors.white.withOpacity(0.5),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Padding(
@@ -117,12 +113,30 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                   width: 50,
                                   child: CircularProgressIndicator());
                             } else {
-                              return Text(
-                                'Billing Address : ${snapshot.data?['userAddress']}',
-                                style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Billing Address : ',
+                                    style: const TextStyle(
+                                        fontSize: 18,
+                                        fontFamily: 'OpenSans',
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black87),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        18, 8, 8, 8.0),
+                                    child: Text(
+                                      '${snapshot.data?['userAddress']}',
+                                      style: const TextStyle(
+                                          fontSize: 18,
+                                          fontFamily: 'OpenSans',
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.black54),
+                                    ),
+                                  ),
+                                ],
                               );
                             }
                           }),
@@ -215,14 +229,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       ),
                       width: 350,
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                            colors: [
-                              hexStringtoColor("5Ed1F4"),
-                              hexStringtoColor("CB28ee"),
-                              hexStringtoColor("9546d4"),
-                            ],
-                            begin: Alignment.bottomRight,
-                            end: Alignment.topLeft),
+                        color: Colors.white.withOpacity(0.5),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Column(
@@ -246,22 +253,62 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                               ConnectionState.waiting) {
                                             return CircularProgressIndicator();
                                           } else {
-                                            return Text(
-                                              'Shipping Address : ${snapshot.data?['userAddress']} ',
-                                              style: const TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white),
+                                            return Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'Shipping Address : ',
+                                                  style: const TextStyle(
+                                                      fontSize: 18,
+                                                      fontFamily: 'OpenSans',
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.black87),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          18, 8, 8, 8),
+                                                  child: Text(
+                                                    '${snapshot.data?['userAddress']}',
+                                                    style: const TextStyle(
+                                                        fontSize: 18,
+                                                        fontFamily: 'OpenSans',
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                        color: Colors.black54),
+                                                  ),
+                                                ),
+                                              ],
                                             );
                                           }
                                         });
                                   } else {
-                                    return Text(
-                                      'Shipping Address : ${snapshot.data?['address']}',
-                                      style: const TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white),
+                                    return Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Shipping Address :',
+                                          style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black87),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              18, 8, 8, 8),
+                                          child: Text(
+                                            '${snapshot.data?['address']}',
+                                            style: const TextStyle(
+                                                fontSize: 18,
+                                                fontFamily: 'OpenSans',
+                                                fontWeight: FontWeight.normal,
+                                                color: Colors.black54),
+                                          ),
+                                        ),
+                                      ],
                                     );
                                   }
                                 }),
@@ -270,7 +317,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             padding: const EdgeInsets.all(10.0),
                             child: Text(
                               'Click to change',
-                              style: TextStyle(color: Colors.white),
+                              style: TextStyle(color: Colors.black87),
                             ),
                           ),
                         ],
@@ -291,21 +338,45 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     width: 350,
                     height: 150,
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(colors: [
-                        hexStringtoColor("5Ed1F4"),
-                        hexStringtoColor("CB28ee"),
-                        hexStringtoColor("9546d4"),
-                      ], begin: Alignment.bottomRight, end: Alignment.topLeft),
+                      color: Colors.white.withOpacity(0.5),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Padding(
-                      padding: EdgeInsets.all(18.0),
-                      child: Text(
-                        'Total Amount : ${widget.price}',
-                        style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
+                      padding: const EdgeInsets.all(18.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Order Summery : ',
+                            style: const TextStyle(
+                                fontSize: 18,
+                                fontFamily: 'OpenSans',
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(18, 18, 0, 4),
+                            child: Text(
+                              'Total Amount : \$${widget.price}',
+                              style: const TextStyle(
+                                  fontSize: 18,
+                                  fontFamily: 'OpenSans',
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black54),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(18, 4, 0, 0),
+                            child: Text(
+                              'Payment Amount : \$${widget.price}',
+                              style: const TextStyle(
+                                  fontSize: 18,
+                                  fontFamily: 'OpenSans',
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black54),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -320,11 +391,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 width: 350,
                 height: 200,
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [
-                    hexStringtoColor("5Ed1F4"),
-                    hexStringtoColor("CB28ee"),
-                    hexStringtoColor("9546d4"),
-                  ], begin: Alignment.bottomRight, end: Alignment.topLeft),
+                  color: Colors.blue.shade900.withOpacity(0.5),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Padding(
@@ -346,7 +413,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           padding: const EdgeInsets.all(10.0),
                           child: Material(
                             elevation: 3,
-                            color: Colors.lightBlue.withOpacity(0.5),
+                            color: Colors.lightBlue.withOpacity(0.8),
                             borderRadius: BorderRadius.circular(10),
                             child: ListTile(
                               title: const Text(
@@ -355,6 +422,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                     color: Colors.white, fontSize: 16),
                               ),
                               leading: Radio<String>(
+                                activeColor: Colors.pink,
                                 value: 'paypal',
                                 groupValue: selectedPaymentMethod,
                                 onChanged: (value) {
@@ -372,7 +440,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           padding: const EdgeInsets.all(10.0),
                           child: Material(
                             elevation: 3,
-                            color: Colors.lightBlue.withOpacity(0.5),
+                            color: Colors.lightBlue.withOpacity(0.8),
                             borderRadius: BorderRadius.circular(10),
                             child: ListTile(
                               title: const Text(
@@ -381,6 +449,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                     color: Colors.white, fontSize: 16),
                               ),
                               leading: Radio<String>(
+                                activeColor: Colors.pink,
                                 value: 'cash_on_hand',
                                 groupValue: selectedPaymentMethod,
                                 onChanged: (value) {
@@ -407,9 +476,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       Navigator.of(context).pop();
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red.shade600,
+                      backgroundColor: Colors.red.shade400,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30)),
+                          borderRadius: BorderRadius.circular(20)),
                       minimumSize: Size(150, 55),
                     ),
                     child: const Padding(
@@ -428,8 +497,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 padding: const EdgeInsets.all(18.0),
                 child: ElevatedButton(
                     onPressed: () {
-                      double advance = ((widget.price.toDouble()) / 100) * 10;
+                      double advance = widget.price.toDouble();
                       if (selectedPaymentMethod == 'paypal') {
+                        Navigator.of(context).pop();
                         Navigation(
                           context,
                           UsePaypal(
@@ -460,40 +530,27 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                   "item_list": {
                                     "items": [
                                       {
-                                        "name": "A demo product",
+                                        "name": widget.name,
                                         "quantity": 1,
                                         "price": advance,
                                         "currency": "USD"
                                       }
                                     ],
-
-                                    // shipping address is not required though
-                                    // "shipping_address": {
-                                    //   "recipient_name": "Jane Foster",
-                                    //   "line1": "Travis County",
-                                    //   "line2": "",
-                                    //   "city": "Austin",
-                                    //   "country_code": "US",
-                                    //   "postal_code": "73301",
-                                    //   "phone": "+00000000",
-                                    //   "state": "Texas"
-                                    // },
                                   }
                                 }
                               ],
                               note:
                                   "Contact us for any questions on your order.",
                               onSuccess: (Map params) async {
-                                Map<String, dynamic> qrMap =
-                                    getBookingData() as Map<String, dynamic>;
-                                generateQRCode(qrMap);
+                                // Map<String, dynamic> qrMap =
+                                //     getBookingData() as Map<String, dynamic>;
+                                // generateQRCode(qrMap);
                                 _addBooking();
                                 _addPaymentHistory(advance);
-                                sendNotificationForAdmin(widget.id);
-                                Navigator.of(context)
-                                    .pushReplacement(MaterialPageRoute(
-                                  builder: (context) => HomeScreen(),
-                                ));
+                                // sendNotificationForAdmin(widget.id);
+                                // Navigator.of(context).push(MaterialPageRoute(
+                                //   builder: (context) => HomeScreen(),
+                                // ));
                                 // sendNotification(widget.id);
 
                                 // Fluttertoast.showToast(
@@ -514,20 +571,19 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         });
                       } else if (selectedPaymentMethod == 'cash_on_hand') {
                         _addBooking();
-
-                        sendNotificationForAdmin(widget.id);
-                        sendNotificationForAdmin(widget.id);
-                        print('Id is : ${widget.id}');
-                        Navigation(context, HomeScreen());
-                        print('Cash on hand is Selected');
+                        // sendNotificationForAdmin(widget.id);
+                        Navigator.of(context).pop();
+                        Navigation(context, HomeScreen()).then((value) {
+                          clearAllSharedPreferenceData();
+                        });
                       } else {
                         showInformation(context, "Please select prefer method");
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue.shade600,
+                      backgroundColor: Colors.blue.shade400,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30)),
+                          borderRadius: BorderRadius.circular(20)),
                       minimumSize: Size(150, 55),
                     ),
                     child: const Padding(

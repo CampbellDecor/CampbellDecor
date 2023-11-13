@@ -69,8 +69,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                         SizedBox(
                           height: 200,
                         ),
-                        reusePaymentContainer(
-                            widget.id, data!['paymentAmount'], context, () {})
+                        reusePaymentContainer(widget.id, data!['name'],
+                            data!['paymentAmount'], context, () {})
                       ],
                     ),
                   ),

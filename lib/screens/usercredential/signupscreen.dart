@@ -1,18 +1,12 @@
-import 'package:campbelldecor/screens/bookings_screens/otp_screen.dart';
-import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
 import 'package:campbelldecor/screens/dash_board/homescreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import '../../reusable/reusable_methods.dart';
 import '../../reusable/reusable_widgets.dart';
 import '../../utils/color_util.dart';
 import '../notifications/notification_services.dart';
 import '../notifications/welcomeNotification.dart';
-import 'otp_setup.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -114,8 +108,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             elevation: 10,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(50),
-                                topRight: Radius.circular(50),
+                                topLeft: Radius.circular(30),
+                                topRight: Radius.circular(30),
                               ),
                             ),
                             backgroundColor: Colors.blue.shade400,
@@ -125,7 +119,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(18.0),
                                   child: SizedBox(
-                                    height: 800,
+                                    height: 900,
                                     child: Column(
                                       children: [
                                         SizedBox(

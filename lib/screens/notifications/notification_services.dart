@@ -7,7 +7,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'notification_view.dart';
 import 'notificationscreenForAdmin.dart';
 
 class NotificationServices {
@@ -55,7 +54,7 @@ class NotificationServices {
     await _flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: (payload) {
-        handleMessage(context, message);
+        // handleMessage(context, message);
       },
     );
   }
@@ -110,37 +109,6 @@ class NotificationServices {
           message.notification!.body.toString(),
           notificationDetails);
     });
-
-    // FirebaseMessaging.onMessage.listen((event) {
-    //   Map<String, dynamic> savedMessage = Map();
-    //   savedMessage['title'] = message.notification!.title.toString();
-    //   savedMessage['body'] = message.notification!.title.toString();
-    //   saveNotificationToFirestore(savedMessage);
-    //   print('Save the Notification');
-    // });
-  }
-
-  Future<void> setupIneractMessage(BuildContext context) async {
-    RemoteMessage? initialMessage =
-        await FirebaseMessaging.instance.getInitialMessage();
-    if (initialMessage != null) {
-      handleMessage(context, initialMessage);
-    }
-
-    FirebaseMessaging.onMessageOpenedApp.listen((event) {
-      handleMessage(context, event);
-    });
-  }
-
-  void handleMessage(BuildContext context, RemoteMessage message) {
-    if (message.data['type'] == 'msg') {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => NotificationScreen()));
-    }
-    // else {
-    //   Navigator.push(
-    //       context, MaterialPageRoute(builder: (context) => NotiMessage()));
-    // }
   }
 
   void saveNotificationToFirestore(Map<String, dynamic> notificationData) {

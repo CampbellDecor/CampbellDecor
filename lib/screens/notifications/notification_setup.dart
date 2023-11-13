@@ -4,6 +4,8 @@ import 'package:campbelldecor/screens/notifications/notificationscreenForAdmin.d
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+import '../../reusable/reusable_methods.dart';
+
 class FirebaseApi {
   final _firebaseMessaging = FirebaseMessaging.instance;
 
@@ -33,7 +35,8 @@ class FirebaseApi {
     );
     FirebaseMessaging.instance.getInitialMessage().then(handleMessage);
     FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
-    FirebaseMessaging.onMessage.listen((message) {
+    FirebaseMessaging.onMessage.listen((message) async {
+      Map<String, dynamic> messageData = message.data;
       final notification = message.notification;
       if (notification == null) return;
       _localNotification.show(
@@ -49,6 +52,13 @@ class FirebaseApi {
           ),
         ),
         payload: jsonEncode(message.toMap()),
+      );
+
+      await saveNotification(
+        messageData['id'],
+        messageData['head'],
+        messageData['body'],
+        DateTime.parse(messageData['dateTime']),
       );
     });
   }

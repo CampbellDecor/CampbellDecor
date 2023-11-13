@@ -271,12 +271,15 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                   amount = (value + amount);
                                 }
                               });
-                              print(amount);
+                              packageAmount =
+                                  await getDoubleData('packageAmount');
                               event = await getData('event');
-                              packageAmount = await getDoubleData('amount');
                               package = await getData('package');
+                              print(' Amount $amount');
+                              print('packageAmount $packageAmount');
 
                               /*---------------------insert Booking Collection---------------------*/
+
                               if ((amount != null && amount! > 0) ||
                                   (packageAmount != null &&
                                       packageAmount! > 0)) {
