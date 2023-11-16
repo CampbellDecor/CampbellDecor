@@ -8,6 +8,7 @@ import '../reusable/reusable_methods.dart';
 class PdfApi {
   static Future<File> saveDocument({
     required String name,
+    required String bookingId,
     required Document pdf,
   }) async {
     final bytes = await pdf.save();
@@ -16,7 +17,7 @@ class PdfApi {
     final file = File('${dir.path}/$name');
 
     await file.writeAsBytes(bytes);
-    savePdfForFirebase(file, 'UPvyJG4VUFSSOPalBs1g');
+    savePdfForFirebase(file, bookingId);
 
     return file;
   }

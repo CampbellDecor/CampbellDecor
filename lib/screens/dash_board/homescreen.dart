@@ -1,5 +1,6 @@
 import 'package:campbelldecor/reusable/reusable_methods.dart';
 import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
+import 'package:campbelldecor/screens/notifications/notification_history.dart';
 import 'package:campbelldecor/screens/notifications/notification_services.dart';
 import 'package:campbelldecor/screens/theme/theme_manager.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -14,7 +15,7 @@ import '../../utils/color_util.dart';
 import '../bookings_screens/date_view.dart';
 import '../bookings_screens/show_rating.dart';
 import '../events_screen/packagesscreen.dart';
-import '../notifications/notification_history.dart';
+import '../notifications/notification_detail.dart';
 import 'header_nav.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -34,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
     updateDeviceTokenForNotification(FirebaseAuth.instance.currentUser!.uid);
     notificationServices.requestNotificationPermission();
     notificationServices.firebaseInit(context);
-    // notificationServices.setupIneractMessage(context);
+    notificationServices.setupIneractMessage(context);
     notificationServices.getDeviceToken().then((value) {
       print('device Token');
       print('Device Token $value');

@@ -2,20 +2,10 @@ import 'package:campbelldecor/screens/notifications/notification_detail.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-
 import '../../reusable/reusable_methods.dart';
 import '../../utils/color_util.dart';
-
-Future<List<DocumentSnapshot>> fetchData() async {
-  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-      .collection('notification')
-      .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-      .orderBy('dateTime', descending: true)
-      .get();
-  return querySnapshot.docs;
-}
 
 class NotificationHistory extends StatefulWidget {
   @override
@@ -24,6 +14,17 @@ class NotificationHistory extends StatefulWidget {
 
 class _NotificationHistoryState extends State<NotificationHistory> {
   late Future<List<DocumentSnapshot>> data;
+  bool isEditing = false;
+  Set<String> selectedItems = Set<String>();
+
+  Future<List<DocumentSnapshot>> fetchData() async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('notification')
+        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .orderBy('dateTime', descending: true)
+        .get();
+    return querySnapshot.docs;
+  }
 
   @override
   void initState() {
@@ -46,6 +47,40 @@ class _NotificationHistoryState extends State<NotificationHistory> {
             ], begin: Alignment.bottomRight, end: Alignment.topLeft),
           ),
         ),
+        actions: [
+          isEditing
+              ? IconButton(
+                  onPressed: () {
+                    _deleteSelected();
+                    setState(() {});
+                    Fluttertoast.showToast(
+                        msg: "Deleted successfully",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        backgroundColor: Colors.white,
+                        textColor: Colors.black);
+                  },
+                  icon: Icon(Icons.delete_outline_outlined))
+              : SizedBox(),
+          isEditing
+              ? IconButton(
+                  icon: Icon(Icons.check),
+                  onPressed: () {
+                    setState(() {
+                      isEditing = false;
+                    });
+                  },
+                )
+              : IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () {
+                    setState(() {
+                      isEditing = true;
+                      selectedItems.clear();
+                    });
+                  },
+                ),
+        ],
       ),
       body: FutureBuilder<List<DocumentSnapshot>>(
         future: data,
@@ -64,55 +99,73 @@ class _NotificationHistoryState extends State<NotificationHistory> {
                 var documentId = document.id;
                 Map<String, dynamic> Notifications =
                     document.data() as Map<String, dynamic>;
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
-                  child: Card(
-                    elevation: 8,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    color: Colors.white70.withOpacity(0.8),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20)),
-                      height: 80,
-                      child: ListTile(
-                        contentPadding: EdgeInsets.all(8),
-                        leading: Icon(
-                          Icons.notification_important,
-                          size: 35,
+                Key cardKey = Key(documentId);
+
+                return GestureDetector(
+                  onTap: () {
+                    if (isEditing) {
+                      setState(() {
+                        if (selectedItems.contains(documentId)) {
+                          selectedItems.remove(documentId);
+                        } else {
+                          selectedItems.add(documentId);
+                        }
+                      });
+                    } else {
+                      Navigation(
+                        context,
+                        NotificationDetailsScreen(
+                          id: documentId,
                         ),
-                        iconColor: Colors.purpleAccent.shade200,
-                        title: Text(
-                          Notifications['head'],
-                        ),
-                        subtitle: Text(
-                          shortenString(Notifications['body'], 45),
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        trailing: Padding(
-                          padding: const EdgeInsets.fromLTRB(8.0, 0, 8, 0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Text(DateFormat.yMd()
-                                  .format(Notifications['dateTime'].toDate())),
-                              Text(DateFormat.Hm()
-                                  .format(Notifications['dateTime'].toDate())),
-                              Icon(
-                                Icons.arrow_forward_ios_outlined,
-                                size: 16,
-                              )
-                            ],
+                      );
+                    }
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
+                    child: Card(
+                      elevation: 8,
+                      key: cardKey,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      color: isEditing && selectedItems.contains(documentId)
+                          ? Colors.purple.withOpacity(0.5)
+                          : Colors.white70.withOpacity(0.8),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20)),
+                        height: 80,
+                        child: ListTile(
+                          contentPadding: EdgeInsets.all(8),
+                          leading: Icon(
+                            Icons.notification_important,
+                            size: 35,
+                          ),
+                          iconColor: Colors.purpleAccent.shade200,
+                          title: Text(
+                            Notifications['head'],
+                          ),
+                          subtitle: Text(
+                            shortenString(Notifications['body'], 45),
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          trailing: Padding(
+                            padding: const EdgeInsets.fromLTRB(8.0, 0, 8, 0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text(DateFormat.yMd().format(
+                                    Notifications['dateTime'].toDate())),
+                                Text(DateFormat.Hm().format(
+                                    Notifications['dateTime'].toDate())),
+                                Icon(
+                                  Icons.arrow_forward_ios_outlined,
+                                  size: 16,
+                                )
+                              ],
+                            ),
                           ),
                         ),
-                        onTap: () {
-                          Navigation(
-                              context,
-                              NotificationDetailsScreen(
-                                id: documentId,
-                              ));
-                        },
                       ),
                     ),
                   ),
@@ -123,5 +176,19 @@ class _NotificationHistoryState extends State<NotificationHistory> {
         },
       ),
     );
+  }
+
+  void _deleteSelected() async {
+    for (int i = selectedItems.length - 1; i >= 0; i--) {
+      if (selectedItems.elementAt(i) != 0) {
+        print(selectedItems.elementAt(i));
+        await FirebaseFirestore.instance
+            .collection('notification')
+            .doc(selectedItems.elementAt(i))
+            .delete();
+        selectedItems.remove(i);
+      }
+    }
+    setState(() {});
   }
 }

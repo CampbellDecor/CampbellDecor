@@ -32,7 +32,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   }
 
   void getDatas() async {
-    final email = 'pinthushan71998@gmail.com';
+    final email = await FirebaseAuth.instance.currentUser!.email;
 
     try {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance

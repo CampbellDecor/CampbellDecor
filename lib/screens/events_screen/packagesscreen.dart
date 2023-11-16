@@ -67,7 +67,7 @@ class _PackageScreenState extends State<PackageScreen> {
                 );
                 if (filteredPackages.length > 0) {
                   return LimitedBox(
-                      maxHeight: 713,
+                      maxHeight: MediaQuery.of(context).size.height * 0.84,
                       child: ListView.builder(
                           scrollDirection: Axis.vertical,
                           itemCount: filteredPackages.length,
@@ -180,6 +180,17 @@ class _PackageScreenState extends State<PackageScreen> {
                                                         documentSnapshot[
                                                                 'price']
                                                             .toDouble());
+                                                    /**-----------------Delete------------------**/
+                                                    print('pinthu');
+                                                    print('pinthu');
+                                                    print('pinthu');
+                                                    print('pinthu');
+                                                    print(preferences
+                                                        .getString('package'));
+                                                    print(preferences.getDouble(
+                                                        'packageAmount'));
+                                                    /**------------------Delete-----------------**/
+
                                                     Navigation(context,
                                                         CalendarScreen());
                                                   },

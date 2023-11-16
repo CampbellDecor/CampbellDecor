@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:campbelldecor/screens/payment_screens/paymentscreen.dart';
 import 'package:campbelldecor/main.dart';
@@ -19,6 +21,12 @@ class pdfscreen extends StatefulWidget {
   State<pdfscreen> createState() => _pdfscreenState();
 }
 
+Map<String, dynamic> user = Map();
+
+void setUser() async {
+  user = await getUserData(FirebaseAuth.instance.currentUser!.uid);
+}
+
 class _pdfscreenState extends State<pdfscreen> {
   // late pw.Image image;
   //
@@ -31,7 +39,10 @@ class _pdfscreenState extends State<pdfscreen> {
 
   @override
   Widget build(BuildContext context) {
-    Map<String, dynamic> event = ({'name': 'birthday', 'price': 5000.0});
+    setUser();
+    Map<String, dynamic> event =
+        ({'name': 'birthday', 'price': 5000.0, 'date': DateTime.now()});
+
     // imageGenerate();
     return Scaffold(
       backgroundColor: Colors.purpleAccent,
@@ -53,9 +64,8 @@ class _pdfscreenState extends State<pdfscreen> {
               ButtonWidget(
                 text: 'Invoice PDF',
                 onClicked: () async {
-                  pw.Image image = await imageGenerate();
-                  GeneratePDFInvoice("Suganthy",
-                      "Madduvil North,chavakachcheri,jaffna", event, image);
+                  // pw.Image image = await imageGenerate();
+                  GeneratePDFInvoice(user, event, 'FhkC7ffWvmpOHEeY4L8G', 5000);
                 },
               ),
             ],

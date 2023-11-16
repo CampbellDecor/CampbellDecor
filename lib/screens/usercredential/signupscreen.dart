@@ -101,7 +101,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         _addressTextController.text.isNotEmpty) {
                       if (_passwordTextController.text ==
                           _confirmpassTextController.text) {
-                        // try {
                         verifyPhoneNumber(_phoneNoTextController.text);
                         await _verifyOTP();
                         showModalBottomSheet(
@@ -228,7 +227,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       } else {
                         showErrorAlert(context,
                             'Password and Confirm password not Matched ');
-                        print('Password and Confirm password not Matched ');
                       }
                     } else {
                       showErrorAlert(context, 'Please Fill the All fields ');

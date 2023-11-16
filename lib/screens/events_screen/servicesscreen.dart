@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:campbelldecor/reusable/reusable_methods.dart';
 import 'package:campbelldecor/screens/bookings_screens/cart_screen.dart';
 import 'package:campbelldecor/screens/events_screen/serviceselectscreen.dart';
@@ -29,8 +28,13 @@ class _ServicesScreenState extends State<ServicesScreen> {
   String? event;
   String? package;
   final uid = FirebaseAuth.instance.currentUser!.uid;
+
   _resetAndNavigateBack() async {
-    Navigator.pop(context);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('package');
+    await prefs.remove('events');
+    await prefs.remove('packageAmount');
+    Navigator.of(context).pop();
   }
 
   @override
@@ -66,7 +70,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
                     if (streamSnapshot.hasData) {
                       return LimitedBox(
-                        maxHeight: 750,
+                        maxHeight: MediaQuery.of(context).size.height * 0.82,
                         child: ListView.builder(
                             itemCount: streamSnapshot.data!.docs.length,
                             itemBuilder: (context, index) {
@@ -165,82 +169,84 @@ class _ServicesScreenState extends State<ServicesScreen> {
                           width: 150,
                           child: ElevatedButton(
                             onPressed: () async {
-                              /*--------------------- Add services into myMap ---------------------*/
-                              await getMapData('service').then((map) {
-                                setState(() {
-                                  myMap = map;
+                              try {
+                                /**--------------------- Add services into myMap ---------------------**/
+                                await getMapData('service').then((map) {
+                                  setState(() {
+                                    myMap = map;
+                                  });
                                 });
-                              });
-                              myMap.forEach((key, value) {
-                                if (key.endsWith('price')) {
-                                  print('$key: $value');
-                                  amount = (value + amount);
-                                }
-                              });
+                                myMap.forEach((key, value) {
+                                  if (key.endsWith('price')) {
+                                    print('$key: $value');
+                                    amount = (value + amount);
+                                  }
+                                });
 
-                              packageAmount =
-                                  await getDoubleData('packageAmount');
-                              event = await getData('event');
-                              package = await getData('package');
-                              print(' Amount $amount');
-                              print('packageAmount $packageAmount');
-                              /**---------------------insert Add to cart Collection---------------------**/
-                              if ((amount != null && amount! > 0) ||
-                                  (packageAmount != null &&
-                                      packageAmount! > 0)) {
-                                if (event != null) {
-                                  await insertData(
-                                          'bookings',
-                                          event!,
-                                          'cart',
-                                          uid,
-                                          DateTime.now(),
-                                          widget.eventDate,
-                                          amount!,
-                                          myMap)
-                                      .then((value) async {
-                                    Navigation(context, AddToCartScreen())
-                                        .then((value) {
-                                      clearAllSharedPreferenceData();
+                                /**---getFromSharedPreferences---**/
+                                packageAmount =
+                                    await getDoubleData('packageAmount');
+                                event = await getData('event');
+                                package = await getData('package');
+
+                                /**---------------------insert Add to cart Collection---------------------**/
+                                if ((amount > 0) ||
+                                    (packageAmount != null &&
+                                        packageAmount! > 0)) {
+                                  if (event != null) {
+                                    await insertData(
+                                            'bookings',
+                                            event!,
+                                            'cart',
+                                            uid,
+                                            DateTime.now(),
+                                            widget.eventDate,
+                                            amount,
+                                            myMap)
+                                        .then((value) async {
+                                      Navigation(context, AddToCartScreen())
+                                          .then((value) {
+                                        clearAllSharedPreferenceData();
+                                      });
                                     });
-                                  });
-                                } else if (package != null) {
-                                  await insertData(
-                                          'bookings',
-                                          package!,
-                                          'cart',
-                                          uid,
-                                          DateTime.now(),
-                                          widget.eventDate,
-                                          packageAmount! + amount!,
-                                          myMap)
-                                      .then((value) async {
-                                    Navigation(context, AddToCartScreen())
-                                        .then((value) {
-                                      clearAllSharedPreferenceData();
+                                  } else if (package != null) {
+                                    await insertData(
+                                            'bookings',
+                                            package!,
+                                            'cart',
+                                            uid,
+                                            DateTime.now(),
+                                            widget.eventDate,
+                                            packageAmount! + amount,
+                                            myMap)
+                                        .then((value) async {
+                                      Navigation(context, AddToCartScreen())
+                                          .then((value) {
+                                        clearAllSharedPreferenceData();
+                                      });
                                     });
-                                  });
+                                  } else {
+                                    await insertData(
+                                            'bookings',
+                                            'Services Only',
+                                            'cart',
+                                            uid,
+                                            DateTime.now(),
+                                            widget.eventDate,
+                                            amount,
+                                            myMap)
+                                        .then((value) async {
+                                      Navigation(context, AddToCartScreen())
+                                          .then((value) {
+                                        clearAllSharedPreferenceData();
+                                      });
+                                    });
+                                  }
                                 } else {
-                                  await insertData(
-                                          'bookings',
-                                          'Services Only',
-                                          'cart',
-                                          uid,
-                                          DateTime.now(),
-                                          widget.eventDate,
-                                          amount,
-                                          myMap)
-                                      .then((value) async {
-                                    Navigation(context, AddToCartScreen())
-                                        .then((value) {
-                                      clearAllSharedPreferenceData();
-                                    });
-                                  });
+                                  showInformation(
+                                      context, 'Please Select Services');
                                 }
-                              } else {
-                                showInformation(
-                                    context, 'Please Select Services');
-                              }
+                              } catch (e) {}
                             },
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
@@ -259,117 +265,118 @@ class _ServicesScreenState extends State<ServicesScreen> {
                           width: 150,
                           child: ElevatedButton(
                             onPressed: () async {
-                              /*--------------------- Add services into myMap ---------------------*/
-                              await getMapData('service').then((map) {
-                                setState(() {
-                                  myMap = map;
+                              try {
+                                /**--------------------- Add services into myMap ---------------------**/
+                                await getMapData('service').then((map) {
+                                  setState(() {
+                                    myMap = map;
+                                  });
                                 });
-                              });
-                              myMap.forEach((key, value) {
-                                if (key.endsWith('price')) {
-                                  print('$key: $value');
-                                  amount = (value + amount);
-                                }
-                              });
-                              packageAmount =
-                                  await getDoubleData('packageAmount');
-                              event = await getData('event');
-                              package = await getData('package');
-                              print(' Amount $amount');
-                              print('packageAmount $packageAmount');
+                                myMap.forEach((key, value) {
+                                  if (key.endsWith('price')) {
+                                    print('$key: $value');
+                                    amount = (value + amount);
+                                  }
+                                });
 
-                              /*---------------------insert Booking Collection---------------------*/
+                                /**---getFromSharedPreferences---**/
 
-                              if ((amount != null && amount! > 0) ||
-                                  (packageAmount != null &&
-                                      packageAmount! > 0)) {
-                                if (event != null) {
-                                  await insertData(
-                                          'bookings',
-                                          event!,
-                                          'cart',
-                                          uid,
-                                          DateTime.now(),
-                                          widget.eventDate,
-                                          amount!,
-                                          myMap)
-                                      .then((value) async {
-                                    final _book = FirebaseFirestore.instance
-                                        .collection("bookings")
-                                        .where('status', isEqualTo: 'cart')
-                                        .where('eventDate',
-                                            isEqualTo: widget.eventDate)
-                                        .where('userID',
-                                            isEqualTo: FirebaseAuth
-                                                .instance.currentUser?.uid);
-                                    DocumentSnapshot documentSnapshot =
-                                        (await _book.get()).docs[0];
-                                    Navigation(
-                                        context,
-                                        CheckOutScreen(
-                                            id: documentSnapshot.id));
-                                  });
-                                } else if (package != null) {
-                                  await insertData(
-                                          'bookings',
-                                          package!,
-                                          'cart',
-                                          uid,
-                                          DateTime.now(),
-                                          widget.eventDate,
-                                          packageAmount!,
-                                          myMap)
-                                      .then((value) async {
-                                    final _book = FirebaseFirestore.instance
-                                        .collection("bookings")
-                                        .where('status', isEqualTo: 'cart')
-                                        .where('eventDate',
-                                            isEqualTo: widget.eventDate)
-                                        .where('userID',
-                                            isEqualTo: FirebaseAuth
-                                                .instance.currentUser?.uid);
-                                    DocumentSnapshot documentSnapshot =
-                                        (await _book.get()).docs[0];
-                                    Navigation(
-                                        context,
-                                        CheckOutScreen(
-                                            id: documentSnapshot.id));
-                                  });
+                                packageAmount =
+                                    await getDoubleData('packageAmount');
+                                event = await getData('event');
+                                package = await getData('package');
+
+                                /**---------------------insert Booking Collection---------------------**/
+
+                                if ((amount > 0) ||
+                                    (packageAmount != null &&
+                                        packageAmount! > 0)) {
+                                  if (event != null) {
+                                    await insertData(
+                                            'bookings',
+                                            event!,
+                                            'cart',
+                                            uid,
+                                            DateTime.now(),
+                                            widget.eventDate,
+                                            amount,
+                                            myMap)
+                                        .then((value) async {
+                                      final _book = FirebaseFirestore.instance
+                                          .collection("bookings")
+                                          .where('status', isEqualTo: 'cart')
+                                          .where('eventDate',
+                                              isEqualTo: widget.eventDate)
+                                          .where('userID',
+                                              isEqualTo: FirebaseAuth
+                                                  .instance.currentUser?.uid);
+                                      DocumentSnapshot documentSnapshot =
+                                          (await _book.get()).docs[0];
+                                      Navigation(
+                                          context,
+                                          CheckOutScreen(
+                                              id: documentSnapshot.id));
+                                    });
+                                  } else if (package != null) {
+                                    await insertData(
+                                            'bookings',
+                                            package!,
+                                            'cart',
+                                            uid,
+                                            DateTime.now(),
+                                            widget.eventDate,
+                                            packageAmount!,
+                                            myMap)
+                                        .then((value) async {
+                                      final _book = FirebaseFirestore.instance
+                                          .collection("bookings")
+                                          .where('status', isEqualTo: 'cart')
+                                          .where('eventDate',
+                                              isEqualTo: widget.eventDate)
+                                          .where('userID',
+                                              isEqualTo: FirebaseAuth
+                                                  .instance.currentUser?.uid);
+                                      DocumentSnapshot documentSnapshot =
+                                          (await _book.get()).docs[0];
+                                      Navigation(
+                                          context,
+                                          CheckOutScreen(
+                                              id: documentSnapshot.id));
+                                    });
+                                  } else {
+                                    await insertData(
+                                            'bookings',
+                                            'Service Only',
+                                            'cart',
+                                            uid,
+                                            DateTime.now(),
+                                            widget.eventDate,
+                                            amount,
+                                            myMap)
+                                        .then((value) async {
+                                      final _book = await FirebaseFirestore
+                                          .instance
+                                          .collection("bookings")
+                                          .where('status', isEqualTo: 'cart')
+                                          .where('eventDate',
+                                              isEqualTo: widget.eventDate)
+                                          .where('userID',
+                                              isEqualTo: FirebaseAuth
+                                                  .instance.currentUser?.uid);
+                                      DocumentSnapshot documentSnapshot =
+                                          (await _book.get()).docs[0];
+                                      Navigation(
+                                          context,
+                                          CheckOutScreen(
+                                              id: documentSnapshot.id));
+                                    });
+                                  }
                                 } else {
-                                  await insertData(
-                                          'bookings',
-                                          'Service Only',
-                                          'cart',
-                                          uid,
-                                          DateTime.now(),
-                                          widget.eventDate,
-                                          amount!,
-                                          myMap)
-                                      .then((value) async {
-                                    final _book = await FirebaseFirestore
-                                        .instance
-                                        .collection("bookings")
-                                        .where('status', isEqualTo: 'cart')
-                                        .where('eventDate',
-                                            isEqualTo: widget.eventDate)
-                                        .where('userID',
-                                            isEqualTo: FirebaseAuth
-                                                .instance.currentUser?.uid);
-                                    DocumentSnapshot documentSnapshot =
-                                        (await _book.get()).docs[0];
-                                    Navigation(
-                                        context,
-                                        CheckOutScreen(
-                                            id: documentSnapshot.id));
-                                  });
-                                  // .then((value) async {
-                                  // Navigation(context,
-                                  //     CheckOutScreen(id: documentSnapshot.id));
-                                  // });
+                                  showInformation(
+                                      context, 'Please Select Services');
                                 }
-                              } else {
-                                showInformation(
-                                    context, 'Please Select Services');
+                              } catch (e) {
+                                print('Error $e');
                               }
                             },
                             style: ElevatedButton.styleFrom(

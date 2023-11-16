@@ -253,6 +253,7 @@ Future<void> showInformationAlert(
         icon: const Icon(
           Icons.info_outline_rounded,
           color: Colors.blue,
+          size: 40,
         ),
         title: const Padding(
           padding: EdgeInsets.all(8.0),
@@ -338,6 +339,7 @@ Future<void> cancelInformationAlert(
         icon: const Icon(
           Icons.info_outline_rounded,
           color: Colors.blue,
+          size: 40,
         ),
         title: const Padding(
           padding: EdgeInsets.all(8.0),
@@ -378,11 +380,11 @@ Future<void> showErrorAlert(BuildContext context, String errorMessage) async {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        backgroundColor: Colors.white.withOpacity(0.7),
+        backgroundColor: Colors.white.withOpacity(0.9),
         shadowColor: Colors.black,
         elevation: 8,
         icon: const Icon(
-          Icons.error_rounded,
+          Icons.error_outline,
           size: 40,
           color: Colors.red,
         ),
@@ -619,13 +621,6 @@ Future<void> outDatedBookings(String id) async {
       .doc(id)
       .update({'status': 'expired'});
 }
-//
-// Future<void> savePdfForFirebase(File file, String id) async {
-//   await FirebaseFirestore.instance
-//       .collection('bookings')
-//       .doc(id)
-//       .update({'pdf': 'expired'});
-// }
 
 Future<void> savePdfForFirebase(File file, String id) async {
   Reference storageReference =
@@ -644,11 +639,15 @@ Future<pw.Image> imageGenerate() async {
   final img = await rootBundle.load('assets/images/appLogo1.png');
   final imageBytes = img.buffer.asUint8List();
   pw.Image image = pw.Image(pw.MemoryImage(imageBytes));
-  return pw.Image(pw.MemoryImage(imageBytes));
+  return image;
 }
 
-Future<void> GeneratePDFInvoice(String customer, String address,
-    Map<String, dynamic> event, pw.Image image) async {
+Future<void> GeneratePDFInvoice(
+  Map<String, dynamic> user,
+  Map<String, dynamic> event,
+  String bookingId,
+  double total,
+) async {
   final date = DateTime.now();
 
   final invoice = Invoice(
@@ -661,8 +660,8 @@ Future<void> GeneratePDFInvoice(String customer, String address,
       website: 'http://www.campbelldecor.com.au/',
     ),
     customer: Customer(
-      name: customer,
-      address: address,
+      name: user['name'],
+      address: user['address'],
     ),
     info: InvoiceInfo(
       description: 'Description',
@@ -673,13 +672,23 @@ Future<void> GeneratePDFInvoice(String customer, String address,
     items: [
       InvoiceItem(
         description: event['name'],
+        eventDate: date,
         amount: event['price'],
-        eventDate: event['date'],
       ),
     ],
-    image: image,
+    image: await imageGenerate(),
   );
-  final pdfFile = await PdfInvoiceApi.generate(invoice);
+  final pdfFile = await PdfInvoiceApi.generate(invoice, bookingId, total);
+}
+
+Future<Map<String, dynamic>> getUserData(String id) async {
+  Map<String, dynamic> userData = {};
+  DocumentSnapshot<Map<String, dynamic>> userSnapshot =
+      await FirebaseFirestore.instance.collection('users').doc(id).get();
+  if (userSnapshot.exists) {
+    userData = userSnapshot.data()!;
+  }
+  return userData;
 }
 
 Future<void> updateData(String collection_name, String document_id,

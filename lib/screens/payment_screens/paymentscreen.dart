@@ -65,9 +65,17 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   /**--------------------Insert User Shipping Address------------------------------**/
+  Map<String, dynamic> user = Map();
+
+  void setUser() async {
+    user = await getUserData(FirebaseAuth.instance.currentUser!.uid);
+  }
 
   @override
   Widget build(BuildContext context) {
+    setUser();
+    Map<String, dynamic> event =
+        ({'name': widget.name, 'price': widget.price, 'date': DateTime.now()});
     return Scaffold(
       backgroundColor: Colors.white.withOpacity(0.9),
       appBar: AppBar(
@@ -542,23 +550,26 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               note:
                                   "Contact us for any questions on your order.",
                               onSuccess: (Map params) async {
+                                _addBooking();
+                                _addPaymentHistory(advance);
+                                GeneratePDFInvoice(
+                                    user, event, widget.id, widget.price);
+                                sendNotificationForAdmin(
+                                    widget.id,
+                                    'Booking request',
+                                    'Your booking request has been received. We will notify you shortly with our response.');
+                                Fluttertoast.showToast(
+                                    msg: "Payment Success",
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.BOTTOM,
+                                    backgroundColor: Colors.white,
+                                    textColor: Colors.black);
                                 // Map<String, dynamic> qrMap =
                                 //     getBookingData() as Map<String, dynamic>;
                                 // generateQRCode(qrMap);
-                                _addBooking();
-                                _addPaymentHistory(advance);
-                                // sendNotificationForAdmin(widget.id);
                                 // Navigator.of(context).push(MaterialPageRoute(
                                 //   builder: (context) => HomeScreen(),
                                 // ));
-                                // sendNotification(widget.id);
-
-                                // Fluttertoast.showToast(
-                                //     msg: "Payment Success",
-                                //     toastLength: Toast.LENGTH_LONG,
-                                //     gravity: ToastGravity.BOTTOM,
-                                //     backgroundColor: Colors.white,
-                                //     textColor: Colors.black);
                               },
                               onError: (error) {
                                 print("onError: $error");
@@ -571,7 +582,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         });
                       } else if (selectedPaymentMethod == 'cash_on_hand') {
                         _addBooking();
-                        // sendNotificationForAdmin(widget.id);
+                        sendNotificationForAdmin(widget.id, 'Booking request',
+                            'Your booking request has been received. We will notify you shortly with our response.');
                         Navigator.of(context).pop();
                         Navigation(context, HomeScreen()).then((value) {
                           clearAllSharedPreferenceData();

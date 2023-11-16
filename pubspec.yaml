@@ -128,6 +128,11 @@ flutter:
          - asset: assets/fonts/Helvetica.ttf
          - asset: assets/fonts/Helvetica-Bold.ttf
          - asset: assets/fonts/Courier.ttf
+
+     - family: Alegreya
+       fonts:
+         - asset: assets/fonts/Alegreya.ttf
+
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
