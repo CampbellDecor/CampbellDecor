@@ -86,7 +86,7 @@ class _EventsScreenState extends State<EventsScreen> {
                     _currentFilter,
                   );
                   return LimitedBox(
-                    maxHeight: 720,
+                    maxHeight: MediaQuery.of(context).size.height * 0.84,
                     child: ListView.builder(
                         itemCount: filteredEvents.length,
                         itemBuilder: (context, index) {

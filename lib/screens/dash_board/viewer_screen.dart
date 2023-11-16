@@ -38,6 +38,7 @@ class _ViewerScreenState extends State<ViewerScreen> {
     CarouselController carouselController = CarouselController();
     int _currentSlide = 0;
     return Scaffold(
+      backgroundColor: hexStringtoColor('efefef'),
       appBar: AppBar(
         leading: Image.asset("assets/images/appLogo1.png"),
         title: const Text('Campbell Decor'),
@@ -287,18 +288,20 @@ class _ViewerScreenState extends State<ViewerScreen> {
                       }),
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.blue,
-                      side: BorderSide(color: Colors.blue),
+                      elevation: 5,
+                      foregroundColor: Colors.red,
+                      side: BorderSide(color: Colors.white70),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50),
+                        borderRadius: BorderRadius.circular(15),
                       ),
                     ),
                     child: const Text(
                       "More Packages",
                       style: TextStyle(
-                          color: Colors.blueGrey,
+                          color: Colors.pink,
                           fontWeight: FontWeight.w500,
-                          fontSize: 18),
+                          fontSize: 18,
+                          fontFamily: 'OpenSans'),
                     ),
                     onPressed: () {
                       Navigator.push(
@@ -308,6 +311,64 @@ class _ViewerScreenState extends State<ViewerScreen> {
                     },
                   ),
                   const SizedBox(height: 20),
+                  const SizedBox(height: 10),
+                  Card(
+                    elevation: 10,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        image: DecorationImage(
+                          image: AssetImage('assets/images/quote1.jpg'),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      height: 200,
+                      width: 350,
+                      child: Stack(
+                        children: [
+                          Container(
+                            height: 250,
+                            width: 350,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: Colors.black.withOpacity(0.7),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(18.0),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    '\" Turning your visions into unforgettable moments – trust us, the experts in event planning. \"',
+                                    style: TextStyle(
+                                        fontSize: 25,
+                                        fontFamily: 'Alegreya',
+                                        fontWeight: FontWeight.w300,
+                                        color: Colors.white),
+                                  ),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(98, 0, 0, 0),
+                                    child: Text(
+                                      '-Cambell Decor',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontFamily: 'Alegreya',
+                                          fontWeight: FontWeight.w300,
+                                          color: Colors.white),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
@@ -419,18 +480,20 @@ class _ViewerScreenState extends State<ViewerScreen> {
                   ),
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.blue,
-                      side: BorderSide(color: Colors.blue),
+                      elevation: 5,
+                      foregroundColor: Colors.red,
+                      side: BorderSide(color: Colors.white70),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(15),
                       ),
                     ),
                     child: const Text(
                       "More Events",
                       style: TextStyle(
-                          color: Colors.blueGrey,
+                          color: Colors.pink,
                           fontWeight: FontWeight.w500,
-                          fontSize: 18),
+                          fontSize: 18,
+                          fontFamily: 'OpenSans'),
                     ),
                     onPressed: () {
                       Navigation(context, SignInScreen());
@@ -548,18 +611,20 @@ class _ViewerScreenState extends State<ViewerScreen> {
                   const SizedBox(height: 10),
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.blue,
-                      side: BorderSide(color: Colors.blue),
+                      elevation: 5,
+                      foregroundColor: Colors.red,
+                      side: BorderSide(color: Colors.white70),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(15),
                       ),
                     ),
                     child: const Text(
                       "More Services",
                       style: TextStyle(
-                          color: Colors.blueGrey,
+                          color: Colors.pink,
                           fontWeight: FontWeight.w500,
-                          fontSize: 18),
+                          fontSize: 18,
+                          fontFamily: 'OpenSans'),
                     ),
                     onPressed: () {
                       Navigation(context, SignInScreen());

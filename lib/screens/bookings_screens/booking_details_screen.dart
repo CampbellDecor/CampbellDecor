@@ -37,7 +37,7 @@ class _BookingScreenState extends State<BookingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Bookings'),
+        title: const Text('Booking history'),
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(colors: [
@@ -605,18 +605,17 @@ class _BookingScreenState extends State<BookingScreen> {
       padding: const EdgeInsets.fromLTRB(50, 10, 50, 10),
       child: GestureDetector(
         onTap: () async {
-          FirebaseFirestore firestore = FirebaseFirestore.instance;
+          FirebaseFirestore firestore = await FirebaseFirestore.instance;
 
           DocumentReference userDocRef =
-              firestore.collection('bookings').doc(documentSnapshot.id);
+              await firestore.collection('bookings').doc(documentSnapshot.id);
           CollectionReference ordersCollectionRef =
-              userDocRef.collection('service');
+              await userDocRef.collection('service');
 
           QuerySnapshot querySnapshot = await ordersCollectionRef.get();
 
           if (querySnapshot.docs.length > 0) {
             Map<String, dynamic> service = {};
-
             querySnapshot.docs.forEach((orderDoc) {
               service = orderDoc.data() as Map<String, dynamic>;
             });

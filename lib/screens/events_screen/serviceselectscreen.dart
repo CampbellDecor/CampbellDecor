@@ -58,7 +58,7 @@ class _ServiceSelectScreenState extends State<ServiceSelectScreen> {
               child: Column(
                 children: [
                   Container(
-                    width: 300,
+                    width: MediaQuery.of(context).size.width * 0.8,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(25),
                     ),
@@ -88,26 +88,52 @@ class _ServiceSelectScreenState extends State<ServiceSelectScreen> {
                           // ),
                         });
 
-                        return DropdownButton(
-                          hint: Text(
-                            'Select ${widget.data}     ',
-                            style: TextStyle(color: Colors.black, fontSize: 18),
-                          ),
-                          value: _selectedItem,
-                          items: items.keys.map((String key) {
-                            return DropdownMenuItem(
-                              value: key,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(key),
-                                  Text('     Rs.${items[key]}0')
-                                ],
+                        return Material(
+                          elevation: 10,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25)),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25),
+                                color: Colors.pink.shade600.withOpacity(0.3)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: DropdownButton(
+                                borderRadius: BorderRadius.circular(20),
+                                hint: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Select ${widget.data}     ',
+                                      style: TextStyle(
+                                          color: Colors.black87, fontSize: 18),
+                                    ),
+                                  ],
+                                ),
+                                icon: Icon(Icons.keyboard_arrow_down_sharp),
+                                iconSize: 30,
+                                elevation: 16,
+                                style: TextStyle(
+                                    color: Colors.black87, fontSize: 18),
+                                value: _selectedItem,
+                                items: items.keys.map((String key) {
+                                  return DropdownMenuItem(
+                                    value: key,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(key),
+                                        Text('     Rs.${items[key]}0')
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                                onChanged: _onSelectedItemChanged,
                               ),
-                            );
-                          }).toList(),
-                          onChanged: _onSelectedItemChanged,
+                            ),
+                          ),
                         );
                       },
                     ),

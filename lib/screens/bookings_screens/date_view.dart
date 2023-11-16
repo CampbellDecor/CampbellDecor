@@ -70,7 +70,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
             padding: const EdgeInsets.fromLTRB(20, 30, 20, 0),
             child: Container(
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10), color: Colors.pink),
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.pink.shade400),
               child: Padding(
                 padding: const EdgeInsets.all(18.0),
                 child: Text(
@@ -117,7 +118,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             calendarStyle: CalendarStyle(
               disabledDecoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.redAccent[100],
+                color: Colors.redAccent.withOpacity(0.8),
               ),
               disabledTextStyle: TextStyle(
                 color: Colors.white,

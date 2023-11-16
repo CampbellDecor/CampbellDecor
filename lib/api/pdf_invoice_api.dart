@@ -11,16 +11,8 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';
 
 class PdfInvoiceApi {
-  static double get total => 1000;
-  late pw.Image image1;
-  Future<pw.Image> imageGenerate() async {
-    final img = await rootBundle.load('assets/images/logo.jpg');
-    final imageBytes = img.buffer.asUint8List();
-    image1 = pw.Image(pw.MemoryImage(imageBytes));
-    return image1;
-  }
-
-  static Future<File> generate(Invoice invoice) async {
+  static Future<File> generate(
+      Invoice invoice, String bookingId, double total) async {
     final pdf = Document();
 
     pdf.addPage(MultiPage(
@@ -30,12 +22,13 @@ class PdfInvoiceApi {
         buildTitle(invoice),
         buildInvoice(invoice),
         Divider(color: PdfColors.green900),
-        buildTotal(invoice),
+        buildTotal(invoice, total),
       ],
       footer: (context) => buildFooter(invoice),
     ));
 
-    return PdfApi.saveDocument(name: 'my_invoice.pdf', pdf: pdf);
+    return PdfApi.saveDocument(
+        name: 'my_invoice.pdf', bookingId: bookingId, pdf: pdf);
   }
 
   static Widget buildHeader(Invoice invoice) {
@@ -136,14 +129,14 @@ class PdfInvoiceApi {
   static Widget buildInvoice(Invoice invoice) {
     final headers = ['Description', 'Date', 'Total amount'];
     final data = invoice.items.map((item) {
-      final total;
-
       return [
         item.description,
-        //Utils.formatDate(item.date),
+        Utils.formatDate(item.eventDate),
         '\$ ${item.amount}',
       ];
     }).toList();
+
+    // data.add(['Extra Row', Utils.formatDate(DateTime.now()), '\$ 100']); // for sample
 
     return Table.fromTextArray(
       headers: headers,
@@ -161,7 +154,7 @@ class PdfInvoiceApi {
     );
   }
 
-  static Widget buildTotal(Invoice invoice) {
+  static Widget buildTotal(Invoice invoice, double total) {
     return Container(
       alignment: Alignment.centerRight,
       child: Row(

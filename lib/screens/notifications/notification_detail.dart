@@ -51,11 +51,11 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
   Future<Map<String, dynamic>> getSubcollectionData(dynamic docID) async {
     var subcollectionSnapshot = await FirebaseFirestore.instance
         .collection('bookings')
-        .doc(docID)
+        .doc('L7NjlSAofOj9TufUA8tW')
         .collection('service')
         .get();
     subcollectionSnapshot.docs.forEach((orderDoc) {
-      service = orderDoc.data() as Map<String, dynamic>;
+      service = orderDoc.data();
     });
     return service;
   }
@@ -83,7 +83,7 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection('bookings')
-                    .doc(notificationData['bookId'])
+                    .doc('L7NjlSAofOj9TufUA8tW')
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -95,6 +95,7 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                   if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   }
+
                   var data = snapshot.data!.data();
 
                   return Padding(
@@ -231,24 +232,24 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                                   ),
                                                 );
                                               });
-                                              if (service.length != 0)
-                                                return Container(
-                                                  child: Column(
-                                                    children: [
-                                                      keyLable('Services : '),
-                                                      LimitedBox(
-                                                        maxWidth: 300,
-                                                        maxHeight: 350,
-                                                        child: Container(
-                                                          // decoration:
-                                                          child: ListView(
-                                                            children: listItems,
-                                                          ),
+                                              // if (service.length != 0)
+                                              return Container(
+                                                child: Column(
+                                                  children: [
+                                                    keyLable('Services : '),
+                                                    LimitedBox(
+                                                      maxWidth: 300,
+                                                      maxHeight: 350,
+                                                      child: Container(
+                                                        // decoration:
+                                                        child: ListView(
+                                                          children: listItems,
                                                         ),
                                                       ),
-                                                    ],
-                                                  ),
-                                                );
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
                                               return SizedBox();
                                             }
                                           },
