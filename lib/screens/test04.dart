@@ -1,10 +1,4 @@
-import 'dart:convert';
-
-import 'package:campbelldecor/screens/notifications/notification_services.dart';
-import 'package:campbelldecor/screens/notifications/welcomeNotification.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-
 import '../reusable/reusable_methods.dart';
 
 class test extends StatefulWidget {
@@ -22,9 +16,12 @@ class _testState extends State<test> {
         child: ElevatedButton(
             onPressed: () {
               sendNotificationForAdmin(
-                  '2pYvBFGBeLNBGgsNagqR',
+                  'GMit4L8TxWyBofbyyfRF',
                   'Booking request',
-                  'Your booking request has been received. We will notify you shortly with our response.');
+                  'Your booking request has been received. We will notify you shortly with our response.',
+                  'birthday',
+                  5000,
+                  DateTime.now());
             },
             child: Text('SendNotification')),
       ),

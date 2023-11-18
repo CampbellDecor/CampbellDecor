@@ -1,9 +1,11 @@
+import 'package:campbelldecor/screens/dash_board/homescreen.dart';
 import 'package:campbelldecor/screens/dash_board/viewer_screen.dart';
 import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
-import 'package:campbelldecor/screens/ltest1.dart';
+import 'package:campbelldecor/screens/dash_board/CountdownTimer.dart';
 import 'package:campbelldecor/screens/notifications/notification_setup.dart';
-import 'package:campbelldecor/screens/notifications/notificationscreenForAdmin.dart';
+import 'package:campbelldecor/screens/notifications/NotificationScreen.dart';
 import 'package:campbelldecor/screens/pdf_generater/pdf_screen.dart';
+import 'package:campbelldecor/screens/test04.dart';
 import 'package:campbelldecor/screens/theme/theme_colors.dart';
 import 'package:campbelldecor/screens/theme/theme_manager.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -51,10 +53,10 @@ class _MyAppState extends State<MyApp> {
               theme: ThemeClass.lightTheme,
               darkTheme: ThemeClass.darkTheme,
               themeMode: themeManager.themeMode,
-              home: ViewerScreen(),
+              home: HomeScreen(),
               navigatorKey: navigatorKey,
               routes: {
-                NotificationScreen.route: (context) => NotificationScreen(),
+                '/notificationscreen': (context) => NotificationScreen(),
                 '/eventScreen': (context) {
                   final args = ModalRoute.of(context)!.settings.arguments;
                   return EventsScreen(name: args as String);

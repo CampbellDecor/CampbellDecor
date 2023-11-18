@@ -26,41 +26,6 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
   Map<String, dynamic> notificationData = Map();
 
   @override
-  void initState() {
-    super.initState();
-    Future.delayed(Duration.zero, () {
-      getDocumentData(widget.id);
-    });
-  }
-
-  Future<void> getDocumentData(dynamic docID) async {
-    var documentSnapshot = await FirebaseFirestore.instance
-        .collection('notification')
-        .doc(docID)
-        .get();
-
-    if (documentSnapshot.exists) {
-      setState(() {
-        notificationData = documentSnapshot.data() as Map<String, dynamic>;
-      });
-    } else {
-      print('Document does not exist');
-    }
-  }
-
-  Future<Map<String, dynamic>> getSubcollectionData(dynamic docID) async {
-    var subcollectionSnapshot = await FirebaseFirestore.instance
-        .collection('bookings')
-        .doc('L7NjlSAofOj9TufUA8tW')
-        .collection('service')
-        .get();
-    subcollectionSnapshot.docs.forEach((orderDoc) {
-      service = orderDoc.data();
-    });
-    return service;
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -82,8 +47,8 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
             SingleChildScrollView(
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
-                    .collection('bookings')
-                    .doc('L7NjlSAofOj9TufUA8tW')
+                    .collection('notification')
+                    .doc(widget.id)
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -95,9 +60,7 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                   if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   }
-
                   var data = snapshot.data!.data();
-
                   return Padding(
                     padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                     child: SingleChildScrollView(
@@ -117,7 +80,8 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                               ),
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.all(30),
+                              padding:
+                                  const EdgeInsets.fromLTRB(30, 30, 20, 10),
                               child: Column(
                                 children: [
                                   Row(
@@ -125,7 +89,7 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text(
-                                          '${notificationData['head'].toString()}',
+                                          '${data!['head']}',
                                           style: const TextStyle(
                                               fontSize: 18,
                                               color: Colors.white,
@@ -146,7 +110,7 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                             padding: const EdgeInsets.fromLTRB(
                                                 18.0, 0, 0, 0),
                                             child: Text(
-                                              '${notificationData['body'].toString()}',
+                                              '${data!['body']}',
                                               style: const TextStyle(
                                                   fontSize: 18,
                                                   color: Colors.white70,
@@ -161,101 +125,31 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                   ),
                                   Row(
                                     children: [
-                                      keyLable('Event name : '),
+                                      keyLable('Name : '),
                                       valueLable(data!['name']),
                                     ],
                                   ),
                                   Row(
                                     children: [
                                       keyLable('Event date : '),
-                                      valueLable(DateFormat.yMd()
-                                          .format(data!['eventDate'].toDate())),
+                                      valueLable(DateFormat.yMd().format(
+                                          data!['eventDateTime'].toDate())),
                                     ],
                                   ),
                                   Row(
                                     children: [
                                       keyLable('Total amount : '),
-                                      valueLable(
-                                          'Rs.${data!['paymentAmount']}0'),
+                                      valueLable('\$${data!['payment']}0'),
                                     ],
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: LimitedBox(
-                                      maxWidth: 300,
-                                      maxHeight: 400,
-                                      child: Container(
-                                        // decoration:
-                                        child:
-                                            FutureBuilder<Map<String, dynamic>>(
-                                          future: getSubcollectionData(
-                                              notificationData['bookId']),
-                                          builder: (context, snapshot) {
-                                            if (snapshot.connectionState ==
-                                                ConnectionState.waiting) {
-                                              // If the Future is still running, show a loading indicator
-                                              return CircularProgressIndicator();
-                                            } else if (snapshot.hasError) {
-                                              return Text(
-                                                  'Error: ${snapshot.error}');
-                                            } else {
-                                              List<Widget> listItems = [];
-                                              service.forEach((key, value) {
-                                                listItems.add(
-                                                  ListTile(
-                                                    title: Text(
-                                                      key,
-                                                      style: const TextStyle(
-                                                          fontSize: 16,
-                                                          color: Colors.white70,
-                                                          fontFamily:
-                                                              'OpenSans',
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                    subtitle: Padding(
-                                                      padding: const EdgeInsets
-                                                          .fromLTRB(8, 0, 0, 0),
-                                                      child: Text(
-                                                        value.toString(),
-                                                        style: const TextStyle(
-                                                            fontSize: 16,
-                                                            color:
-                                                                Colors.white54,
-                                                            fontFamily:
-                                                                'OpenSans',
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .normal),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                );
-                                              });
-                                              // if (service.length != 0)
-                                              return Container(
-                                                child: Column(
-                                                  children: [
-                                                    keyLable('Services : '),
-                                                    LimitedBox(
-                                                      maxWidth: 300,
-                                                      maxHeight: 350,
-                                                      child: Container(
-                                                        // decoration:
-                                                        child: ListView(
-                                                          children: listItems,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
-                                              return SizedBox();
-                                            }
-                                          },
-                                        ),
-                                      ),
-                                    ),
+                                  SizedBox(
+                                    height: 30,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      valueLable('check your booking history')
+                                    ],
                                   ),
                                 ],
                               ),

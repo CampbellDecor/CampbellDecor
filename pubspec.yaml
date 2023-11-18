@@ -133,6 +133,10 @@ flutter:
        fonts:
          - asset: assets/fonts/Alegreya.ttf
 
+     - family: AbrilFatface
+       fonts:
+         - asset: assets/fonts/AbrilFatface.ttf
+
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
