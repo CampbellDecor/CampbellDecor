@@ -133,17 +133,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         const Text(
                           'Packages',
                           style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.black87,
+                            fontSize: 24,
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'Source Sans Pro',
-                            shadows: [
-                              Shadow(
-                                offset: Offset(5.0, 5.0),
-                                blurRadius: 10.0,
-                                color: Colors.grey,
-                              ),
-                            ],
+                            fontFamily: 'AbrilFatface',
                           ),
                         ),
                       ],
@@ -234,11 +226,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     documentSnapshot[
                                                         'packageName'],
                                                     style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 18,
-                                                      color: Colors.white,
-                                                    ),
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 18,
+                                                        color: Colors.white,
+                                                        fontFamily:
+                                                            'AbrilFatface'),
                                                   ),
                                                 ),
                                               ),
@@ -314,20 +307,38 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: CircularProgressIndicator(),
                         );
                       }),
+                  const SizedBox(height: 10),
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.blue,
-                      side: BorderSide(color: Colors.blue),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50),
+                        splashFactory: InkRipple.splashFactory,
+                        padding: EdgeInsets.symmetric(
+                            vertical: 12.0, horizontal: 20.0),
+                        elevation: 3,
+                        side: BorderSide(color: Colors.white70),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        backgroundColor: hexStringtoColor('aea1fb')),
+                    child: SizedBox(
+                      width: 180,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "More Packages",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 18),
+                          ),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.white,
+                            size: 20,
+                          )
+                        ],
                       ),
-                    ),
-                    child: const Text(
-                      "More Packages",
-                      style: TextStyle(
-                          color: Colors.blueGrey,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 18),
                     ),
                     onPressed: () {
                       Navigator.push(
@@ -350,16 +361,22 @@ class _HomeScreenState extends State<HomeScreen> {
                           return Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Container(
-                                height: 200,
-                                width: 350,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30),
-                                  color: Colors.black12.withOpacity(0.8),
+                              Card(
+                                elevation: 10,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
                                 ),
-                                child: CountdownTimer(
-                                  initialDays: days,
-                                  event: firstEvent,
+                                child: Container(
+                                  height: 200,
+                                  width: 300,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(30),
+                                    color: Colors.white70,
+                                  ),
+                                  child: CountdownTimer(
+                                    initialDays: days,
+                                    event: firstEvent,
+                                  ),
                                 ),
                               ),
                             ],
@@ -374,17 +391,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         const Text(
                           'Events',
                           style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.black87,
+                            fontSize: 24,
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'Source Sans Pro',
-                            shadows: [
-                              Shadow(
-                                offset: Offset(5.0, 5.0),
-                                blurRadius: 10.0,
-                                color: Colors.grey,
-                              ),
-                            ],
+                            fontFamily: 'AbrilFatface',
                           ),
                         ),
                       ],
@@ -463,11 +472,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   child: Text(
                                                     documentSnapshot['name'],
                                                     style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 20,
-                                                      color: Colors.white,
-                                                    ),
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 20,
+                                                        color: Colors.white,
+                                                        fontFamily:
+                                                            'AbrilFatface'),
                                                   ),
                                                 ),
                                               ),
@@ -487,20 +497,38 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     },
                   ),
+                  const SizedBox(height: 10),
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.blue,
-                      side: BorderSide(color: Colors.blue),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                        splashFactory: InkRipple.splashFactory,
+                        padding: EdgeInsets.symmetric(
+                            vertical: 12.0, horizontal: 20.0),
+                        elevation: 3,
+                        side: BorderSide(color: Colors.white70),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        backgroundColor: hexStringtoColor('aea1fb')),
+                    child: SizedBox(
+                      width: 180,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "More events",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 18),
+                          ),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.white,
+                            size: 20,
+                          )
+                        ],
                       ),
-                    ),
-                    child: const Text(
-                      "More Events",
-                      style: TextStyle(
-                          color: Colors.blueGrey,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 18),
                     ),
                     onPressed: () {
                       Navigation(
@@ -519,17 +547,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         const Text(
                           'Services',
                           style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.black87,
+                            fontSize: 24,
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'Source Sans Pro',
-                            shadows: [
-                              Shadow(
-                                offset: Offset(5.0, 5.0),
-                                blurRadius: 10.0,
-                                color: Colors.grey,
-                              ),
-                            ],
+                            fontFamily: 'AbrilFatface',
                           ),
                         ),
                       ],
@@ -603,11 +623,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   child: Text(
                                                     documentSnapshot['name'],
                                                     style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 20,
-                                                      color: Colors.white,
-                                                    ),
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 20,
+                                                        color: Colors.white,
+                                                        fontFamily:
+                                                            'AbrilFatface'),
                                                   ),
                                                 ),
                                               ),
@@ -630,23 +651,41 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 10),
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.blue,
-                      side: BorderSide(color: Colors.blue),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                        splashFactory: InkRipple.splashFactory,
+                        padding: EdgeInsets.symmetric(
+                            vertical: 12.0, horizontal: 20.0),
+                        elevation: 3,
+                        side: BorderSide(color: Colors.white70),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        backgroundColor: hexStringtoColor('aea1fb')),
+                    child: SizedBox(
+                      width: 180,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "More services",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 18),
+                          ),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.white,
+                            size: 20,
+                          )
+                        ],
                       ),
-                    ),
-                    child: const Text(
-                      "More Services",
-                      style: TextStyle(
-                          color: Colors.blueGrey,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 18),
                     ),
                     onPressed: () {
                       Navigation(context, CalendarScreen());
                     },
                   ),
+                  const SizedBox(height: 30),
                 ],
               ),
             ),

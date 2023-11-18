@@ -53,7 +53,7 @@ class _MyAppState extends State<MyApp> {
               theme: ThemeClass.lightTheme,
               darkTheme: ThemeClass.darkTheme,
               themeMode: themeManager.themeMode,
-              home: HomeScreen(),
+              home: ViewerScreen(),
               navigatorKey: navigatorKey,
               routes: {
                 '/notificationscreen': (context) => NotificationScreen(),

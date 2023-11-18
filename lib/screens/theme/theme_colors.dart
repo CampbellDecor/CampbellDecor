@@ -1,3 +1,4 @@
+import 'package:campbelldecor/utils/color_util.dart';
 import 'package:flutter/material.dart';
 
 // Color lightPrimaryColor = Color(0xFFDF0054);
@@ -26,7 +27,8 @@ class ThemeClass {
   static ThemeData darkTheme = ThemeData.dark().copyWith(
     // primaryColor: Colors.blue, // Accent color
     // backgroundColor: Colors.black26, // Background color
-    scaffoldBackgroundColor: Colors.grey[900], // Scaffold background color
+    scaffoldBackgroundColor:
+        hexStringtoColor('050118'), // Scaffold background color
     textTheme: TextTheme(
       bodyLarge: TextStyle(color: Colors.white), // Text color
       bodyMedium: TextStyle(color: Colors.white), // Text color
