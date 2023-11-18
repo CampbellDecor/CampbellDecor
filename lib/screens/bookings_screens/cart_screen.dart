@@ -3,6 +3,7 @@ import 'package:campbelldecor/screens/dash_board/homescreen.dart';
 import 'package:campbelldecor/screens/payment_screens/checkoutscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
@@ -146,74 +147,127 @@ class _AddToCartScreenState extends State<AddToCartScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Container(
-                      height: 45,
-                      width: 130,
+                  Material(
+                    elevation: 18,
+                    borderRadius: BorderRadius.circular(15),
+                    child: Container(
+                      height: 50,
+                      width: 150,
+                      decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                              colors: [
+                                hexStringtoColor("815ef4"),
+                                hexStringtoColor("bc6dd0"),
+                                hexStringtoColor("db4baa"),
+                              ],
+                              begin: Alignment.bottomRight,
+                              end: Alignment.topLeft),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.8),
+                              spreadRadius: 3,
+                              blurRadius: 5,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                          borderRadius: BorderRadius.circular(15)),
                       child: ElevatedButton(
                         onPressed: _deleteSelected,
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              Colors.redAccent),
-                          padding:
-                              MaterialStateProperty.all<EdgeInsetsGeometry>(
-                            const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 12),
-                          ),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                          ),
-                          textStyle: MaterialStateProperty.all<TextStyle>(
-                            const TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
+                        style: ElevatedButton.styleFrom(
+                          elevation: 18,
+                          backgroundColor: Colors.transparent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
                           ),
                         ),
-                        child: const Text('Delete'),
-                      )),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Icon(
+                              CupertinoIcons.delete_simple,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                            Text(
+                              'Delete',
+                              style: TextStyle(
+                                  fontFamily: 'OpenSans',
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                  color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Material(
+                    elevation: 18,
+                    borderRadius: BorderRadius.circular(15),
                     child: Container(
-                        height: 45,
-                        width: 130,
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            double j = 0;
-                            for (int i = _isChecked.length - 1; i >= 0; i--) {
-                              j++;
+                      height: 50,
+                      width: 150,
+                      decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                              colors: [
+                                hexStringtoColor("db4baa"),
+                                hexStringtoColor("bc6dd0"),
+                                hexStringtoColor("815ef4"),
+                              ],
+                              begin: Alignment.bottomRight,
+                              end: Alignment.topLeft),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.8),
+                              spreadRadius: 3,
+                              blurRadius: 5,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                          borderRadius: BorderRadius.circular(15)),
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          double j = 0;
+                          for (int i = _isChecked.length - 1; i >= 0; i--) {
+                            j++;
 
-                              if (_isChecked[i]) {
-                                print(_isChecked[i]);
-                                final documentSnapshot =
-                                    (await _cart.get()).docs[i];
-                                Navigation(context,
-                                    CheckOutScreen(id: documentSnapshot.id));
-                              }
+                            if (_isChecked[i]) {
+                              print(_isChecked[i]);
+                              final documentSnapshot =
+                                  (await _cart.get()).docs[i];
+                              Navigation(context,
+                                  CheckOutScreen(id: documentSnapshot.id));
                             }
-                            print(" pinthu $j");
-                          },
-                          style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all<Color>(Colors.blue),
-                            padding:
-                                MaterialStateProperty.all<EdgeInsetsGeometry>(
-                              const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 12),
-                            ),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                            ),
-                            textStyle: MaterialStateProperty.all<TextStyle>(
-                              const TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
+                          }
+                          print(" pinthu $j");
+                        },
+                        style: ElevatedButton.styleFrom(
+                          elevation: 18,
+                          backgroundColor: Colors.transparent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
                           ),
-                          child: const Text('Book'),
-                        )),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Icon(
+                              Icons.book_outlined,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                            Text(
+                              'Book',
+                              style: TextStyle(
+                                  fontFamily: 'OpenSans',
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                  color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),

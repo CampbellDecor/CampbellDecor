@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:campbelldecor/main.dart';
-import 'package:campbelldecor/screens/notifications/notificationscreenForAdmin.dart';
+import 'package:campbelldecor/screens/notifications/NotificationScreen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -24,6 +24,12 @@ class FirebaseApi {
       NotificationScreen.route,
       arguments: message,
     );
+  }
+
+  Future<String> getDeviceToken() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    String? token = await messaging.getToken();
+    return token!;
   }
 
   Future initPushNotifications() async {
@@ -54,10 +60,20 @@ class FirebaseApi {
         payload: jsonEncode(message.toMap()),
       );
 
+      // await saveNotification(
+      //   messageData['id'],
+      //   messageData['head'],
+      //   messageData['body'],
+      //   DateTime.parse(messageData['dateTime']),
+      // );
+
       await saveNotification(
         messageData['id'],
         messageData['head'],
         messageData['body'],
+        messageData['name'],
+        double.parse(messageData['payment']),
+        DateTime.parse(messageData['eventDate']),
         DateTime.parse(messageData['dateTime']),
       );
     });

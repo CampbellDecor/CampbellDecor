@@ -1,4 +1,3 @@
-import 'package:campbelldecor/screens/notifications/notification_detail.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import '../../reusable/reusable_methods.dart';
 import '../../utils/color_util.dart';
+import 'notification_detail.dart';
 
 class NotificationHistory extends StatefulWidget {
   @override
@@ -113,11 +113,10 @@ class _NotificationHistoryState extends State<NotificationHistory> {
                       });
                     } else {
                       Navigation(
-                        context,
-                        NotificationDetailsScreen(
-                          id: documentId,
-                        ),
-                      );
+                          context,
+                          NotificationDetailsScreen(
+                            id: documentId,
+                          ));
                     }
                   },
                   child: Padding(

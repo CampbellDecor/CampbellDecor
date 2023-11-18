@@ -4,6 +4,7 @@ import 'package:campbelldecor/screens/payment_screens/paymentscreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import '../screens/bookings_screens/cart_screen.dart';
 import '../screens/dash_board/homescreen.dart';
 import '../screens/searchbar/searchbar_widget.dart';
@@ -364,6 +365,14 @@ Widget valueLable(String text) {
           fontFamily: 'OpenSans',
           fontWeight: FontWeight.normal),
     ),
+  );
+}
+
+Widget generateQRCode(String data) {
+  return QrImageView(
+    data: data,
+    version: QrVersions.auto,
+    size: 100.0,
   );
 }
 

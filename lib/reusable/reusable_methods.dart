@@ -14,8 +14,9 @@ import '../api/pdf_invoice_api.dart';
 import '../models/invoice.dart';
 import '../models/supplier.dart';
 import '../models/user_model.dart';
-import '../screens/notifications/notification_services.dart';
 import 'package:pdf/widgets.dart' as pw;
+
+import '../screens/notifications/notification_setup.dart';
 
 Future<int> getCollectionCount(String collectionName) async {
   try {
@@ -27,6 +28,54 @@ Future<int> getCollectionCount(String collectionName) async {
     print('Error getting collection count: $e');
     return 0;
   }
+}
+
+// Future<Map<String, dynamic>> fetchDataFromFirebase(
+//     String collection, String orderField, String uid) async {
+//   Map<String, dynamic> resultMap = {};
+//
+//   try {
+//     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+//         .collection(collection)
+//         .where('userID', isEqualTo: uid)
+//         .orderBy(orderField, descending: true)
+//         .get();
+//
+//     if (querySnapshot.docs.isNotEmpty) {
+//       querySnapshot.docs.forEach((doc) {
+//         resultMap[doc.get('eventDate').toString()] = doc.data();
+//       });
+//       print(resultMap);
+//       print(resultMap);
+//       print(resultMap);
+//     }
+//   } catch (e) {
+//     print('Error: $e');
+//   }
+//
+//   return resultMap;
+// }
+
+Future<Map<String, dynamic>> fetchDataFromFirebase(
+    String collection, String orderField, String uid) async {
+  Map<String, dynamic> resultMap = {};
+
+  try {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection(collection)
+        .where('userID', isEqualTo: uid)
+        .where('status', isEqualTo: 'active')
+        .orderBy(orderField, descending: true)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      resultMap = querySnapshot.docs.first.data() as Map<String, dynamic>;
+    }
+  } catch (e) {
+    print('Error: $e');
+  }
+
+  return resultMap;
 }
 
 Future<void> Navigation(BuildContext context, dynamic function) async {
@@ -241,7 +290,7 @@ Future<void> confirmCancellation(String bookingId) async {
 //   });
 // }
 
-/*********************************************************************************/
+/**---------------------Dialog box Start-----------------------**/
 Future<void> showInformationAlert(
     BuildContext context, String inform, dynamic function) async {
   showDialog(
@@ -409,6 +458,10 @@ Future<void> showErrorAlert(BuildContext context, String errorMessage) async {
   );
 }
 
+/**---------------------Dialog box end-----------------------**/
+
+/**--------------------- Shared references start-----------------------**/
+
 Future<String?> getData(dynamic name) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.getString(name);
@@ -431,6 +484,13 @@ Future<Map<String, dynamic>> getMapData(String service) async {
   Map<String, dynamic> mapData = json.decode(jsonData);
   return mapData;
 }
+
+Future<void> clearAllSharedPreferenceData() async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.clear();
+}
+
+/**--------------------- Shared references end-----------------------**/
 
 Future<String?> getUserNameByEmail(String email) async {
   String? userName;
@@ -459,6 +519,7 @@ Future<void> insertData(
     DateTime date,
     DateTime eventDate,
     double paymentAmount,
+    bool isRated,
     Map<String, dynamic> myMap) async {
   try {
     CollectionReference parentCollection =
@@ -469,7 +530,9 @@ Future<void> insertData(
       'date': date,
       'eventDate': eventDate,
       'paymentAmount': paymentAmount,
-      'status': status
+      'status': status,
+      'isRated': isRated,
+      'pdf': null
     });
     CollectionReference subCollection =
         await parentDocument.collection('service');
@@ -480,7 +543,7 @@ Future<void> insertData(
 }
 
 Future<void> updateDeviceTokenForNotification(String userId) async {
-  NotificationServices notificationServices = NotificationServices();
+  FirebaseApi notificationServices = FirebaseApi();
   notificationServices.getDeviceToken().then((value) async {
     try {
       final firestore = FirebaseFirestore.instance;
@@ -490,19 +553,19 @@ Future<void> updateDeviceTokenForNotification(String userId) async {
         'deviceTokenForNotification': value,
       });
 
-      print('User age updated successfully');
+      print('Device token  updated successfully');
     } catch (e) {
       print('Error updating user age: $e');
     }
   });
 }
 
-Future<void> sendNotificationForAdmin(
-    String id, String heading, String details) async {
+Future<void> sendNotificationForAdmin(String id, String heading, String details,
+    String name, double payment, DateTime eventDate) async {
+  Map<String, dynamic> user =
+      await getUserData(FirebaseAuth.instance.currentUser!.uid);
   var data = {
-    'to':
-        'c89jyGQ8SaSiy3H05Lmp3N:APA91bFKipKaz3IzkUFP7KjlYu90NJPBS87wyWkX6e5mMf6EtNnqldXjJJp-Db32vaJutwqofS'
-            '-DdrnNb7Oxvd6yeoelRHwaU71VwryUQoEi6jr5XuhUM4TL8xlw6DH0lsFgNbBVFbS9',
+    'to': user['deviceTokenForNotification'],
     'priority': 'high',
     'notification': {
       'title': 'Booking Confirmation',
@@ -512,6 +575,9 @@ Future<void> sendNotificationForAdmin(
       'id': id,
       'head': heading,
       'body': details,
+      'name': name,
+      'payment': payment,
+      'eventDate': eventDate.toString(),
       'dateTime': DateTime.now().toString()
     }
   };
@@ -522,11 +588,6 @@ Future<void> sendNotificationForAdmin(
         'Authorization':
             'key=AAAAliCh-R8:APA91bGSDvwcL3obmsYq7k3A3ueBbHm-SNDdKt8Y9RMqA7Ywi2U4o72j6WRZMiEQF4GPhuYsNlqwH6-RMgvigiQbuXTq42sjuG4zySquDBk0gN-zyHbCeIwHMHNXhHxrfLDKG02tgrKt'
       });
-}
-
-Future<void> clearAllSharedPreferenceData() async {
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.clear();
 }
 
 Future<void> phoneAuthentication(String phoneNo) async {
@@ -712,7 +773,14 @@ String shortenString(String input, int maxLength) {
 }
 
 Future<void> saveNotification(
-    String id, String head, String body, DateTime dateTime) async {
+  String id,
+  String head,
+  String body,
+  String name,
+  double payment,
+  DateTime eventDate,
+  DateTime dateTime,
+) async {
   CollectionReference notification =
       await FirebaseFirestore.instance.collection('notification');
   try {
@@ -720,6 +788,9 @@ Future<void> saveNotification(
       'bookId': id,
       'head': head,
       'body': body,
+      'name': name,
+      'eventDateTime': eventDate,
+      'payment': payment,
       'dateTime': dateTime,
       'uid': FirebaseAuth.instance.currentUser!.uid
     });

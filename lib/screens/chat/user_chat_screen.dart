@@ -99,7 +99,7 @@ class _UserChatScreenState extends State<UserChatScreen> {
                 }
                 return Container(
                   decoration:
-                      BoxDecoration(color: Colors.blue.withOpacity(0.5)),
+                      BoxDecoration(color: Colors.blue.withOpacity(0.3)),
                   child: Padding(
                     padding: const EdgeInsets.all(5.0),
                     child: ListView(
@@ -117,7 +117,7 @@ class _UserChatScreenState extends State<UserChatScreen> {
               children: <Widget>[
                 Expanded(
                   child: Material(
-                    color: Colors.blue.withOpacity(0.6),
+                    color: Colors.blue.withOpacity(0.5),
                     borderRadius: BorderRadius.circular(15),
                     elevation: 5,
                     child: Padding(
@@ -177,7 +177,7 @@ class MessageWidget extends StatelessWidget {
       padding: EdgeInsets.all(8.0),
       alignment: isSentByUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(90, 0, 0, 0),
+        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
         child: Material(
             elevation: 3,
             color: Colors.blue.withOpacity(0.9),
@@ -186,7 +186,8 @@ class MessageWidget extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(15, 10, 15, 10.0),
               child: Text(
                 text,
-                style: TextStyle(fontSize: 18),
+                style: TextStyle(
+                    fontSize: 18, fontFamily: 'OpenSans', color: Colors.white),
               ),
             )),
       ),

@@ -1,11 +1,11 @@
 import 'package:campbelldecor/screens/dash_board/homescreen.dart';
+import 'package:campbelldecor/screens/notifications/notification_setup.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../reusable/reusable_methods.dart';
 import '../../reusable/reusable_widgets.dart';
 import '../../utils/color_util.dart';
-import '../notifications/notification_services.dart';
 import '../notifications/welcomeNotification.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -17,7 +17,7 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  NotificationServices notificationServices = NotificationServices();
+  FirebaseApi notificationServices = FirebaseApi();
   String verificationId = '';
   String otp = '';
   String token = '';

@@ -22,6 +22,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   String? selectedPaymentMethod;
   String userAddress = '';
   String userShippingAddress = '';
+  Map<String, dynamic> data = Map();
 
   /**--------------------Retrieve User Address------------------------------**/
   Future<Map<String, dynamic>> retrieveUserAddress() async {
@@ -49,8 +50,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         await collectionReference.doc(widget.id).get();
 
     if (documentSnapshot.exists) {
-      Map<String, dynamic> data =
-          documentSnapshot.data() as Map<String, dynamic>;
+      data = documentSnapshot.data() as Map<String, dynamic>;
 
       return {
         'address': data['address'],
@@ -557,7 +557,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 sendNotificationForAdmin(
                                     widget.id,
                                     'Booking request',
-                                    'Your booking request has been received. We will notify you shortly with our response.');
+                                    'Your booking request has been received. We will notify you shortly with our response.',
+                                    data['name'],
+                                    widget.price,
+                                    data['eventDate'].toDate());
                                 Fluttertoast.showToast(
                                     msg: "Payment Success",
                                     toastLength: Toast.LENGTH_LONG,
@@ -582,8 +585,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         });
                       } else if (selectedPaymentMethod == 'cash_on_hand') {
                         _addBooking();
-                        sendNotificationForAdmin(widget.id, 'Booking request',
-                            'Your booking request has been received. We will notify you shortly with our response.');
+                        sendNotificationForAdmin(
+                            widget.id,
+                            'Booking request',
+                            'Your booking request has been received. We will notify you shortly with our response.',
+                            data['name'],
+                            widget.price,
+                            data['eventDate'].toDate());
                         Navigator.of(context).pop();
                         Navigation(context, HomeScreen()).then((value) {
                           clearAllSharedPreferenceData();
@@ -623,7 +631,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     await FirebaseFirestore.instance
         .collection('bookings')
         .doc(widget.id)
-        .update({'status': 'pending'});
+        .update({'status': 'pending', 'paymentAmount': widget.price});
   }
 
   void _addPaymentHistory(double price) async {

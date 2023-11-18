@@ -5,7 +5,6 @@ import 'dart:ffi';
 import 'package:campbelldecor/reusable/reusable_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../utils/color_util.dart';
@@ -31,8 +30,6 @@ class _ServiceSelectScreenState extends State<ServiceSelectScreen> {
   TextEditingController priceController = TextEditingController(text: '0');
   @override
   Widget build(BuildContext context) {
-    // print('Amount is $amount');
-    // print(totalPrice);
     return Scaffold(
       extendBodyBehindAppBar: false,
       appBar: AppBar(
@@ -125,7 +122,7 @@ class _ServiceSelectScreenState extends State<ServiceSelectScreen> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(key),
-                                        Text('     Rs.${items[key]}0')
+                                        Text('     \$${items[key]}0')
                                       ],
                                     ),
                                   );
@@ -231,7 +228,6 @@ class _ServiceSelectScreenState extends State<ServiceSelectScreen> {
   void _onSelectedItemChanged(dynamic value) {
     setState(() {
       _selectedItem = value;
-      print(_selectedItem);
     });
     if (items.containsKey(value)) {
       _total(items[value]!);

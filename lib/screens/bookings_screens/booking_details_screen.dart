@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../reusable/reusable_methods.dart';
+import '../../reusable/reusable_widgets.dart';
 import '../../utils/color_util.dart';
 import 'custom_rating.dart';
 
@@ -52,6 +53,7 @@ class _BookingScreenState extends State<BookingScreen> {
         stream: FirebaseFirestore.instance
             .collection('bookings')
             .where('userID', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+            .orderBy('date', descending: true)
             .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
           if (streamSnapshot.connectionState == ConnectionState.waiting) {
@@ -89,10 +91,13 @@ class _BookingScreenState extends State<BookingScreen> {
             itemBuilder: (context, index) {
               if (index == 0) {
                 return const Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(18.0),
                   child: Text(
                     'Active Bookings',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'OpenSans'),
                   ),
                 );
               } else if (index <= activeBookings.length) {
@@ -101,10 +106,13 @@ class _BookingScreenState extends State<BookingScreen> {
                     context, doc, Colors.deepPurpleAccent, Colors.pinkAccent);
               } else if (index == activeBookings.length + 1) {
                 return const Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(18.0),
                   child: Text(
                     'Request Bookings',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'OpenSans'),
                   ),
                 );
               } else if (index > activeBookings.length + 1 &&
@@ -115,10 +123,13 @@ class _BookingScreenState extends State<BookingScreen> {
               } else if (index <=
                   (activeBookings.length + pendingBookings.length + 2)) {
                 return const Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(18.0),
                   child: Text(
                     'Cancelled Bookings',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'OpenSans'),
                   ),
                 );
               } else {
@@ -137,7 +148,7 @@ class _BookingScreenState extends State<BookingScreen> {
   Widget buildBookingCard1(BuildContext context,
       DocumentSnapshot documentSnapshot, Color startColor, Color endColor) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(50, 10, 50, 10),
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
       child: GestureDetector(
         onTap: () async {
           FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -188,8 +199,13 @@ class _BookingScreenState extends State<BookingScreen> {
                     ),
                     content: SingleChildScrollView(
                       child: Container(
-                        height: 350,
-                        width: 500,
+                        constraints: BoxConstraints(
+                            minHeight: 100,
+                            minWidth: 400,
+                            maxHeight: 550,
+                            maxWidth: 500),
+                        height: 300,
+                        width: 450,
                         child: SingleChildScrollView(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -198,6 +214,12 @@ class _BookingScreenState extends State<BookingScreen> {
                               SizedBox(
                                 height: 20,
                               ),
+                              if (documentSnapshot['pdf'] != null)
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      generateQRCode(documentSnapshot['pdf']),
+                                    ]),
                               Text(
                                 "Event Date : ${DateFormat.yMd().format(documentSnapshot['eventDate'].toDate())}",
                                 style: const TextStyle(
@@ -222,24 +244,25 @@ class _BookingScreenState extends State<BookingScreen> {
                               SizedBox(
                                 height: 20,
                               ),
-                              Text(
-                                "Services : ",
-                                style: const TextStyle(
-                                    color: Colors.black, fontSize: 18),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(28.0),
-                                child: LimitedBox(
-                                  maxHeight: 200,
+                              if (service.length > 0)
+                                Text(
+                                  "Services : ",
+                                  style: const TextStyle(
+                                      color: Colors.black, fontSize: 18),
+                                ),
+                              if (service.length > 0)
+                                Padding(
+                                  padding: const EdgeInsets.all(28.0),
                                   child: Container(
-                                    // decoration:
-                                    //     BoxDecoration(color: Colors.blue),
-                                    child: ListView(
-                                      children: listItems,
+                                    color: Colors.black12.withOpacity(0.2),
+                                    child: LimitedBox(
+                                      maxHeight: 200,
+                                      child: ListView(
+                                        children: listItems,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
                             ],
                           ),
                         ),
@@ -261,11 +284,11 @@ class _BookingScreenState extends State<BookingScreen> {
           }
         },
         child: Container(
-          height: 250,
+          height: 200,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(50),
+            borderRadius: BorderRadius.circular(25),
             gradient: LinearGradient(
-              colors: [startColor, endColor],
+              colors: [startColor.withOpacity(0.9), endColor.withOpacity(0.9)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -275,9 +298,9 @@ class _BookingScreenState extends State<BookingScreen> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
-            elevation: 10,
+            elevation: 18,
             child: Container(
-              height: 250,
+              height: 200,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -293,7 +316,6 @@ class _BookingScreenState extends State<BookingScreen> {
                               fontWeight: FontWeight.bold),
                         ),
                       ),
-                      // subtitle: Text('Upcoming on ${documentSnapshot.data[index].date.toString()}'),
                     ),
                   ),
                   Center(
@@ -309,11 +331,11 @@ class _BookingScreenState extends State<BookingScreen> {
                               fontWeight: FontWeight.bold),
                         ),
                       ),
-                      // subtitle: Text('Upcoming on ${documentSnapshot.data[index].date.toString()}'),
                     ),
                   ),
                   const Divider(
-                    thickness: 3,
+                    thickness: 1,
+                    color: Colors.black87,
                     height: 0.1,
                     indent: 20,
                     endIndent: 20,
@@ -370,7 +392,7 @@ class _BookingScreenState extends State<BookingScreen> {
   Widget buildBookingCard2(BuildContext context,
       DocumentSnapshot documentSnapshot, Color startColor, Color endColor) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(50, 10, 50, 10),
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
       child: GestureDetector(
         onTap: () async {
           FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -402,6 +424,7 @@ class _BookingScreenState extends State<BookingScreen> {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
+                    scrollable: true,
                     shadowColor: Colors.black,
                     elevation: 8,
                     icon: const Icon(
@@ -411,17 +434,20 @@ class _BookingScreenState extends State<BookingScreen> {
                     ),
                     title: Padding(
                       padding: EdgeInsets.all(4.0),
-                      child: Padding(
-                        padding: EdgeInsets.all(4.0),
-                        child: Text(
-                          "${documentSnapshot['name']}",
-                        ),
+                      child: Text(
+                        "${documentSnapshot['name']}",
                       ),
                     ),
                     content: SingleChildScrollView(
                       child: Container(
-                        height: 350,
-                        width: 500,
+                        color: Colors.white70,
+                        constraints: BoxConstraints(
+                            minHeight: 100,
+                            minWidth: 400,
+                            maxHeight: 550,
+                            maxWidth: 500),
+                        height: 300,
+                        width: 450,
                         child: SingleChildScrollView(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -430,6 +456,12 @@ class _BookingScreenState extends State<BookingScreen> {
                               SizedBox(
                                 height: 20,
                               ),
+                              if (documentSnapshot['pdf'] != null)
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      generateQRCode(documentSnapshot['pdf']),
+                                    ]),
                               Text(
                                 "Event Date : ${DateFormat.yMd().format(documentSnapshot['eventDate'].toDate())}",
                                 style: const TextStyle(
@@ -447,31 +479,32 @@ class _BookingScreenState extends State<BookingScreen> {
                                 height: 20,
                               ),
                               Text(
-                                "Total Amount : ${documentSnapshot['paymentAmount']}",
+                                "Total Amount : \$${documentSnapshot['paymentAmount']}",
                                 style: const TextStyle(
                                     color: Colors.black, fontSize: 18),
                               ),
                               SizedBox(
                                 height: 20,
                               ),
-                              Text(
-                                "Services : ",
-                                style: const TextStyle(
-                                    color: Colors.black, fontSize: 18),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(28.0),
-                                child: LimitedBox(
-                                  maxHeight: 200,
+                              if (service.length > 0)
+                                Text(
+                                  "Services : ",
+                                  style: const TextStyle(
+                                      color: Colors.black, fontSize: 18),
+                                ),
+                              if (service.length > 0)
+                                Padding(
+                                  padding: const EdgeInsets.all(28.0),
                                   child: Container(
-                                    // decoration:
-                                    //     BoxDecoration(color: Colors.blue),
-                                    child: ListView(
-                                      children: listItems,
+                                    color: Colors.black12.withOpacity(0.2),
+                                    child: LimitedBox(
+                                      maxHeight: 250,
+                                      child: ListView(
+                                        children: listItems,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
                             ],
                           ),
                         ),
@@ -495,9 +528,9 @@ class _BookingScreenState extends State<BookingScreen> {
         child: Container(
           height: 200,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(50),
+            borderRadius: BorderRadius.circular(25),
             gradient: LinearGradient(
-              colors: [startColor, endColor],
+              colors: [startColor.withOpacity(0.9), endColor.withOpacity(0.9)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -602,11 +635,10 @@ class _BookingScreenState extends State<BookingScreen> {
   Widget buildBookingCard3(BuildContext context,
       DocumentSnapshot documentSnapshot, Color startColor, Color endColor) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(50, 10, 50, 10),
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
       child: GestureDetector(
         onTap: () async {
           FirebaseFirestore firestore = await FirebaseFirestore.instance;
-
           DocumentReference userDocRef =
               await firestore.collection('bookings').doc(documentSnapshot.id);
           CollectionReference ordersCollectionRef =
@@ -633,132 +665,243 @@ class _BookingScreenState extends State<BookingScreen> {
             showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return AlertDialog(
-                    shadowColor: Colors.black,
-                    elevation: 8,
-                    icon: const Icon(
-                      Icons.event,
-                      color: Colors.blue,
-                      size: 60,
-                    ),
-                    title: Padding(
-                      padding: EdgeInsets.all(4.0),
-                      child: Padding(
-                        padding: EdgeInsets.all(4.0),
-                        child: Text(
-                          "${documentSnapshot['name']}",
-                        ),
+                  try {
+                    return AlertDialog(
+                      shadowColor: Colors.black,
+                      elevation: 8,
+                      icon: const Icon(
+                        Icons.event,
+                        color: Colors.blue,
+                        size: 60,
                       ),
-                    ),
-                    content: SingleChildScrollView(
-                      child: Container(
-                        height: 350,
-                        width: 500,
-                        child: SingleChildScrollView(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                height: 20,
-                              ),
-                              Text(
-                                "Event Date : ${DateFormat.yMd().format(documentSnapshot['eventDate'].toDate())}",
-                                style: const TextStyle(
-                                    color: Colors.black, fontSize: 18),
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              Text(
-                                "Booking Date : ${DateFormat.yMd().format(documentSnapshot['date'].toDate())}",
-                                style: const TextStyle(
-                                    color: Colors.black, fontSize: 18),
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              Text(
-                                "Total Amount : ${documentSnapshot['paymentAmount']}",
-                                style: const TextStyle(
-                                    color: Colors.black, fontSize: 18),
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              Text(
-                                "Services : ",
-                                style: const TextStyle(
-                                    color: Colors.black, fontSize: 18),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(28.0),
-                                child: LimitedBox(
-                                  maxHeight: 200,
-                                  child: Container(
-                                    // decoration:
-                                    //     BoxDecoration(color: Colors.blue),
-                                    child: ListView(
-                                      children: listItems,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                      title: Padding(
+                        padding: EdgeInsets.all(4.0),
+                        child: Padding(
+                          padding: EdgeInsets.all(4.0),
+                          child: Text(
+                            "${documentSnapshot['name']}",
                           ),
                         ),
                       ),
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    actions: <Widget>[
-                      if (documentSnapshot['isRated'] == false)
-                        TextButton(
-                          child: const Text('FeedBack',
-                              style: TextStyle(fontSize: 16)),
-                          onPressed: () async {
-                            await getPackage(
-                                documentSnapshot['name'], documentSnapshot.id);
-                            Navigation(
-                                context,
-                                CustomRatingBar(
-                                  onRatingChanged: (double) {},
-                                  pid: packageId,
-                                  bid: bookingId,
-                                ));
-                          },
+                      content: SingleChildScrollView(
+                        child: Container(
+                          constraints: BoxConstraints(
+                              minHeight: 100,
+                              minWidth: 400,
+                              maxHeight: 550,
+                              maxWidth: 500),
+                          height: 300,
+                          width: 450,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                if (documentSnapshot['pdf'] != null)
+                                  Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        generateQRCode(documentSnapshot['pdf']),
+                                      ]),
+                                Text(
+                                  "Event Date : ${DateFormat.yMd().format(documentSnapshot['eventDate'].toDate())}",
+                                  style: const TextStyle(
+                                      color: Colors.black, fontSize: 18),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Text(
+                                  "Booking Date : ${DateFormat.yMd().format(documentSnapshot['date'].toDate())}",
+                                  style: const TextStyle(
+                                      color: Colors.black, fontSize: 18),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Text(
+                                  "Total Amount : ${documentSnapshot['paymentAmount']}",
+                                  style: const TextStyle(
+                                      color: Colors.black, fontSize: 18),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                if (service.length > 0)
+                                  Text(
+                                    "Services : ",
+                                    style: const TextStyle(
+                                        color: Colors.black, fontSize: 18),
+                                  ),
+                                if (service.length > 0)
+                                  Padding(
+                                    padding: const EdgeInsets.all(28.0),
+                                    child: Container(
+                                      color: Colors.black12.withOpacity(0.2),
+                                      child: LimitedBox(
+                                        maxHeight: 200,
+                                        child: ListView(
+                                          children: listItems,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
                         ),
-                      if (documentSnapshot['isRated'] == true)
-                        TextButton(
-                          child: const Text('FeedBack',
-                              style: TextStyle(fontSize: 16)),
-                          onPressed: () {
-                            Fluttertoast.showToast(
-                                msg: "Already feedback",
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.BOTTOM,
-                                backgroundColor: Colors.white,
-                                textColor: Colors.black);
-                          },
-                        ),
-                      TextButton(
-                        child: const Text('OK', style: TextStyle(fontSize: 16)),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
                       ),
-                    ],
-                  );
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      actions: [
+                        if (documentSnapshot['isRated'] == false)
+                          TextButton(
+                            child: const Text('FeedBack',
+                                style: TextStyle(fontSize: 16)),
+                            onPressed: () async {
+                              await getPackage(documentSnapshot['name'],
+                                  documentSnapshot.id);
+                              Navigation(
+                                  context,
+                                  CustomRatingBar(
+                                    onRatingChanged: (double) {},
+                                    pid: packageId,
+                                    bid: bookingId,
+                                  ));
+                            },
+                          ),
+                        if (documentSnapshot['isRated'] == true)
+                          TextButton(
+                            child: const Text('FeedBack',
+                                style: TextStyle(fontSize: 16)),
+                            onPressed: () {
+                              Fluttertoast.showToast(
+                                  msg: "Already feedback",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  backgroundColor: Colors.white,
+                                  textColor: Colors.black);
+                            },
+                          ),
+                        TextButton(
+                          child:
+                              const Text('OK', style: TextStyle(fontSize: 16)),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  } catch (e) {
+                    return AlertDialog(
+                      shadowColor: Colors.black,
+                      elevation: 8,
+                      icon: const Icon(
+                        Icons.event,
+                        color: Colors.blue,
+                        size: 60,
+                      ),
+                      title: Padding(
+                        padding: EdgeInsets.all(4.0),
+                        child: Padding(
+                          padding: EdgeInsets.all(4.0),
+                          child: Text(
+                            "${documentSnapshot['name']}",
+                          ),
+                        ),
+                      ),
+                      content: SingleChildScrollView(
+                        child: Container(
+                          constraints: BoxConstraints(
+                              minHeight: 100,
+                              minWidth: 400,
+                              maxHeight: 550,
+                              maxWidth: 500),
+                          height: 300,
+                          width: 450,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                if (documentSnapshot['pdf'] != null)
+                                  Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        generateQRCode(documentSnapshot['pdf']),
+                                      ]),
+                                Text(
+                                  "Booking Date : ${DateFormat.yMd().format(documentSnapshot['date'].toDate())}",
+                                  style: const TextStyle(
+                                      color: Colors.black, fontSize: 18),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Text(
+                                  "Total Amount : ${documentSnapshot['paymentAmount']}",
+                                  style: const TextStyle(
+                                      color: Colors.black, fontSize: 18),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                if (service.length > 0)
+                                  Text(
+                                    "Services : ",
+                                    style: const TextStyle(
+                                        color: Colors.black, fontSize: 18),
+                                  ),
+                                if (service.length > 0)
+                                  Padding(
+                                    padding: const EdgeInsets.all(28.0),
+                                    child: Container(
+                                      color: Colors.black12.withOpacity(0.2),
+                                      child: LimitedBox(
+                                        maxHeight: 200,
+                                        child: ListView(
+                                          children: listItems,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      actions: [
+                        TextButton(
+                          child:
+                              const Text('OK', style: TextStyle(fontSize: 16)),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  }
                 });
           }
         },
         child: Container(
           height: 150,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(50),
+            borderRadius: BorderRadius.circular(25),
             gradient: LinearGradient(
-              colors: [startColor, endColor],
+              colors: [startColor.withOpacity(0.8), endColor.withOpacity(0.8)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),

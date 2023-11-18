@@ -67,19 +67,24 @@ class _CalendarScreenState extends State<CalendarScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 30, 20, 0),
-            child: Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.pink.shade400),
-              child: Padding(
-                padding: const EdgeInsets.all(18.0),
-                child: Text(
-                  'Selected Day = ' + _focusedDay.toString().split(" ")[0],
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+            padding: const EdgeInsets.fromLTRB(20, 90, 20, 0),
+            child: Material(
+              borderRadius: BorderRadius.circular(20),
+              elevation: 8,
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.white60),
+                child: Padding(
+                  padding: const EdgeInsets.all(18.0),
+                  child: Text(
+                    'Selected Day = ' + _focusedDay.toString().split(" ")[0],
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontFamily: 'OpenSans',
+                      fontWeight: FontWeight.bold,
+                      color: Colors.pink,
+                    ),
                   ),
                 ),
               ),
@@ -127,28 +132,65 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(200, 8.0, 0, 30),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                elevation: 10,
-                splashFactory: InkRipple.splashFactory,
-              ),
-              onPressed: () {
-                if (_selectedDay != null) {
-                  Navigation(
-                      context,
-                      ServicesScreen(
-                        eventDate: _selectedDay!,
-                      ));
-                  print(_selectedDay);
-                } else {
-                  showErrorAlert(context, 'Please Select One');
-                }
-              },
-              child: const Padding(
-                padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                child: Text(
-                  "Next",
-                  style: TextStyle(fontSize: 18),
+            child: Material(
+              elevation: 18,
+              borderRadius: BorderRadius.circular(15),
+              child: Container(
+                height: 50,
+                width: 150,
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: [
+                      hexStringtoColor("815ef4"),
+                      hexStringtoColor("bc6dd0"),
+                      hexStringtoColor("db4baa"),
+                    ], begin: Alignment.bottomRight, end: Alignment.topLeft),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.8),
+                        spreadRadius: 3,
+                        blurRadius: 5,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                    borderRadius: BorderRadius.circular(15)),
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (_selectedDay != null) {
+                      Navigation(
+                          context,
+                          ServicesScreen(
+                            eventDate: _selectedDay!,
+                          ));
+                      print(_selectedDay);
+                    } else {
+                      showErrorAlert(context, 'Please Select One');
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    elevation: 18,
+                    backgroundColor: Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        'Next',
+                        style: TextStyle(
+                            fontFamily: 'OpenSans',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: Colors.white),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
