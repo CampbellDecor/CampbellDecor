@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../utils/color_util.dart';
@@ -9,11 +8,12 @@ final String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
 final User? user = FirebaseAuth.instance.currentUser;
 
 class TodoListScreen extends StatelessWidget {
-  final CollectionReference messagesRef =
-      FirebaseFirestore.instance.collection('todolist');
-  final TextEditingController textController = TextEditingController();
+  // final CollectionReference _messagesRef = FirebaseFirestore.instance
+  //     .collection('bookings')
+  //     .where('userID', isEqualTo: uid)
+  //     .get();
 
-  // String? get text => null;
+  final TextEditingController textController = TextEditingController();
 
   Color getColorForStatus(String status) {
     switch (status) {
@@ -24,12 +24,11 @@ class TodoListScreen extends StatelessWidget {
       case 'Completed':
         return Colors.green.shade500;
       default:
-        return Colors.transparent; // Default color if status doesn't match
+        return Colors.transparent;
     }
   }
 
   List<Map<String, dynamic>> sortTasks(List<Map<String, dynamic>> tasks) {
-    // Custom order of statuses: Not Started -> In Progress -> Completed
     tasks.sort((task1, task2) {
       final order = ['Not Started', 'In Progress', 'Completed'];
       final status1 = task1['status'];
@@ -59,63 +58,77 @@ class TodoListScreen extends StatelessWidget {
         children: [
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: messagesRef
-                  .orderBy('status')
-                  .where('user_id',
-                      isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+              stream: FirebaseFirestore.instance
+                  .collection('books')
+                  .where('userID', isEqualTo: uid)
                   .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                }
-
+              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (!snapshot.hasData) {
-                  return CircularProgressIndicator();
-                }
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  try {
+                    print(snapshot.data!.docs.toString());
+                    print(snapshot.data!.docs.toString());
+                    print(snapshot.data!.docs.toString());
+                    print(snapshot.data!.docs.toString());
+                    print(snapshot.data!.docs.toString());
+                    List<QueryDocumentSnapshot> todolist = snapshot.data!.docs;
+                    List<Map<String, dynamic>> tasks = todolist
+                        .map((doc) => doc.data() as Map<String, dynamic>)
+                        .toList();
+                    tasks = sortTasks(tasks);
 
-                List<QueryDocumentSnapshot> todolist = snapshot.data!.docs;
-                List<Map<String, dynamic>> tasks = todolist
-                    .map((doc) => doc.data() as Map<String, dynamic>)
-                    .toList();
-                tasks = sortTasks(tasks);
-                return ListView.builder(
-                  itemCount: todolist.length,
-                  itemBuilder: (context, index) {
-                    Map<String, dynamic> messageData = tasks[index];
+                    return LimitedBox(
+                      maxHeight: MediaQuery.of(context).size.height * 0.84,
+                      child: ListView.builder(
+                        itemCount: todolist.length,
+                        itemBuilder: (context, index) {
+                          Map<String, dynamic> messageData = tasks[index];
 
-                    String status = messageData['status'] ?? '';
-                    String taskName = messageData['taskName'] ?? '';
-                    String user_id = messageData['user_id'] ?? '';
+                          String status = messageData['desc'] ?? '';
+                          String taskName = messageData['task'] ?? '';
+                          String userID = messageData['userID'] ?? '';
 
-                    bool isCurrentUser =
-                        user_id == FirebaseAuth.instance.currentUser?.uid;
+                          bool isCurrentUser =
+                              userID == FirebaseAuth.instance.currentUser?.uid;
 
-                    return Padding(
-                      padding: const EdgeInsets.fromLTRB(30, 8, 30, 8.0),
-                      child: ListTile(
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(taskName),
-                            Text(
-                              isCurrentUser ? status : user_id,
-                              style: TextStyle(
-                                color: Colors.indigo.shade700,
+                          return Padding(
+                            padding: const EdgeInsets.fromLTRB(30, 8, 30, 8.0),
+                            child: ListTile(
+                              title: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(taskName),
+                                  Text(
+                                    isCurrentUser ? status : userID,
+                                    style: TextStyle(
+                                      color: Colors.indigo.shade700,
+                                    ),
+                                  ),
+                                ],
                               ),
+                              trailing: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                    // ...
+                                    ),
+                              ),
+                              tileColor: getColorForStatus(status),
                             ),
-                          ],
-                        ),
-                        trailing: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                              // ...
-                              ),
-                        ),
-                        tileColor: getColorForStatus(status),
+                          );
+                        },
                       ),
                     );
-                  },
-                );
+                  } catch (e) {
+                    print(e);
+                    return Text('pinthu');
+                  }
+                }
               },
             ),
           ),
