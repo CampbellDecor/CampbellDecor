@@ -52,6 +52,11 @@ class _CountdownTimerState extends State<CountdownTimer> {
   @override
   Widget build(BuildContext context) {
     String timerText = _days.toString().padLeft(2, '0');
+    print(timerText);
+    print(timerText);
+    print(timerText);
+    print(timerText);
+    print(timerText);
     return Center(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -79,16 +84,16 @@ class _CountdownTimerState extends State<CountdownTimer> {
               color: Colors.white70,
               borderRadius: BorderRadius.circular(15),
               border: Border.all(
-                color: Colors.pink, // Set the border color here
-                width: 1.5, // Set the border width
+                color: Colors.pink,
+                width: 1.5,
               ),
             ),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(8, 6, 8, 8),
               child: Text(
-                ' $timerText',
+                '$timerText',
                 style: TextStyle(
-                    fontSize: 50,
+                    fontSize: 45,
                     fontFamily: 'AbrilFatface',
                     color: Colors.pink,
                     fontWeight: FontWeight.w500),

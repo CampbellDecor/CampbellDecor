@@ -52,12 +52,14 @@ class _NotificationHistoryState extends State<NotificationHistory> {
               ? IconButton(
                   onPressed: () {
                     _deleteSelected();
-                    Fluttertoast.showToast(
-                        msg: "Please select",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.BOTTOM,
-                        backgroundColor: Colors.white,
-                        textColor: Colors.black);
+                    if (selectedItems.length <= 0) {
+                      Fluttertoast.showToast(
+                          msg: "Please select",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor: Colors.white,
+                          textColor: Colors.black);
+                    }
                   },
                   icon: Icon(Icons.delete_outline_outlined))
               : SizedBox(),

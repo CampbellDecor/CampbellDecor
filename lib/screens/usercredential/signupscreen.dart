@@ -204,26 +204,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 ),
                               );
                             });
-                        // } catch (e) {
-                        //   print('fffffffffffffffffffffffffffffffffffffffffffff'
-                        //       'ffffffffffffffffffffffffffffffffffffffffffffffffff'
-                        //       'ffffffffffffffffffffffffffffffffffffffffffffffffr: $e');
-                        //   // if (e is FirebaseAuthException) {
-                        //   //   if (e.code ==
-                        //   //       'The email address is already in use by another account.') {
-                        //   //     print(e);
-                        //   //     print(
-                        //   //         'Errorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr'
-                        //   //         'rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr'
-                        //   //         'rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr: $e');
-                        //   //   } else {
-                        //   //     print(
-                        //   //         'dddddddddddddddddddddddddddddddddddddddddddddddd'
-                        //   //         'rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr'
-                        //   //         'rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr: $e');
-                        //   //   }
-                        //   // }
-                        // }
                       } else {
                         showErrorAlert(context,
                             'Password and Confirm password not Matched ');
@@ -233,62 +213,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     }
                   },
                 ),
-                // if (isCodeSent)
-                //   TextField(
-                //     decoration: InputDecoration(
-                //       prefixIcon: Icon(
-                //         Icons.verified_outlined,
-                //         color: Colors.white70,
-                //       ),
-                //       labelText: "Enter OTP",
-                //       labelStyle:
-                //           TextStyle(color: Colors.white.withOpacity(0.9)),
-                //       filled: true,
-                //       floatingLabelBehavior: FloatingLabelBehavior.never,
-                //       fillColor: Colors.white.withOpacity(0.3),
-                //       border: OutlineInputBorder(
-                //           borderRadius: BorderRadius.circular(30.0),
-                //           borderSide: const BorderSide(
-                //               width: 0, style: BorderStyle.none)),
-                //     ),
-                //     keyboardType: TextInputType.number,
-                //     onChanged: (value) {
-                //       otp = value;
-                //     },
-                //     cursorColor: Colors.white,
-                //     style: TextStyle(color: Colors.white.withOpacity(0.9)),
-                //   ),
-                // SizedBox(height: 20),
-                // if (isCodeSent)
-                //   SizedBox(
-                //     width: double.infinity,
-                //     height: 50,
-                //     child: ElevatedButton(
-                //         style: ButtonStyle(
-                //             backgroundColor:
-                //                 MaterialStateProperty.resolveWith((states) {
-                //               if (states.contains(MaterialState.pressed)) {
-                //                 return Colors.black26;
-                //               }
-                //               return Colors.white;
-                //             }),
-                //             shape: MaterialStateProperty.all<
-                //                 RoundedRectangleBorder>(
-                //               RoundedRectangleBorder(
-                //                   borderRadius: BorderRadius.circular((30))),
-                //             )),
-                //         onPressed: () async {
-                //           _verifyOTP();
-                //         },
-                //         child: Text(
-                //           "VERIFY OTP",
-                //           style: const TextStyle(
-                //               color: Colors.black87,
-                //               fontWeight: FontWeight.bold,
-                //               fontSize: 16),
-                //         )),
-                //   ),
-                // SizedBox(height: 20),
               ],
             ),
           ),
