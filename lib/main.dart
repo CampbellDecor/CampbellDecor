@@ -1,3 +1,4 @@
+import 'package:campbelldecor/screens/dash_board/aboutUs.dart';
 import 'package:campbelldecor/screens/dash_board/homescreen.dart';
 import 'package:campbelldecor/screens/dash_board/viewer_screen.dart';
 import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
@@ -54,7 +55,7 @@ class _MyAppState extends State<MyApp> {
               theme: ThemeClass.lightTheme,
               darkTheme: ThemeClass.darkTheme,
               themeMode: themeManager.themeMode,
-              home: ViewerScreen(),
+              home: AboutUs(),
               navigatorKey: navigatorKey,
               routes: {
                 '/notificationscreen': (context) => NotificationScreen(),
