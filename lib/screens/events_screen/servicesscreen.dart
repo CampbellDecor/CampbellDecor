@@ -160,7 +160,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       /**----------------------------------------Add to cart Button--------------------------------------------**/
                       Padding(
@@ -299,6 +299,9 @@ class _ServicesScreenState extends State<ServicesScreen> {
                             ),
                           ),
                         ),
+                      ),
+                      SizedBox(
+                        width: 20,
                       ),
                       /**----------------------------------------Book Button--------------------------------------------**/
                       Padding(

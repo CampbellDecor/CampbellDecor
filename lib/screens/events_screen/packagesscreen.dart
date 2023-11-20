@@ -67,7 +67,7 @@ class _PackageScreenState extends State<PackageScreen> {
                 );
                 if (filteredPackages.length > 0) {
                   return LimitedBox(
-                      maxHeight: MediaQuery.of(context).size.height * 0.84,
+                      maxHeight: MediaQuery.of(context).size.height * 0.80,
                       child: ListView.builder(
                           scrollDirection: Axis.vertical,
                           itemCount: filteredPackages.length,
