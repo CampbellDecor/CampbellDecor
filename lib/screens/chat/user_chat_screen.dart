@@ -137,14 +137,14 @@ class _UserChatScreenState extends State<UserChatScreen> {
                   child: Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.blue.shade700,
+                      color: Colors.blue.shade700.withOpacity(0.9),
                     ),
                     child: Center(
                       child: IconButton(
                         icon: Icon(
                           Icons.send,
                           color: Colors.white,
-                          size: 25,
+                          size: 28,
                         ),
                         onPressed: () {
                           _sendMessage(_messageController.text);
@@ -177,10 +177,14 @@ class MessageWidget extends StatelessWidget {
       padding: EdgeInsets.all(8.0),
       alignment: isSentByUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+        padding: isSentByUser
+            ? EdgeInsets.fromLTRB(90, 0, 10, 0)
+            : EdgeInsets.fromLTRB(10, 0, 90, 0),
         child: Material(
             elevation: 3,
-            color: Colors.blue.withOpacity(0.9),
+            color: isSentByUser
+                ? Colors.blue.withOpacity(0.5)
+                : Colors.blue.withOpacity(0.9),
             borderRadius: BorderRadius.circular(15),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(15, 10, 15, 10.0),

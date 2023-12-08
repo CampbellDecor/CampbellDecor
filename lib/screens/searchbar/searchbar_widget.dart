@@ -192,6 +192,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       child: Icon(
                         Icons.search_outlined,
                         size: 35,
+                        color: Colors.blue,
                       ),
                     ),
                     suffixIcon: GestureDetector(
@@ -205,6 +206,14 @@ class _SearchScreenState extends State<SearchScreen> {
                     ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(50),
+                      borderSide: BorderSide(color: Colors.blue),
+                    ),
+                    errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50.0),
+                      borderSide: BorderSide(color: Colors.red),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50.0),
                       borderSide: BorderSide(color: Colors.blue),
                     ),
                     focusedBorder: OutlineInputBorder(

@@ -6,6 +6,7 @@ import 'package:campbelldecor/screens/usercredential/signupscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../../utils/color_util.dart';
 import 'aboutUs.dart';
 import 'ToDoList.dart';
@@ -211,12 +212,21 @@ class _MyDrawerState extends State<MyDrawer> {
                             },
                           ),
                           TextButton(
-                            child: const Text('OK',
+                            child: const Text('Confirm',
                                 style: TextStyle(fontSize: 16)),
                             onPressed: () async {
-                              _deleteAccount();
+                              await _deleteAccount();
                               await FirebaseAuth.instance.signOut();
                               Navigator.of(context).pop();
+                              Navigation(context, SignInScreen()).then((value) {
+                                Fluttertoast.showToast(
+                                    msg:
+                                        "Account has been successfully deleted.",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    backgroundColor: Colors.white,
+                                    textColor: Colors.black);
+                              });
                             },
                           ),
                         ],
@@ -245,8 +255,8 @@ class _MyDrawerState extends State<MyDrawer> {
             .collection('users')
             .doc(user.uid)
             .delete();
-
         await user.delete();
+        setState(() {});
       }
     } catch (e) {
       print("Error: $e");

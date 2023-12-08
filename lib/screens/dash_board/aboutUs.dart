@@ -25,7 +25,7 @@ class _AboutUsState extends State<AboutUs> {
             ),
           ),
         ),
-        bottomNavigationBar: bottom_Bar(context),
+        bottomNavigationBar: bottom_Bar(context, 0),
         body: SingleChildScrollView(
           child: Column(
             children: [

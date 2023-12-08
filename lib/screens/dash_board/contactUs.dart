@@ -24,7 +24,7 @@ class _ContactUsState extends State<ContactUs> {
             ),
           ),
         ),
-        bottomNavigationBar: bottom_Bar(context),
+        bottomNavigationBar: bottom_Bar(context, 0),
         body: Container(
             padding: const EdgeInsets.all(8),
             child: Column(
@@ -36,22 +36,34 @@ class _ContactUsState extends State<ContactUs> {
                 ),
                 const SizedBox(height: 8),
                 const ListTile(
-                  leading: Icon(Icons.location_on),
+                  leading: Icon(
+                    Icons.location_pin,
+                    color: Colors.red,
+                  ),
                   title: Text('Campbell Town,NSW,Australia,2560'),
                   subtitle: Text('Address'),
                 ),
                 const ListTile(
-                  leading: Icon(Icons.phone),
+                  leading: Icon(
+                    Icons.phone,
+                    color: Colors.blue,
+                  ),
                   title: Text('+61 410 734 436'),
                   subtitle: Text('Mobile'),
                 ),
                 const ListTile(
-                  leading: Icon(Icons.email),
+                  leading: Icon(
+                    Icons.email_outlined,
+                    color: Colors.red,
+                  ),
                   title: Text('campbelldecorau@gmail.com'),
                   subtitle: Text('Email'),
                 ),
                 const ListTile(
-                  leading: Icon(Icons.web),
+                  leading: Icon(
+                    Icons.link,
+                    color: Colors.blue,
+                  ),
                   title: Text('http://www.campbelldecor.com.au/'),
                   subtitle: Text('Website'),
                 ),
