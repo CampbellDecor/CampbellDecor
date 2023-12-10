@@ -1,3 +1,4 @@
+import 'package:campbelldecor/screens/dash_board/homescreen.dart';
 import 'package:campbelldecor/screens/dash_board/viewer_screen.dart';
 import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
 import 'package:campbelldecor/screens/notifications/notification_setup.dart';
@@ -57,6 +58,7 @@ class _MyAppState extends State<MyApp> {
                   final args = ModalRoute.of(context)!.settings.arguments;
                   return EventsScreen(name: args as String);
                 },
+                '/homescreen': (context) => HomeScreen(),
               },
             );
           },

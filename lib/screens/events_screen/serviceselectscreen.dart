@@ -6,7 +6,6 @@ import 'package:campbelldecor/reusable/reusable_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../utils/color_util.dart';
 
 class ServiceSelectScreen extends StatefulWidget {

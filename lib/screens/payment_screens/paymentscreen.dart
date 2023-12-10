@@ -6,7 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_paypal/flutter_paypal.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import '../../reusable/reusable_widgets.dart';
 import '../../utils/color_util.dart';
 
 class PaymentScreen extends StatefulWidget {
@@ -20,7 +19,6 @@ class PaymentScreen extends StatefulWidget {
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   String verificationId = '';
   String otp = '';
   bool isCodeSent = false;
@@ -562,7 +560,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         onPressed: () {
                           double advance = widget.price.toDouble();
                           if (selectedPaymentMethod == 'paypal') {
-                            Navigator.pop(context);
                             Navigation(
                                 context,
                                 VerifyUser(

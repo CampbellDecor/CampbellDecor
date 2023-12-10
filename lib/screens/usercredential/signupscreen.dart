@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import '../../reusable/reusable_methods.dart';
 import '../../reusable/reusable_widgets.dart';
 import '../../utils/color_util.dart';
-import '../notifications/welcomeNotification.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});

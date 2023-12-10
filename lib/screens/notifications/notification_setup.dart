@@ -54,18 +54,11 @@ class FirebaseApi {
             _androidChannel.id,
             _androidChannel.name,
             channelDescription: _androidChannel.description,
-            icon: '@drawable/ic_launcher',
+            icon: '@drawable/notification_icon',
           ),
         ),
         payload: jsonEncode(message.toMap()),
       );
-
-      // await saveNotification(
-      //   messageData['id'],
-      //   messageData['head'],
-      //   messageData['body'],
-      //   DateTime.parse(messageData['dateTime']),
-      // );
 
       await saveNotification(
         messageData['id'],
@@ -85,7 +78,8 @@ class FirebaseApi {
       requestBadgePermission: true,
       requestAlertPermission: true,
     );
-    const android = AndroidInitializationSettings('@drawable/ic_launcher');
+    const android =
+        AndroidInitializationSettings('@drawable/notification_icon');
     const settings = InitializationSettings(android: android, iOS: iOS);
 
     await _localNotification.initialize(
@@ -96,7 +90,6 @@ class FirebaseApi {
             RemoteMessage.fromMap(jsonDecode(notificationResponse.payload!));
         handleMessage(message);
       },
-      // onDidReceiveBackgroundNotificationResponse: handleBackgroundMessage(),
     );
     _localNotification
         .resolvePlatformSpecificImplementation<
