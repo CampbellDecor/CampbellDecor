@@ -488,16 +488,6 @@ Future<Map<String, dynamic>> getMapData(String service) async {
 Future<void> clearAllSharedPreferenceData() async {
   final prefs = await SharedPreferences.getInstance();
   await prefs.clear();
-  print("pppppppppppppppppppppppppppppppppppppppppppppppppppppp"
-      "ppppppppppppppppppppppppppppppppppppppppppppppppppppppppp"
-      "pppppppppppppppppppppppppppppppppppppppppppppppppppppppppp"
-      "pppppppppppppppppppppppppppppppppppppppppppppppppppppppppp"
-      "ppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp"
-      "pppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp"
-      "ppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp"
-      "pppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp"
-      "ppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp"
-      "pppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp");
 }
 
 /**--------------------- Shared references end-----------------------**/
@@ -808,18 +798,3 @@ Future<void> saveNotification(
     print(e);
   }
 }
-
-/**---------------------------important-------------------------------**/
-// LoadingIndicator(
-// indicatorType: Indicator.lineScale,
-// colors: const [
-// Colors.pink,
-// Colors.yellowAccent,
-// Colors.lightGreenAccent,
-// Colors.blue,
-// Colors.orange,
-// ],
-// strokeWidth: 1,
-// backgroundColor: Colors.transparent,
-// pathBackgroundColor: Colors.blue,
-// ),

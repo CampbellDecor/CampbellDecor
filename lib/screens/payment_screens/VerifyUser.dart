@@ -1,5 +1,4 @@
 import 'package:campbelldecor/screens/dash_board/homescreen.dart';
-import 'package:campbelldecor/screens/dash_board/viewer_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -92,317 +91,328 @@ class _VerifyUserState extends State<VerifyUser> {
           ),
         ),
       ),
-      body: Container(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.1,
-              ),
-              Container(
-                child: FutureBuilder(
-                    future: _loadUserData(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator();
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      } else {
-                        return SingleChildScrollView(
-                          child: Center(
-                            child: Card(
-                              elevation: 15.0,
-                              margin: const EdgeInsets.all(20.0),
-                              child: Container(
-                                color: Colors.white70.withOpacity(0.5),
-                                width: MediaQuery.of(context).size.width * 0.6,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.4,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    children: [
-                                      const SizedBox(height: 20.0),
-                                      Stack(
-                                        alignment: Alignment.center,
-                                        children: [
-                                          Container(
-                                            width: 120,
-                                            height: 120,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              border: Border.all(
-                                                color: Colors.blueGrey,
-                                                width: 2.0,
+      body: SingleChildScrollView(
+        child: Container(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.1,
+                ),
+                Container(
+                  child: FutureBuilder(
+                      future: _loadUserData(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          return SingleChildScrollView(
+                            child: Center(
+                              child: Card(
+                                elevation: 15.0,
+                                margin: const EdgeInsets.all(20.0),
+                                child: Container(
+                                  color: Colors.white70.withOpacity(0.5),
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.6,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.4,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      children: [
+                                        const SizedBox(height: 20.0),
+                                        Stack(
+                                          alignment: Alignment.center,
+                                          children: [
+                                            Container(
+                                              width: 120,
+                                              height: 120,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                border: Border.all(
+                                                  color: Colors.blueGrey,
+                                                  width: 2.0,
+                                                ),
+                                              ),
+                                              child: ClipOval(
+                                                child: userURL != null
+                                                    ? Image.network(
+                                                        userURL,
+                                                        width: 150,
+                                                        height: 150,
+                                                        fit: BoxFit.cover,
+                                                      )
+                                                    : Image.network(
+                                                        'https://firebasestorage.googleapis.com/v0/b/campbelldecor-c2d1f.appspot.com/o/Users%2Fuser.png?alt=media&token=af8768f7-68e4-4961-892f-400eee8bae5d',
+                                                        width: 150,
+                                                        height: 150,
+                                                        fit: BoxFit.cover,
+                                                      ),
                                               ),
                                             ),
-                                            child: ClipOval(
-                                              child: userURL != null
-                                                  ? Image.network(
-                                                      userURL,
-                                                      width: 150,
-                                                      height: 150,
-                                                      fit: BoxFit.cover,
-                                                    )
-                                                  : Image.network(
-                                                      'https://firebasestorage.googleapis.com/v0/b/campbelldecor-c2d1f.appspot.com/o/Users%2Fuser.png?alt=media&token=af8768f7-68e4-4961-892f-400eee8bae5d',
-                                                      width: 150,
-                                                      height: 150,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                            ),
-                                          ),
-                                          Profile(userURL),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 15.0),
-                                      const Text(
-                                        'Name:',
-                                        style: TextStyle(
-                                            fontSize: 18.0,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      const SizedBox(height: 5.0),
-                                      Text(
-                                        _user.name,
-                                        style: const TextStyle(fontSize: 16.0),
-                                      ),
-                                      const SizedBox(height: 20.0),
-                                      const Text(
-                                        'Mobile No:',
-                                        style: TextStyle(
-                                            fontSize: 18.0,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      const SizedBox(height: 5.0),
-                                      Text(
-                                        '*' * (_user.phoneNo.length - 4) +
-                                            _user.phoneNo.substring(
-                                                _user.phoneNo.length - 4),
-                                        style: const TextStyle(fontSize: 16.0),
-                                      ),
-                                      const SizedBox(height: 20.0),
-                                      Material(
-                                        elevation: 28,
-                                        borderRadius: BorderRadius.circular(15),
-                                        child: Container(
-                                          height: 50,
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.45,
-                                          decoration: BoxDecoration(
-                                              gradient: LinearGradient(
-                                                  colors: [
-                                                    hexStringtoColor("db4baa"),
-                                                    hexStringtoColor("bc6dd0"),
-                                                    hexStringtoColor("815ef4"),
-                                                  ],
-                                                  begin: Alignment.bottomRight,
-                                                  end: Alignment.topLeft),
-                                              borderRadius:
-                                                  BorderRadius.circular(15)),
-                                          child: ElevatedButton(
-                                            onPressed: () {
-                                              try {
-                                                verifyPhoneNumber(phNo!);
-                                                showDialog(
-                                                  context: context,
-                                                  builder:
-                                                      (BuildContext context) {
-                                                    return AlertDialog(
-                                                      scrollable: true,
-                                                      shadowColor: Colors.black,
-                                                      elevation: 8,
-                                                      icon: const Icon(
-                                                        Icons
-                                                            .verified_user_outlined,
-                                                        color: Colors.blue,
-                                                        size: 40,
-                                                      ),
-                                                      title: const Padding(
-                                                        padding:
-                                                            EdgeInsets.all(8.0),
-                                                        child: Padding(
+                                            Profile(userURL),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 15.0),
+                                        const Text(
+                                          'Name:',
+                                          style: TextStyle(
+                                              fontSize: 18.0,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        const SizedBox(height: 5.0),
+                                        Text(
+                                          _user.name,
+                                          style:
+                                              const TextStyle(fontSize: 16.0),
+                                        ),
+                                        const SizedBox(height: 20.0),
+                                        const Text(
+                                          'Mobile No:',
+                                          style: TextStyle(
+                                              fontSize: 18.0,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        const SizedBox(height: 5.0),
+                                        Text(
+                                          '*' * (_user.phoneNo.length - 4) +
+                                              _user.phoneNo.substring(
+                                                  _user.phoneNo.length - 4),
+                                          style:
+                                              const TextStyle(fontSize: 16.0),
+                                        ),
+                                        const SizedBox(height: 20.0),
+                                        Material(
+                                          elevation: 28,
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          child: Container(
+                                            height: 50,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.45,
+                                            decoration: BoxDecoration(
+                                                gradient: LinearGradient(
+                                                    colors: [
+                                                      hexStringtoColor(
+                                                          "db4baa"),
+                                                      hexStringtoColor(
+                                                          "bc6dd0"),
+                                                      hexStringtoColor(
+                                                          "815ef4"),
+                                                    ],
+                                                    begin:
+                                                        Alignment.bottomRight,
+                                                    end: Alignment.topLeft),
+                                                borderRadius:
+                                                    BorderRadius.circular(15)),
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                try {
+                                                  verifyPhoneNumber(phNo!);
+                                                  showDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return AlertDialog(
+                                                        scrollable: true,
+                                                        shadowColor:
+                                                            Colors.black,
+                                                        elevation: 18,
+                                                        icon: const Icon(
+                                                          Icons
+                                                              .verified_user_outlined,
+                                                          color: Colors.blue,
+                                                          size: 40,
+                                                        ),
+                                                        title: const Padding(
                                                           padding:
                                                               EdgeInsets.all(
                                                                   8.0),
-                                                          child: Text(
-                                                              'OTP Verification'),
-                                                        ),
-                                                      ),
-                                                      content: Container(
-                                                        height: 400,
-                                                        width: 380,
-                                                        child:
-                                                            SingleChildScrollView(
-                                                          child: Column(
-                                                            children: [
-                                                              imgContainer(
-                                                                  'assets/images/otp.png',
-                                                                  200,
-                                                                  200),
-                                                              TextField(
-                                                                decoration:
-                                                                    InputDecoration(
-                                                                  prefixIcon:
-                                                                      Icon(
-                                                                    Icons
-                                                                        .verified_outlined,
-                                                                    color: Colors
-                                                                        .black,
-                                                                  ),
-                                                                  labelText:
-                                                                      "Enter OTP",
-                                                                  labelStyle:
-                                                                      TextStyle(
-                                                                    color: Colors
-                                                                        .black
-                                                                        .withOpacity(
-                                                                            0.9),
-                                                                    fontFamily:
-                                                                        'OpenSans',
-                                                                  ),
-                                                                  filled: true,
-                                                                  floatingLabelBehavior:
-                                                                      FloatingLabelBehavior
-                                                                          .never,
-                                                                  fillColor: Colors
-                                                                      .grey
-                                                                      .withOpacity(
-                                                                          0.3),
-                                                                  border: OutlineInputBorder(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              30.0),
-                                                                      borderSide: const BorderSide(
-                                                                          width:
-                                                                              0,
-                                                                          style:
-                                                                              BorderStyle.none)),
-                                                                ),
-                                                                keyboardType:
-                                                                    TextInputType
-                                                                        .number,
-                                                                onChanged:
-                                                                    (value) {
-                                                                  otp = value;
-                                                                },
-                                                                cursorColor:
-                                                                    Colors
-                                                                        .white,
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .black
-                                                                        .withOpacity(
-                                                                            0.9),
-                                                                    fontFamily:
-                                                                        'OpenSans',
-                                                                    fontSize:
-                                                                        18),
-                                                              ),
-                                                              SizedBox(
-                                                                height: 20,
-                                                              ),
-                                                              SizedBox(
-                                                                width: double
-                                                                    .infinity,
-                                                                height: 50,
-                                                                child: ElevatedButton(
-                                                                    style: ButtonStyle(
-                                                                        backgroundColor: MaterialStateProperty.resolveWith((states) {
-                                                                          if (states
-                                                                              .contains(MaterialState.pressed)) {
-                                                                            return Colors.black26;
-                                                                          }
-                                                                          return Colors
-                                                                              .white;
-                                                                        }),
-                                                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                                          RoundedRectangleBorder(
-                                                                              borderRadius: BorderRadius.circular((30))),
-                                                                        )),
-                                                                    onPressed: () async {
-                                                                      Navigator.of(
-                                                                              context)
-                                                                          .pop();
-                                                                      _verifyOTP();
-                                                                    },
-                                                                    child: Text(
-                                                                      "VERIFY OTP",
-                                                                      style: const TextStyle(
-                                                                          color: Colors
-                                                                              .black87,
-                                                                          fontWeight: FontWeight
-                                                                              .bold,
-                                                                          fontSize:
-                                                                              16),
-                                                                    )),
-                                                              ),
-                                                            ],
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    8.0),
+                                                            child: Text(
+                                                                'OTP Verification'),
                                                           ),
                                                         ),
-                                                      ),
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(15.0),
-                                                      ),
-                                                    );
-                                                  },
-                                                );
-                                              } catch (e) {
-                                                print("Error : $e");
-                                              }
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                              elevation: 28,
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(16),
+                                                        content: Container(
+                                                          height: 400,
+                                                          width: 380,
+                                                          child:
+                                                              SingleChildScrollView(
+                                                            child: Column(
+                                                              children: [
+                                                                imgContainer(
+                                                                    'assets/images/otp.png',
+                                                                    180,
+                                                                    180),
+                                                                TextField(
+                                                                  decoration:
+                                                                      InputDecoration(
+                                                                    prefixIcon:
+                                                                        Icon(
+                                                                      Icons
+                                                                          .verified_outlined,
+                                                                      color: Colors
+                                                                          .black,
+                                                                    ),
+                                                                    labelText:
+                                                                        "Enter OTP",
+                                                                    labelStyle:
+                                                                        TextStyle(
+                                                                      color: Colors
+                                                                          .black
+                                                                          .withOpacity(
+                                                                              0.9),
+                                                                      fontFamily:
+                                                                          'OpenSans',
+                                                                    ),
+                                                                    filled:
+                                                                        true,
+                                                                    floatingLabelBehavior:
+                                                                        FloatingLabelBehavior
+                                                                            .never,
+                                                                    fillColor: Colors
+                                                                        .grey
+                                                                        .withOpacity(
+                                                                            0.3),
+                                                                    border: OutlineInputBorder(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                                30.0),
+                                                                        borderSide: const BorderSide(
+                                                                            width:
+                                                                                0,
+                                                                            style:
+                                                                                BorderStyle.none)),
+                                                                  ),
+                                                                  keyboardType:
+                                                                      TextInputType
+                                                                          .number,
+                                                                  onChanged:
+                                                                      (value) {
+                                                                    otp = value;
+                                                                  },
+                                                                  cursorColor:
+                                                                      Colors
+                                                                          .white,
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black
+                                                                          .withOpacity(
+                                                                              0.9),
+                                                                      fontFamily:
+                                                                          'OpenSans',
+                                                                      fontSize:
+                                                                          18),
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 20,
+                                                                ),
+                                                                SizedBox(
+                                                                  width: double
+                                                                      .infinity,
+                                                                  height: 50,
+                                                                  child: ElevatedButton(
+                                                                      style: ButtonStyle(
+                                                                          backgroundColor: MaterialStateProperty.resolveWith((states) {
+                                                                            if (states.contains(MaterialState.pressed)) {
+                                                                              return Colors.black26;
+                                                                            }
+                                                                            return Colors.white;
+                                                                          }),
+                                                                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                                            RoundedRectangleBorder(borderRadius: BorderRadius.circular((30))),
+                                                                          )),
+                                                                      onPressed: () async {
+                                                                        Navigator.of(context)
+                                                                            .pop();
+                                                                        _verifyOTP();
+                                                                      },
+                                                                      child: Text(
+                                                                        "VERIFY OTP",
+                                                                        style: const TextStyle(
+                                                                            color:
+                                                                                Colors.black87,
+                                                                            fontWeight: FontWeight.bold,
+                                                                            fontSize: 16),
+                                                                      )),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      15.0),
+                                                        ),
+                                                      );
+                                                    },
+                                                  );
+                                                } catch (e) {
+                                                  print("Error : $e");
+                                                }
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                elevation: 28,
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(16),
+                                                ),
                                               ),
-                                            ),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                Text(
-                                                  'Send OTP',
-                                                  style: TextStyle(
-                                                      fontFamily: 'OpenSans',
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 18,
-                                                      color: Colors.white),
-                                                ),
-                                                Transform.rotate(
-                                                  angle: -30 * (3.14159 / 180),
-                                                  child: Icon(
-                                                    Icons.send_outlined,
-                                                    color: Colors.white,
-                                                    size: 25,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  Text(
+                                                    'Send OTP',
+                                                    style: TextStyle(
+                                                        fontFamily: 'OpenSans',
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 18,
+                                                        color: Colors.white),
                                                   ),
-                                                ),
-                                              ],
+                                                  Transform.rotate(
+                                                    angle:
+                                                        -30 * (3.14159 / 180),
+                                                    child: Icon(
+                                                      Icons.send_outlined,
+                                                      color: Colors.white,
+                                                      size: 25,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        );
-                      }
-                    }),
-              ),
-            ],
+                          );
+                        }
+                      }),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -490,12 +500,15 @@ class _VerifyUserState extends State<VerifyUser> {
                       widget.user, widget.event, widget.id, widget.price);
                   clearAllSharedPreferenceData();
                   sendNotificationForAdmin(
-                      widget.id,
-                      'Booking request',
-                      'Your booking request has been received. We will notify you shortly with our response.',
-                      widget.eventName,
-                      widget.price,
-                      widget.eventDate.toDate());
+                          widget.id,
+                          'Booking request',
+                          'Your booking request has been received. We will notify you shortly with our response.',
+                          widget.eventName,
+                          widget.price,
+                          widget.eventDate.toDate())
+                      .then((value) async {
+                    await Navigator.popAndPushNamed(context, "/homescreen");
+                  });
                   Fluttertoast.showToast(
                       msg: "Payment Success",
                       toastLength: Toast.LENGTH_LONG,

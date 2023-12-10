@@ -125,14 +125,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                     children: [
                                       keyLable('Date : '),
                                       valueLable(DateFormat.yMd()
-                                          .format(data!['eventDate'].toDate())),
+                                          .format(data['eventDate'].toDate())),
                                     ],
                                   ),
                                   Row(
                                     children: [
                                       keyLable('Total amount : '),
-                                      valueLable(
-                                          '\$${data!['paymentAmount']}0'),
+                                      valueLable('\$${data['paymentAmount']}0'),
                                     ],
                                   ),
                                   SizedBox(

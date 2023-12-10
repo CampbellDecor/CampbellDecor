@@ -48,7 +48,8 @@ Container Profile(String userURL) {
               fit: BoxFit.cover,
             )
           : Image.network(
-              'https://firebasestorage.googleapis.com/v0/b/campbelldecor-c2d1f.appspot.com/o/Users%2Fuser.png?alt=media&token=af8768f7-68e4-4961-892f-400eee8bae5d',
+              'https://firebasestorage.googleapis.com/v0/b/campbelldecor-c2d1f.appspot.com'
+              '/o/Users%2Fuser.png?alt=media&token=af8768f7-68e4-4961-892f-400eee8bae5d',
               width: 150,
               height: 150,
               fit: BoxFit.cover,
@@ -279,7 +280,7 @@ Widget reusePaymentContainer(String id, String name, double price,
                               ));
                         },
                         style: ElevatedButton.styleFrom(
-                            primary: Colors.red[400],
+                            backgroundColor: Colors.red[400],
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15))),
                         child: const Padding(
