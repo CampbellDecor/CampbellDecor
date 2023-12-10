@@ -170,7 +170,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                           borderRadius: BorderRadius.circular(15),
                           child: Container(
                             height: 50,
-                            width: 150,
+                            width: MediaQuery.of(context).size.width * 0.35,
                             decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                     colors: [
@@ -180,14 +180,6 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                     ],
                                     begin: Alignment.bottomRight,
                                     end: Alignment.topLeft),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.8),
-                                    spreadRadius: 3,
-                                    blurRadius: 5,
-                                    offset: Offset(0, 2),
-                                  ),
-                                ],
                                 borderRadius: BorderRadius.circular(15)),
                             child: ElevatedButton(
                               onPressed: () async {
@@ -274,7 +266,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                 } catch (e) {}
                               },
                               style: ElevatedButton.styleFrom(
-                                elevation: 18,
+                                elevation: 28,
                                 backgroundColor: Colors.transparent,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16),
@@ -284,8 +276,11 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Icon(CupertinoIcons.shopping_cart,
-                                      color: Colors.white),
+                                  Icon(
+                                    CupertinoIcons.shopping_cart,
+                                    color: Colors.white,
+                                    size: 28,
+                                  ),
                                   Text(
                                     'Cart',
                                     style: TextStyle(
@@ -301,17 +296,17 @@ class _ServicesScreenState extends State<ServicesScreen> {
                         ),
                       ),
                       SizedBox(
-                        width: 20,
+                        width: MediaQuery.of(context).size.width * 0.05,
                       ),
                       /**----------------------------------------Book Button--------------------------------------------**/
                       Padding(
                         padding: const EdgeInsets.fromLTRB(0, 8, 40, 8),
                         child: Material(
-                          elevation: 18,
+                          elevation: 28,
                           borderRadius: BorderRadius.circular(15),
                           child: Container(
                             height: 50,
-                            width: 150,
+                            width: MediaQuery.of(context).size.width * 0.35,
                             decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                     colors: [
@@ -321,14 +316,6 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                     ],
                                     begin: Alignment.bottomRight,
                                     end: Alignment.topLeft),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.8),
-                                    spreadRadius: 3,
-                                    blurRadius: 5,
-                                    offset: Offset(0, 2),
-                                  ),
-                                ],
                                 borderRadius: BorderRadius.circular(15)),
                             child: ElevatedButton(
                               onPressed: () async {
@@ -450,7 +437,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                 }
                               },
                               style: ElevatedButton.styleFrom(
-                                elevation: 18,
+                                elevation: 28,
                                 backgroundColor: Colors.transparent,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16),
@@ -460,8 +447,11 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Icon(Icons.book_outlined,
-                                      color: Colors.white),
+                                  Icon(
+                                    Icons.book_outlined,
+                                    color: Colors.white,
+                                    size: 28,
+                                  ),
                                   Text(
                                     'Book',
                                     style: TextStyle(

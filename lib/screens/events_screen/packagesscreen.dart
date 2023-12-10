@@ -335,7 +335,7 @@ class _PackageScreenState extends State<PackageScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: bottom_Bar(context),
+      bottomNavigationBar: bottom_Bar(context, 0),
     );
   }
 

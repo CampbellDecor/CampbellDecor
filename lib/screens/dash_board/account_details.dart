@@ -227,8 +227,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           return SingleChildScrollView(
                             child: Center(
                               child: Card(
-                                color: Colors.white70.withOpacity(0.5),
-                                elevation: 5.0,
+                                // color: Colors.white70.withOpacity(0.5),
+                                elevation: 15.0,
                                 margin: const EdgeInsets.all(20.0),
                                 child: Container(
                                   color: Colors.white70.withOpacity(0.5),
@@ -373,22 +373,62 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SizedBox(height: 20),
               _isEditing
                   ? Container(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          backgroundColor: Colors.blue, // Text color
-                          elevation: 3, // Button elevation
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(50.0), // Rounded corners
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 16, horizontal: 24),
-                        ),
-                        onPressed: _isEditing ? _updateUserData : null,
-                        child: const Text('Save Changes'),
-                      ),
-                    )
+                      child: Material(
+                          elevation: 18,
+                          borderRadius: BorderRadius.circular(15),
+                          child: Container(
+                            height: 50,
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                    colors: [
+                                      hexStringtoColor("db4baa"),
+                                      hexStringtoColor("bc6dd0"),
+                                      hexStringtoColor("815ef4"),
+                                    ],
+                                    begin: Alignment.bottomRight,
+                                    end: Alignment.topLeft),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.8),
+                                    spreadRadius: 3,
+                                    blurRadius: 5,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
+                                borderRadius: BorderRadius.circular(15)),
+                            child: ElevatedButton(
+                              onPressed: _isEditing ? _updateUserData : null,
+                              style: ElevatedButton.styleFrom(
+                                elevation: 10,
+                                backgroundColor: Colors.transparent,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.save_as_outlined,
+                                    color: Colors.white,
+                                    size: 28,
+                                  ),
+                                  SizedBox(
+                                    width: 15,
+                                  ),
+                                  Text(
+                                    'Save changes',
+                                    style: TextStyle(
+                                        fontFamily: 'OpenSans',
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )))
                   : SizedBox(height: 20)
             ],
           ),

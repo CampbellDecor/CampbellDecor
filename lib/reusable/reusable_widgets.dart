@@ -175,7 +175,6 @@ Widget reuseContainerList(String imgName, double height, double width,
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
-          // color: Color.fromARGB(50, 200, 20, 25),
         ),
         child: Row(
           children: [
@@ -227,14 +226,9 @@ Widget reusePaymentContainer(String id, String name, double price,
           color: CupertinoColors.white.withOpacity(0.6),
           child: Container(
             height: 120,
-            width: 360,
+            width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              // gradient: LinearGradient(colors: [
-              //   hexStringtoColor("5Ed1F4"),
-              //   hexStringtoColor("CB28ee"),
-              //   hexStringtoColor("9546d4"),
-              // ], begin: Alignment.bottomRight, end: Alignment.topLeft),
             ),
             child: Row(
               children: [
@@ -244,21 +238,21 @@ Widget reusePaymentContainer(String id, String name, double price,
                     Padding(
                         padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
                         child: Text(
-                          "Price Amount : Rs.${price.toStringAsFixed(2)}",
+                          "Price Amount : \$${price.toStringAsFixed(2)}",
                           style: const TextStyle(
                               fontSize: 14, color: Colors.black87),
                         )),
                     Padding(
                         padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                         child: Text(
-                          "Bond Money : Rs.${bondmoney.toStringAsFixed(2)}",
+                          "Bond Money : \$${bondmoney.toStringAsFixed(2)}",
                           style: const TextStyle(
                               fontSize: 14, color: Colors.black87),
                         )),
                     Padding(
                         padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                         child: Text(
-                          "Total Amount : Rs.${total.toStringAsFixed(2)}",
+                          "Total Amount : \$${total.toStringAsFixed(2)}",
                           style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -376,7 +370,7 @@ Widget generateQRCode(String data) {
   );
 }
 
-Widget bottom_Bar(BuildContext context) {
+Widget bottom_Bar(BuildContext context, int selectIndex) {
   return Container(
     decoration: BoxDecoration(
       gradient: LinearGradient(colors: [
@@ -404,13 +398,6 @@ Widget bottom_Bar(BuildContext context) {
             ),
             label: 'Chat',
           ),
-          // BottomNavigationBarItem(
-          //   icon: Padding(
-          //     padding: EdgeInsets.all(4.0),
-          //     child: Icon(CupertinoIcons.add),
-          //   ),
-          //   label: 'Add',
-          // ),
           BottomNavigationBarItem(
             icon: Padding(
               padding: EdgeInsets.all(4.0),
@@ -426,17 +413,13 @@ Widget bottom_Bar(BuildContext context) {
             label: 'Search',
           ),
         ],
-        // currentIndex: _selectedIndex,
+        currentIndex: selectIndex,
         onTap: (index) {
           if (index == 0) {
             BottomNavigationForHome(context, HomeScreen());
           } else if (index == 1) {
             BottomNavigation(context, UserChatScreen());
-          }
-          // else if (index == 2) {
-          //   BottomNavigation(context, EventsScreen());
-          // }
-          else if (index == 2) {
+          } else if (index == 2) {
             BottomNavigation(context, AddToCartScreen());
           } else if (index == 3) {
             BottomNavigation(context, SearchScreen());

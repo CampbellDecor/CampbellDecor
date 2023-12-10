@@ -25,7 +25,7 @@ class _AboutUsState extends State<AboutUs> {
             ),
           ),
         ),
-        bottomNavigationBar: bottom_Bar(context),
+        bottomNavigationBar: bottom_Bar(context, 0),
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -51,7 +51,6 @@ class _AboutUsState extends State<AboutUs> {
                   ],
                 ),
               ),
-
               Container(
                 width: screenWidth,
                 padding: EdgeInsets.all(8),
@@ -60,7 +59,6 @@ class _AboutUsState extends State<AboutUs> {
                   style: Theme.of(context).textTheme.bodyText2,
                 ),
               ),
-
               Container(
                   width: screenWidth,
                   padding: EdgeInsets.all(8),
@@ -105,62 +103,6 @@ class _AboutUsState extends State<AboutUs> {
                         title: Text('Affortable cost'),
                       ),
                     ],
-                  )),
-
-              Container(
-                  width: screenWidth,
-                  padding: EdgeInsets.all(8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Events:',
-                        style: Theme.of(context).textTheme.headline6,
-                      ),
-                      SizedBox(height: 8),
-                      ListTile(
-                        leading: Icon(Icons.sunny),
-                        title: Text('wedding'),
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.sunny),
-                        title: Text('Birth Day'),
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.sunny),
-                        title: Text('Get Together'),
-                      ),
-                    ],
-                  )),
-
-              Container(
-                  width: screenWidth,
-                  padding: EdgeInsets.all(8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Decorations:',
-                        style: Theme.of(context).textTheme.headline6,
-                      ),
-                      SizedBox(height: 8),
-                      ListTile(
-                        leading: Icon(Icons.sunny),
-                        title: Text('Balloon Decoration'),
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.sunny),
-                        title: Text('Flower Decoration'),
-                      ),
-                    ],
-                  )),
-
-              //social media
-              Container(
-                  width: screenWidth,
-                  padding: EdgeInsets.all(8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                   )),
             ],
           ),

@@ -169,7 +169,7 @@ class _EventsScreenState extends State<EventsScreen> {
               })
         ]))
       ]),
-      bottomNavigationBar: bottom_Bar(context),
+      bottomNavigationBar: bottom_Bar(context, 0),
     );
   }
 }

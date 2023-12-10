@@ -1,5 +1,6 @@
 import 'package:campbelldecor/reusable/reusable_methods.dart';
 import 'package:campbelldecor/screens/dash_board/homescreen.dart';
+import 'package:campbelldecor/screens/payment_screens/VerifyUser.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -72,6 +73,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
   /**--------------------Insert User Shipping Address------------------------------**/
   Map<String, dynamic> user = Map();
 
+  /**--------------------Save to Booking ------------------------------**/
+
+  void _addBooking() async {
+    await FirebaseFirestore.instance
+        .collection('bookings')
+        .doc(widget.id)
+        .update({'status': 'pending', 'paymentAmount': widget.price});
+  }
+
+  /**--------------------set User ------------------------------**/
   void setUser() async {
     user = await getUserData(FirebaseAuth.instance.currentUser!.uid);
   }
@@ -421,6 +432,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                   fontWeight: FontWeight.bold))
                         ],
                       ),
+                      /** ------------- Paypal method--------------- **/
                       Container(
                         child: Padding(
                           padding: const EdgeInsets.all(10.0),
@@ -448,6 +460,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           ),
                         ),
                       ),
+                      /** ------------- Cash on Hand method--------------- **/
                       Container(
                         child: Padding(
                           padding: const EdgeInsets.all(10.0),
@@ -482,141 +495,123 @@ class _PaymentScreenState extends State<PaymentScreen> {
             ),
             SizedBox(height: 16),
             Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+              /** ------------- Cancel Button --------------- **/
               Padding(
                 padding: const EdgeInsets.all(18.0),
-                child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red.shade400,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      minimumSize: Size(150, 55),
-                    ),
-                    child: const Padding(
-                      padding: EdgeInsets.fromLTRB(10, 8, 10, 8),
-                      child: Text(
-                        "Cancel",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontFamily: 'OpenSans',
-                            fontWeight: FontWeight.bold),
-                      ),
-                    )),
+                child: Material(
+                  elevation: 28,
+                  borderRadius: BorderRadius.circular(15),
+                  child: Container(
+                    height: 50,
+                    width: MediaQuery.of(context).size.width * 0.35,
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            colors: [
+                              hexStringtoColor("db4baa"),
+                              hexStringtoColor("bc6dd0"),
+                              hexStringtoColor("815ef4"),
+                            ],
+                            begin: Alignment.bottomRight,
+                            end: Alignment.topLeft),
+                        borderRadius: BorderRadius.circular(15)),
+                    child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          elevation: 28,
+                          backgroundColor: Colors.transparent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.fromLTRB(10, 8, 10, 8),
+                          child: Text(
+                            "Cancel",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontFamily: 'OpenSans',
+                                fontWeight: FontWeight.bold),
+                          ),
+                        )),
+                  ),
+                ),
               ),
+              /** ------------- Booking Button --------------- **/
               Padding(
                 padding: const EdgeInsets.all(18.0),
-                child: ElevatedButton(
-                    onPressed: () {
-                      double advance = widget.price.toDouble();
-                      if (selectedPaymentMethod == 'paypal') {
-                        Navigator.of(context).pop();
-
-                        Navigation(
-                          context,
-                          UsePaypal(
-                              sandboxMode: true,
-                              clientId:
-                                  "AfzAtOt2yh5xa4AElQ2bj3QroOPekqjVd5fpMotR4og9IY3NrW4h1UXyrMnSzLvj19TpGBUDH_AMcTIt",
-                              secretKey:
-                                  "EArmmUGnSt4w6OBXCptMWmw7I6bxDbZigkync-WoQ7hNldWs2xvWsjrLiNWQQFY-eyLB0mqoS4CJyoRq",
-                              returnURL: "https://samplesite.com/return",
-                              cancelURL: "https://samplesite.com/cancel",
-                              transactions: [
-                                {
-                                  "amount": {
-                                    "total": advance,
-                                    "currency": "USD",
-                                    "details": {
-                                      "subtotal": advance,
-                                      "shipping": '0',
-                                      "shipping_discount": 0
-                                    }
-                                  },
-                                  "description":
-                                      "The payment transaction description.",
-                                  // "payment_options": {
-                                  //   "allowed_payment_method":
-                                  //       "INSTANT_FUNDING_SOURCE"
-                                  // },
-                                  "item_list": {
-                                    "items": [
-                                      {
-                                        "name": widget.name,
-                                        "quantity": 1,
-                                        "price": advance,
-                                        "currency": "USD"
-                                      }
-                                    ],
-                                  }
-                                }
-                              ],
-                              note:
-                                  "Contact us for any questions on your order.",
-                              onSuccess: (Map params) async {
-                                _addBooking();
-                                _addPaymentHistory(advance);
-                                GeneratePDFInvoice(
-                                    user, event, widget.id, widget.price);
-                                sendNotificationForAdmin(
-                                    widget.id,
-                                    'Booking request',
-                                    'Your booking request has been received. We will notify you shortly with our response.',
-                                    data['name'],
-                                    widget.price,
-                                    data['eventDate'].toDate());
-                                Fluttertoast.showToast(
-                                    msg: "Payment Success",
-                                    toastLength: Toast.LENGTH_LONG,
-                                    gravity: ToastGravity.BOTTOM,
-                                    backgroundColor: Colors.white,
-                                    textColor: Colors.black);
-                              },
-                              onError: (error) {
-                                print("onError: $error");
-                              },
-                              onCancel: (params) {
-                                print('cancelled: $params');
-                              }),
-                        ).then((value) {
-                          clearAllSharedPreferenceData();
-                        });
-                      } else if (selectedPaymentMethod == 'cash_on_hand') {
-                        _addBooking();
-                        sendNotificationForAdmin(
-                            widget.id,
-                            'Booking request',
-                            'Your booking request has been received. We will notify you shortly with our response.',
-                            data['name'],
-                            widget.price,
-                            data['eventDate'].toDate());
-                        Navigator.of(context).pop();
-                        Navigation(context, HomeScreen()).then((value) {
-                          clearAllSharedPreferenceData();
-                        });
-                      } else {
-                        showInformation(context, "Please select prefer method");
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue.shade400,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      minimumSize: Size(150, 55),
-                    ),
-                    child: const Padding(
-                      padding: EdgeInsets.fromLTRB(10, 8, 10, 8),
-                      child: Text(
-                        "Pay",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontFamily: 'OpenSans',
-                            fontWeight: FontWeight.bold),
-                      ),
-                    )),
+                child: Material(
+                  elevation: 28,
+                  borderRadius: BorderRadius.circular(15),
+                  child: Container(
+                    height: 50,
+                    width: MediaQuery.of(context).size.width * 0.35,
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            colors: [
+                              hexStringtoColor("db4baa"),
+                              hexStringtoColor("bc6dd0"),
+                              hexStringtoColor("815ef4"),
+                            ],
+                            begin: Alignment.bottomRight,
+                            end: Alignment.topLeft),
+                        borderRadius: BorderRadius.circular(15)),
+                    child: ElevatedButton(
+                        onPressed: () {
+                          double advance = widget.price.toDouble();
+                          if (selectedPaymentMethod == 'paypal') {
+                            Navigator.pop(context);
+                            Navigation(
+                                context,
+                                VerifyUser(
+                                    eventName: data['name'],
+                                    name: widget.name,
+                                    id: widget.id,
+                                    price: widget.price,
+                                    advance: advance,
+                                    eventDate: data['eventDate'],
+                                    user: user,
+                                    event: event));
+                          } else if (selectedPaymentMethod == 'cash_on_hand') {
+                            _addBooking();
+                            sendNotificationForAdmin(
+                                widget.id,
+                                'Booking request',
+                                'Your booking request has been received. We will notify you shortly with our response.',
+                                data['name'],
+                                widget.price,
+                                data['eventDate'].toDate());
+                            Navigator.of(context).pop();
+                            Navigation(context, HomeScreen()).then((value) {
+                              clearAllSharedPreferenceData();
+                            });
+                          } else {
+                            showInformation(
+                                context, "Please select prefer method");
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          elevation: 28,
+                          backgroundColor: Colors.transparent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.fromLTRB(10, 8, 10, 8),
+                          child: Text(
+                            "Pay",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontFamily: 'OpenSans',
+                                fontWeight: FontWeight.bold),
+                          ),
+                        )),
+                  ),
+                ),
               ),
             ])
           ]),
@@ -624,158 +619,4 @@ class _PaymentScreenState extends State<PaymentScreen> {
       ),
     );
   }
-
-  /**--------------------Save to Booking ------------------------------**/
-
-  void _addBooking() async {
-    await FirebaseFirestore.instance
-        .collection('bookings')
-        .doc(widget.id)
-        .update({'status': 'pending', 'paymentAmount': widget.price});
-  }
-
-  void _addPaymentHistory(double price) async {
-    await FirebaseFirestore.instance
-        .collection('paymentDBHistory')
-        .doc(widget.id)
-        .set({'price': price, 'dateTime': DateTime.now()});
-  }
-
-  generateQRCode(Map<String, dynamic> data) {
-    Fluttertoast.showToast(
-        msg: data['name'],
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.white,
-        textColor: Colors.black);
-    // return QrImageView(
-    //   data: data['name'],
-    //   version: QrVersions.auto,
-    //   size: 200.0,
-    // );
-  }
-
-  // Future<void> verifyPhoneNumber(String phoneNumber) async {
-  //   verified(AuthCredential authResult) {}
-  //
-  //   verificationFailed(authException) {
-  //     print('Verification failed: $authException');
-  //   }
-  //
-  //   codeSent(String verificationId, [int? forceResendingToken]) {
-  //     setState(() {
-  //       this.verificationId = verificationId;
-  //       this.isCodeSent = true;
-  //     });
-  //   }
-  //
-  //   codeAutoRetrievalTimeout(String verificationId) {
-  //     print('Verification timeout: $verificationId');
-  //   }
-  //
-  //   await _auth.verifyPhoneNumber(
-  //     phoneNumber: '+94 $phoneNumber',
-  //     timeout: const Duration(seconds: 60),
-  //     verificationCompleted: verified,
-  //     verificationFailed: verificationFailed,
-  //     codeSent: codeSent,
-  //     codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
-  //   );
-  // }
-
-  // Future<void> _verifyOTP() async {
-  //   final AuthCredential credential = PhoneAuthProvider.credential(
-  //     verificationId: verificationId,
-  //     smsCode: otp,
-  //   );
-  //
-  //   try {
-  //     final UserCredential userCredential =
-  //         await _auth.signInWithCredential(credential);
-  //     final User? user = userCredential.user;
-  //     if (user != null) {
-  //       Navigation(
-  //         context,
-  //         UsePaypal(
-  //             sandboxMode: true,
-  //             clientId:
-  //             "AfzAtOt2yh5xa4AElQ2bj3QroOPekqjVd5fpMotR4og9IY3NrW4h1UXyrMnSzLvj19TpGBUDH_AMcTIt",
-  //             secretKey:
-  //             "EArmmUGnSt4w6OBXCptMWmw7I6bxDbZigkync-WoQ7hNldWs2xvWsjrLiNWQQFY-eyLB0mqoS4CJyoRq",
-  //             returnURL: "https://samplesite.com/return",
-  //             cancelURL: "https://samplesite.com/cancel",
-  //             transactions: [
-  //               {
-  //                 "amount": {
-  //                   "total": advance,
-  //                   "currency": "USD",
-  //                   "details": {
-  //                     "subtotal": advance,
-  //                     "shipping": '0',
-  //                     "shipping_discount": 0
-  //                   }
-  //                 },
-  //                 "description":
-  //                 "The payment transaction description.",
-  //                 // "payment_options": {
-  //                 //   "allowed_payment_method":
-  //                 //       "INSTANT_FUNDING_SOURCE"
-  //                 // },
-  //                 "item_list": {
-  //                   "items": [
-  //                     {
-  //                       "name": widget.name,
-  //                       "quantity": 1,
-  //                       "price": advance,
-  //                       "currency": "USD"
-  //                     }
-  //                   ],
-  //                 }
-  //               }
-  //             ],
-  //             note:
-  //             "Contact us for any questions on your order.",
-  //             onSuccess: (Map params) async {
-  //               _addBooking();
-  //               _addPaymentHistory(advance);
-  //               GeneratePDFInvoice(
-  //                   user, event, widget.id, widget.price);
-  //               sendNotificationForAdmin(
-  //                   widget.id,
-  //                   'Booking request',
-  //                   'Your booking request has been received. We will notify you shortly with our response.',
-  //                   data['name'],
-  //                   widget.price,
-  //                   data['eventDate'].toDate());
-  //               Fluttertoast.showToast(
-  //                   msg: "Payment Success",
-  //                   toastLength: Toast.LENGTH_LONG,
-  //                   gravity: ToastGravity.BOTTOM,
-  //                   backgroundColor: Colors.white,
-  //                   textColor: Colors.black);
-  //             },
-  //             onError: (error) {
-  //               print("onError: $error");
-  //             },
-  //             onCancel: (params) {
-  //               print('cancelled: $params');
-  //             }),
-  //       ).then((value) {
-  //         clearAllSharedPreferenceData();
-  //       });
-  //     } else {
-  //       print('User is null');
-  //     }
-  //   } catch (e) {
-  //     if (e.toString() ==
-  //         '[firebase_auth/too-many-requests] We have blocked all requests from this device due to unusual activity. Try again later.') {
-  //       showInformation(context,
-  //           'We have blocked all requests from this device due to too many attempts. Try again later.');
-  //     } else if (e.toString() ==
-  //         '[firebase_auth/session-expired] The sms code has expired. Please re-send the verification code to try again.') {
-  //       showInformation(context,
-  //           'The sms code has expired. Please re-send the verification code to try again.');
-  //     }
-  //   }
-  // }
 }

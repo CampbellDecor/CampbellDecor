@@ -133,7 +133,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           Padding(
             padding: const EdgeInsets.fromLTRB(200, 8.0, 0, 30),
             child: Material(
-              elevation: 18,
+              elevation: 28,
               borderRadius: BorderRadius.circular(15),
               child: Container(
                 height: 50,
@@ -144,14 +144,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       hexStringtoColor("bc6dd0"),
                       hexStringtoColor("db4baa"),
                     ], begin: Alignment.bottomRight, end: Alignment.topLeft),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.8),
-                        spreadRadius: 3,
-                        blurRadius: 5,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
                     borderRadius: BorderRadius.circular(15)),
                 child: ElevatedButton(
                   onPressed: () {

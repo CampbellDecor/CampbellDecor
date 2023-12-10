@@ -105,17 +105,9 @@ class _ViewerScreenState extends State<ViewerScreen> {
                         const Text(
                           'Packages',
                           style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.black87,
+                            fontSize: 24,
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'Source Sans Pro',
-                            shadows: [
-                              Shadow(
-                                offset: Offset(5.0, 5.0),
-                                blurRadius: 10.0,
-                                color: Colors.grey,
-                              ),
-                            ],
+                            fontFamily: 'AbrilFatface',
                           ),
                         ),
                       ],
@@ -377,17 +369,9 @@ class _ViewerScreenState extends State<ViewerScreen> {
                         const Text(
                           'Events',
                           style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.black87,
+                            fontSize: 24,
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'Source Sans Pro',
-                            shadows: [
-                              Shadow(
-                                offset: Offset(5.0, 5.0),
-                                blurRadius: 10.0,
-                                color: Colors.grey,
-                              ),
-                            ],
+                            fontFamily: 'AbrilFatface',
                           ),
                         ),
                       ],
@@ -508,17 +492,9 @@ class _ViewerScreenState extends State<ViewerScreen> {
                         const Text(
                           'Services',
                           style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.black87,
+                            fontSize: 24,
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'Source Sans Pro',
-                            shadows: [
-                              Shadow(
-                                offset: Offset(5.0, 5.0),
-                                blurRadius: 10.0,
-                                color: Colors.grey,
-                              ),
-                            ],
+                            fontFamily: 'AbrilFatface',
                           ),
                         ),
                       ],
