@@ -488,6 +488,16 @@ Future<Map<String, dynamic>> getMapData(String service) async {
 Future<void> clearAllSharedPreferenceData() async {
   final prefs = await SharedPreferences.getInstance();
   await prefs.clear();
+  print("pppppppppppppppppppppppppppppppppppppppppppppppppppppp"
+      "ppppppppppppppppppppppppppppppppppppppppppppppppppppppppp"
+      "pppppppppppppppppppppppppppppppppppppppppppppppppppppppppp"
+      "pppppppppppppppppppppppppppppppppppppppppppppppppppppppppp"
+      "ppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp"
+      "pppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp"
+      "ppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp"
+      "pppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp"
+      "ppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp"
+      "pppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp");
 }
 
 /**--------------------- Shared references end-----------------------**/

@@ -102,7 +102,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       if (_passwordTextController.text ==
                           _confirmpassTextController.text) {
                         verifyPhoneNumber(_phoneNoTextController.text);
-                        await _verifyOTP();
+                        // await _verifyOTP();
                         showModalBottomSheet(
                             elevation: 10,
                             shape: RoundedRectangleBorder(
@@ -187,7 +187,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                                   )),
                                               onPressed: () async {
                                                 Navigator.of(context).pop();
-                                                _verifyOTP();
+                                                try {
+                                                  await _verifyOTP();
+                                                } catch (e) {
+                                                  print(
+                                                      "Errrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrooooooooooooo"
+                                                      "oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooorrrrrrr"
+                                                      "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr: $e");
+                                                }
                                               },
                                               child: Text(
                                                 "VERIFY OTP",
@@ -273,18 +280,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Future<void> _verifyOTP() async {
-    final AuthCredential credential = PhoneAuthProvider.credential(
+    final AuthCredential phoneCredential = PhoneAuthProvider.credential(
       verificationId: verificationId,
       smsCode: otp,
     );
 
     try {
       final UserCredential userCredential =
-          await _auth.signInWithCredential(credential);
+          await _auth.signInWithCredential(phoneCredential);
       final User? user = userCredential.user;
+
       if (user != null) {
+        final AuthCredential emailCredential = EmailAuthProvider.credential(
+          email: _emailTextController.text,
+          password: _passwordTextController.text,
+        );
+
+        await user.linkWithCredential(emailCredential);
+
         await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(
+            .signInWithEmailAndPassword(
                 email: _emailTextController.text,
                 password: _passwordTextController.text)
             .then((value) {
@@ -294,32 +309,37 @@ class _SignUpScreenState extends State<SignUpScreen> {
               _phoneNoTextController.text,
               _addressTextController.text,
               FirebaseAuth.instance.currentUser!.uid);
-          Navigation(context, HomeScreen()).then((value) {
-            CreationNotificationService notificationService =
-                CreationNotificationService();
-            notificationService.showNotification(
-                title: 'Create Account',
-                body: 'Welcome ${_userTextController.text}');
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          ).then((_) {
+            // CreationNotificationService notificationService =
+            //     CreationNotificationService();
+            // notificationService.showNotification(
+            //     title: 'Create Account',
+            //     body: 'Welcome ${_userTextController.text}');
           });
-        }).onError((error, stackTrace) {
-          if (error.toString() ==
-              '[firebase_auth/email-already-in-use] The email address is already in use by another account.') {
-            showInformation(context,
-                'The email address is already in use by another account.');
+        }).catchError((error) {
+          if (error is FirebaseAuthException) {
+            if (error.code == 'email-already-in-use') {
+              showInformation(context,
+                  'The email address is already in use by another account.');
+            } else {}
           }
         });
       } else {
         print('User is null');
       }
     } catch (e) {
-      if (e.toString() ==
-          '[firebase_auth/too-many-requests] We have blocked all requests from this device due to unusual activity. Try again later.') {
-        showInformation(context,
-            'We have blocked all requests from this device due to too many attempts. Try again later.');
-      } else if (e.toString() ==
-          '[firebase_auth/session-expired] The sms code has expired. Please re-send the verification code to try again.') {
-        showInformation(context,
-            'The sms code has expired. Please re-send the verification code to try again.');
+      if (e is FirebaseAuthException) {
+        if (e.code == 'too-many-requests') {
+          showInformation(context,
+              'We have blocked all requests from this device due to too many attempts. Try again later.');
+        } else if (e.code == 'session-expired') {
+          showInformation(context,
+              'The sms code has expired. Please re-send the verification code to try again.');
+        } else {}
       }
     }
   }
