@@ -20,13 +20,9 @@ class _OTPScreenState extends State<OTPScreen> {
   TextEditingController countryController = TextEditingController();
 
   Future<void> verifyPhoneNumber(String phoneNumber) async {
-    verified(AuthCredential authResult) {
-      // Handle phone number verification automatically if possible
-      // (e.g., user has previously signed in with the same phone number).
-    }
+    verified(AuthCredential authResult) {}
 
     verificationFailed(authException) {
-      // Handle verification failure (e.g., invalid number).
       print('Verification failed: $authException');
     }
 
@@ -38,7 +34,6 @@ class _OTPScreenState extends State<OTPScreen> {
     }
 
     codeAutoRetrievalTimeout(String verificationId) {
-      // Handle timeout here.
       print('Verification timeout: $verificationId');
     }
 
@@ -70,13 +65,10 @@ class _OTPScreenState extends State<OTPScreen> {
             gravity: ToastGravity.BOTTOM,
             backgroundColor: Colors.white,
             textColor: Colors.black);
-        // OTP verification successful, handle the signed-in user here.
       } else {
-        // Handle the case where user is null.
         print('User is null');
       }
     } catch (e) {
-      // Handle OTP verification failure.
       print('OTP verification failed: $e');
       Fluttertoast.showToast(
           msg: '$e',

@@ -1,9 +1,11 @@
+import 'package:campbelldecor/reusable/reusable_methods.dart';
 import 'package:campbelldecor/reusable/reusable_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../utils/color_util.dart';
+import '../bookings_screens/booking_details_screen.dart';
 
 class NotificationScreen extends StatefulWidget {
   NotificationScreen({super.key});
@@ -63,7 +65,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           borderRadius: BorderRadius.circular(20),
                           elevation: 8,
                           child: Container(
-                            width: 450,
+                            constraints: BoxConstraints(minHeight: 350),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
                               gradient: const LinearGradient(
@@ -97,7 +99,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                         padding: const EdgeInsets.fromLTRB(
                                             8.0, 0, 8, 0),
                                         child: Container(
-                                          width: 330,
+                                          width: 320,
                                           child: Padding(
                                             padding: const EdgeInsets.fromLTRB(
                                                 18.0, 0, 0, 0),
@@ -140,7 +142,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      valueLable('check your booking history')
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigation(
+                                                context, BookingScreen());
+                                          },
+                                          child: valueLable(
+                                              'check your booking history'))
                                     ],
                                   ),
                                 ],

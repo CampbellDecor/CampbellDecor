@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../utils/color_util.dart';
 
 class FilterScreen extends StatefulWidget {
@@ -81,35 +80,6 @@ class _FilterScreenState extends State<FilterScreen> {
               style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
             ),
             SizedBox(height: 20),
-            // Text(
-            //   'Event Name',
-            //   style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
-            // ),
-            // SizedBox(
-            //   height: 10,
-            // ),
-            // TextField(
-            //   onChanged: (value) {
-            //     setState(() {
-            //       widget.packageFilter.eventName = value;
-            //     });
-            //   },
-            //   decoration: InputDecoration(
-            //     hintText: 'Enter event name',
-            //     hintStyle: TextStyle(color: Colors.grey),
-            //     border: OutlineInputBorder(
-            //       borderSide: BorderSide(color: Colors.green),
-            //       borderRadius: BorderRadius.circular(40.0),
-            //     ),
-            //     focusedBorder: OutlineInputBorder(
-            //       borderSide: BorderSide(color: Colors.blue),
-            //     ),
-            //     enabledBorder: OutlineInputBorder(
-            //       borderSide: BorderSide(color: Colors.grey),
-            //     ),
-            //     contentPadding: EdgeInsets.all(16.0),
-            //   ),
-            // ),
             SizedBox(height: 20),
             Text(
               'Order By',

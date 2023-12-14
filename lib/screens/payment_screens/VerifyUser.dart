@@ -119,8 +119,7 @@ class _VerifyUserState extends State<VerifyUser> {
                                   color: Colors.white70.withOpacity(0.5),
                                   width:
                                       MediaQuery.of(context).size.width * 0.6,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.4,
+                                  height: 400,
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Column(

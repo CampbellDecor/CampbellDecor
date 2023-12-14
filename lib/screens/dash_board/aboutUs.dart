@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../reusable/reusable_widgets.dart';
 import '../../utils/color_util.dart';
@@ -39,7 +38,7 @@ class _AboutUsState extends State<AboutUs> {
                   children: [
                     Text(
                       'Campbell Decor',
-                      style: Theme.of(context).textTheme.headline5,
+                      style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     SizedBox(height: 8),
                     Image.asset(
@@ -56,7 +55,7 @@ class _AboutUsState extends State<AboutUs> {
                 padding: EdgeInsets.all(8),
                 child: Text(
                   'Our organization is helping its customers to have their events more beautiful by ausing different decorative methods.Our event specialists are making our customers events more beautiful with affortable price!',
-                  style: Theme.of(context).textTheme.bodyText2,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
               Container(
@@ -67,17 +66,17 @@ class _AboutUsState extends State<AboutUs> {
                     children: [
                       Text(
                         'Mission :',
-                        style: Theme.of(context).textTheme.headline6,
+                        style: Theme.of(context).textTheme.titleLarge,
                       ),
                       SizedBox(height: 8),
                       Text(
                         'Our mission is to provide high-quality decorations to make events more beautiful .',
-                        style: Theme.of(context).textTheme.bodyText2,
+                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
                       SizedBox(height: 16),
                       Text(
                         'Features:',
-                        style: Theme.of(context).textTheme.headline6,
+                        style: Theme.of(context).textTheme.titleLarge,
                       ),
                       SizedBox(height: 8),
                       ListTile(

@@ -19,9 +19,6 @@ class _UserChatScreenState extends State<UserChatScreen> {
   final CollectionReference _messages =
       FirebaseFirestore.instance.collection('messages');
 
-  final CollectionReference _admins =
-      FirebaseFirestore.instance.collection('admin');
-
   @override
   void initState() {
     super.initState();

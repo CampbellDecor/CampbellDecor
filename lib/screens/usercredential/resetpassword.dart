@@ -1,11 +1,9 @@
 import 'package:campbelldecor/reusable/reusable_methods.dart';
-import 'package:campbelldecor/screens/dash_board/homescreen.dart';
 import 'package:campbelldecor/screens/usercredential/signinscreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../reusable/reusable_widgets.dart';
 import '../../utils/color_util.dart';
-import '../events_screen/eventscreen.dart';
 
 class ResetScreen extends StatefulWidget {
   const ResetScreen({super.key});
@@ -61,33 +59,6 @@ class _ResetScreenState extends State<ResetScreen> {
               ),
               resetButton(context, () async {
                 if (emailController.text.isNotEmpty) {
-                  // try {
-                  //
-                  //   // FirebaseAuth.instance
-                  //   //     .sendPasswordResetEmail(email: emailController.text)
-                  //   //     .then((value) {
-                  //   //   showInformationAlert(
-                  //   //       context,
-                  //   //       'Password reset email sent. Check your inbox.',
-                  //   //       SignInScreen());
-                  //   // });
-                  // } catch (ex) {
-                  //   // if (e.toString() == 'user-not-found') {
-                  //   //   showErrorAlert(
-                  //   //     context,
-                  //   //     'No user found with this email address.',
-                  //   //   );
-                  //   // } else {
-                  //   //   showErrorAlert(
-                  //   //     context,
-                  //   //     'An error occurred: $e',
-                  //   //   );
-                  //   // }
-                  //   setState(() {
-                  //     print(
-                  //         "Ssssssssssssssssssssssssssssssssssssssssssssssssss");
-                  //   });
-                  // }
                   try {
                     var userCheck = await FirebaseAuth.instance
                         .fetchSignInMethodsForEmail(emailController.text);
