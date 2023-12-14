@@ -360,18 +360,6 @@ class _PackageScreenState extends State<PackageScreen> {
           .where((package) => package['packageName'] == filter.eventName)
           .toList();
     }
-    //
-    // Apply rating range filter
-    // if (filter.minRating != null) {
-    //   filteredPackages = filteredPackages
-    //       .where((package) => package['rating'] >= filter.minRating!)
-    //       .toList();
-    // }
-    // if (filter.maxRating != null) {
-    //   filteredPackages = filteredPackages
-    //       .where((package) => package['rating'] <= filter.maxRating!)
-    //       .toList();
-    // }
 
     // Apply order by
     if (filter.ascendingOrder) {

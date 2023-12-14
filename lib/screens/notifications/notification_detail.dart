@@ -2,7 +2,9 @@ import 'package:campbelldecor/reusable/reusable_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../../reusable/reusable_methods.dart';
 import '../../utils/color_util.dart';
+import '../bookings_screens/booking_details_screen.dart';
 
 class NotificationDetailsScreen extends StatefulWidget {
   final String id;
@@ -142,7 +144,13 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      valueLable('check your booking history')
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigation(
+                                                context, BookingScreen());
+                                          },
+                                          child: valueLable(
+                                              'check your booking history'))
                                     ],
                                   ),
                                 ],

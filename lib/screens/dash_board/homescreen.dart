@@ -2,6 +2,7 @@ import 'package:campbelldecor/reusable/reusable_methods.dart';
 import 'package:campbelldecor/screens/events_screen/eventscreen.dart';
 import 'package:campbelldecor/screens/notifications/notification_history.dart';
 import 'package:campbelldecor/screens/theme/theme_manager.dart';
+import 'package:campbelldecor/screens/usercredential/signinscreen.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:confetti/confetti.dart';
@@ -76,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ], begin: Alignment.bottomRight, end: Alignment.topLeft),
           ),
         ),
-        /* Dark mood and Light mode button */
+        /**---------------------- Dark mood and Light mode button ------------------**/
         actions: [
           Switch(
             value: themeManager.themeMode == ThemeMode.dark,
@@ -102,6 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () async {
               await FirebaseAuth.instance.signOut();
               Navigator.of(context).pop();
+              Navigation(context, SignInScreen());
             },
           ),
         ],

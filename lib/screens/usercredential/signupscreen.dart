@@ -26,7 +26,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       FirebaseFirestore.instance.collection('users');
   TextEditingController _emailTextController = TextEditingController();
   TextEditingController _passwordTextController = TextEditingController();
-  TextEditingController _confirmpassTextController = TextEditingController();
+  TextEditingController _confirmPassTextController = TextEditingController();
   TextEditingController _userTextController = TextEditingController();
   TextEditingController _addressTextController = TextEditingController();
   TextEditingController _phoneNoTextController = TextEditingController();
@@ -75,7 +75,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   height: 20,
                 ),
                 textField("Confirm Password", Icons.lock_open_rounded, true,
-                    _confirmpassTextController),
+                    _confirmPassTextController),
                 const SizedBox(
                   height: 20,
                 ),
@@ -99,7 +99,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         _phoneNoTextController.text.isNotEmpty &&
                         _addressTextController.text.isNotEmpty) {
                       if (_passwordTextController.text ==
-                          _confirmpassTextController.text) {
+                          _confirmPassTextController.text) {
                         verifyPhoneNumber(_phoneNoTextController.text);
                         // await _verifyOTP();
                         showModalBottomSheet(
@@ -189,10 +189,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                                 try {
                                                   await _verifyOTP();
                                                 } catch (e) {
-                                                  print(
-                                                      "Errrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrooooooooooooo"
-                                                      "oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooorrrrrrr"
-                                                      "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr: $e");
+                                                  print("Erorr: $e");
                                                 }
                                               },
                                               child: Text(

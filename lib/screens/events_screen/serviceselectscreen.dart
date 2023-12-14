@@ -1,5 +1,3 @@
-// ignore_for_file: must_be_immutable
-
 import 'dart:convert';
 import 'dart:ffi';
 import 'package:campbelldecor/reusable/reusable_methods.dart';

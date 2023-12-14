@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../reusable/reusable_widgets.dart';
 import '../../utils/color_util.dart';
@@ -32,7 +31,7 @@ class _ContactUsState extends State<ContactUs> {
               children: [
                 Text(
                   'Contact Us:',
-                  style: Theme.of(context).textTheme.headline6,
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
                 const SizedBox(height: 8),
                 const ListTile(
