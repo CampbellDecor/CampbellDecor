@@ -14,7 +14,6 @@ Container logoWidget(String imageName) {
   return Container(
     width: 350, // Set the desired width
     height: 350,
-    // decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.blue),
     child: Image.asset(imageName),
   );
 }
@@ -23,7 +22,6 @@ Container imgContainer(String imageName, double width, double height) {
   return Container(
     width: width, // Set the desired width
     height: height,
-    // decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.blue),
     child: Image.asset(imageName),
   );
 }
@@ -58,7 +56,7 @@ Container Profile(String userURL) {
   );
 }
 
-/*----------------------- Image for Container List view ----------------------------------*/
+/**----------------------- Image for Container List view ----------------------------------**/
 ClipRRect IconImageWidget(String imageName, double height, double width) {
   return ClipRRect(
     borderRadius: BorderRadius.circular(10),
@@ -160,7 +158,7 @@ Container reuseButton(BuildContext context, String text, Function onTap) {
   );
 }
 
-/*----------------------- Data show as Container List ---------------------------------*/
+/**----------------------- Data show as Container List ---------------------------------**/
 Widget reuseContainerList(String imgName, double height, double width,
     String name, DateTime date, BuildContext context) {
   return Padding(
@@ -210,7 +208,7 @@ Widget reuseContainerList(String imgName, double height, double width,
   );
 }
 
-/*----------------------- Data show as Container List ---------------------------------*/
+/**----------------------- Data show as Container List ---------------------------------**/
 Widget reusePaymentContainer(String id, String name, double price,
     BuildContext context, Function onTap) {
   double bondmoney = (price / 100) * 10;
@@ -300,40 +298,6 @@ Widget reusePaymentContainer(String id, String name, double price,
     ],
   );
 }
-
-// Future<void> getRating() async {
-//   FirestoreService firestoreService = FirestoreService();
-//   List<String> fieldNames = ['packageName', 'rating_count', 'avg_rating'];
-//   List<Package> packages =
-//       await firestoreService.retriveFromCollection('packages', fieldNames);
-//   print(packages.length);
-//   print(packages[0].name);
-// }
-
-// Column res(Function onTap) {
-//   return Column(
-//     mainAxisAlignment: MainAxisAlignment.center,
-//     crossAxisAlignment: CrossAxisAlignment.center,
-//     children: [
-//       ElevatedButton(
-//           onPressed: () {
-//             onTap;
-//           },
-//           style: ElevatedButton.styleFrom(
-//               primary: Colors.red,
-//               shape: RoundedRectangleBorder(
-//                   borderRadius: BorderRadius.circular(15))),
-//           child: const Padding(
-//             padding: EdgeInsets.fromLTRB(10, 8, 10, 8),
-//             child: Text(
-//               "Pay",
-//               style: TextStyle(color: Colors.white),
-//             ),
-//           )),
-//     ],
-//   );
-// }
-/**************************/
 
 Widget keyLable(String text) {
   return Padding(

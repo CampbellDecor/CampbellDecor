@@ -52,12 +52,7 @@ class _NotificationHistoryState extends State<NotificationHistory> {
                   onPressed: () {
                     _deleteSelected();
                     if (selectedItems.length <= 0) {
-                      Fluttertoast.showToast(
-                          msg: "Please select",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.BOTTOM,
-                          backgroundColor: Colors.white,
-                          textColor: Colors.black);
+                      showToast("Please Select");
                     }
                   },
                   icon: Icon(Icons.delete_outline_outlined))
@@ -188,12 +183,6 @@ class _NotificationHistoryState extends State<NotificationHistory> {
         setState(() {
           selectedItems.remove(i);
         });
-        Fluttertoast.showToast(
-            msg: "Deleted successfully",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: Colors.white,
-            textColor: Colors.black);
       }
     }
   }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,6 +19,15 @@ import 'package:pdf/widgets.dart' as pw;
 
 import '../screens/notifications/notification_setup.dart';
 
+Future<void> showToast(String msg) async {
+  Fluttertoast.showToast(
+      msg: msg,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: Colors.white,
+      textColor: Colors.black);
+}
+
 Future<int> getCollectionCount(String collectionName) async {
   try {
     CollectionReference collectionRef =
@@ -29,32 +39,6 @@ Future<int> getCollectionCount(String collectionName) async {
     return 0;
   }
 }
-
-// Future<Map<String, dynamic>> fetchDataFromFirebase(
-//     String collection, String orderField, String uid) async {
-//   Map<String, dynamic> resultMap = {};
-//
-//   try {
-//     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-//         .collection(collection)
-//         .where('userID', isEqualTo: uid)
-//         .orderBy(orderField, descending: true)
-//         .get();
-//
-//     if (querySnapshot.docs.isNotEmpty) {
-//       querySnapshot.docs.forEach((doc) {
-//         resultMap[doc.get('eventDate').toString()] = doc.data();
-//       });
-//       print(resultMap);
-//       print(resultMap);
-//       print(resultMap);
-//     }
-//   } catch (e) {
-//     print('Error: $e');
-//   }
-//
-//   return resultMap;
-// }
 
 Future<Map<String, dynamic>> fetchDataFromFirebase(
     String collection, String orderField, String uid) async {
@@ -88,69 +72,12 @@ Future<void> Navigation(BuildContext context, dynamic function) async {
       duration: Duration(milliseconds: 300),
       reverseDuration: Duration(milliseconds: 150),
     ),
-    // PageRouteBuilder(
-    //   pageBuilder: (context, animation, secondaryAnimation) {
-    //     return function;
-    //   },
-    //   transitionsBuilder: (context, animation, secondaryAnimation, child) {
-    //     const begin = Offset(0.0, 1.0);
-    //     const end = Offset.zero;
-    //     const curve = Curves.easeInOut;
-    //     const duration = Duration(milliseconds: 500);
-    //
-    //     var offsetAnimation = animation.drive(
-    //       Tween(begin: begin, end: end).chain(
-    //         CurveTween(curve: curve),
-    //       ),
-    //     );
-    //
-    //     return SlideTransition(
-    //       position: offsetAnimation,
-    //       child: child,
-    //     );
-    //   },
-    // ),
   );
-
-  // Get.to(() => function(), transition: Transition.zoom);
 }
 
 Future<void> NavigationWithoutAnimation(
     BuildContext context, dynamic function) async {
   Navigator.push(context, MaterialPageRoute(builder: (context) => function));
-  // Navigator.push(
-  //   context,
-  //   PageTransition(
-  //     type: PageTransitionType.rightToLeft,
-  //     child: function,
-  //     duration: Duration(milliseconds: 600),
-  //     reverseDuration: Duration(milliseconds: 500),
-  //   ),
-  //   // PageRouteBuilder(
-  //   //   pageBuilder: (context, animation, secondaryAnimation) {
-  //   //     return function;
-  //   //   },
-  //   //   transitionsBuilder: (context, animation, secondaryAnimation, child) {
-  //   //     const begin = Offset(0.0, 1.0);
-  //   //     const end = Offset.zero;
-  //   //     const curve = Curves.easeInOut;
-  //   //     const duration = Duration(milliseconds: 500);
-  //   //
-  //   //     var offsetAnimation = animation.drive(
-  //   //       Tween(begin: begin, end: end).chain(
-  //   //         CurveTween(curve: curve),
-  //   //       ),
-  //   //     );
-  //   //
-  //   //     return SlideTransition(
-  //   //       position: offsetAnimation,
-  //   //       child: child,
-  //   //     );
-  //   //   },
-  //   // ),
-  // );
-
-  // Get.to(() => function(), transition: Transition.zoom);
 }
 
 Future<void> BottomNavigation(BuildContext context, dynamic function) async {
@@ -162,90 +89,15 @@ Future<void> BottomNavigation(BuildContext context, dynamic function) async {
       duration: Duration(milliseconds: 100),
       reverseDuration: Duration(milliseconds: 100),
     ),
-
-    // PageRouteBuilder(
-    //   pageBuilder: (context, animation, secondaryAnimation) {
-    //     return function;
-    //   },
-    //   transitionsBuilder: (context, animation, secondaryAnimation, child) {
-    //     const begin = Offset(0.0, 1.0);
-    //     const end = Offset.zero;
-    //     const curve = Curves.easeInOut;
-    //     const duration = Duration(milliseconds: 500);
-    //
-    //     var offsetAnimation = animation.drive(
-    //       Tween(begin: begin, end: end).chain(
-    //         CurveTween(curve: curve),
-    //       ),
-    //     );
-    //
-    //     return SlideTransition(
-    //       position: offsetAnimation,
-    //       child: child,
-    //     );
-    //   },
-    // ),
   );
-
-  // Get.to(() => function(), transition: Transition.zoom);
 }
 
 Future<void> BottomNavigationForHome(
     BuildContext context, dynamic function) async {
   NavigationWithoutAnimation(context, function);
-
-  // PageRouteBuilder(
-  //   pageBuilder: (context, animation, secondaryAnimation) {
-  //     return function;
-  //   },
-  //   transitionsBuilder: (context, animation, secondaryAnimation, child) {
-  //     const begin = Offset(0.0, 1.0);
-  //     const end = Offset.zero;
-  //     const curve = Curves.easeInOut;
-  //     const duration = Duration(milliseconds: 500);
-  //
-  //     var offsetAnimation = animation.drive(
-  //       Tween(begin: begin, end: end).chain(
-  //         CurveTween(curve: curve),
-  //       ),
-  //     );
-  //
-  //     return SlideTransition(
-  //       position: offsetAnimation,
-  //       child: child,
-  //     );
-  //   },
-  // ),
-
-  // Get.to(() => function(), transition: Transition.zoom);
 }
 
-// void navigateToDestinationPage(BuildContext context) {
-//   Navigator.push(
-//     context,
-//     PageRouteBuilder(
-//       pageBuilder: (context, animation, secondaryAnimation) {
-//         return YourDestinationPage();
-//       },
-//       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-//         const begin = Offset(1.0, 0.0);
-//         const end = Offset.zero;
-//         const curve = Curves.easeInOut;
-//
-//         var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-//
-//         var offsetAnimation = animation.drive(tween);
-//
-//         return SlideTransition(
-//           position: offsetAnimation,
-//           child: child,
-//         );
-//       },
-//     ),
-//   );
-// }
-
-/**********************************************************************************/
+/**------------------------------------------------------------------**/
 Future<void> requestCancellation(String bookingId) async {
   try {
     await FirebaseFirestore.instance
@@ -269,26 +121,6 @@ Future<void> confirmCancellation(String bookingId) async {
     print('Error confirming cancellation: $e');
   }
 }
-
-/*-------------------------- Function to update booking statuses ----------------------------*/
-// void updateBookingStatus() async {
-//   final CollectionReference bookingsRef =
-//       FirebaseFirestore.instance.collection('bookings');
-//   final DateTime currentDate = DateTime.now();
-//
-//   QuerySnapshot querySnapshot = await bookingsRef.get();
-//   querySnapshot.docs.forEach((bookingDoc) {
-//     Map<String, dynamic> bookingData =
-//         bookingDoc.data() as Map<String, dynamic>;
-//
-//     String bookingDateString = bookingData['eventDate'];
-//     DateTime bookingDate = DateTime.parse(bookingDateString);
-//     if (currentDate.isAfter(bookingDate)) {
-//       // Update the booking status to "expired"
-//       bookingDoc.reference.update({'status': 'expired'});
-//     }
-//   });
-// }
 
 /**---------------------Dialog box Start-----------------------**/
 Future<void> showInformationAlert(
@@ -490,6 +322,14 @@ Future<void> clearAllSharedPreferenceData() async {
   await prefs.clear();
 }
 
+Future<void> resetSharedPreferences(BuildContext context) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.remove('amount');
+  await prefs.remove('packageAmount');
+  await prefs.remove('events');
+  await prefs.remove('package');
+  Navigator.of(context).pop();
+}
 /**--------------------- Shared references end-----------------------**/
 
 Future<String?> getUserNameByEmail(String email) async {
@@ -555,7 +395,7 @@ Future<void> updateDeviceTokenForNotification(String userId) async {
 
       print('Device token  updated successfully');
     } catch (e) {
-      print('Error updating user age: $e');
+      print('Error updating: $e');
     }
   });
 }

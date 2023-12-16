@@ -41,7 +41,6 @@ class _AddToCartScreenState extends State<AddToCartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // backgroundColor: hexStringtoColor('efefef'),
         appBar: AppBar(
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),

@@ -16,7 +16,6 @@ import '../bookings_screens/date_view.dart';
 import '../bookings_screens/show_rating.dart';
 import '../events_screen/packagesscreen.dart';
 import 'CountdownTimer.dart';
-import '../notifications/notification_detail.dart';
 import 'header_nav.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -35,6 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     controller.play();
     setOutDatedBooking();
+    clearAllSharedPreferenceData();
     updateDeviceTokenForNotification(FirebaseAuth.instance.currentUser!.uid);
   }
 

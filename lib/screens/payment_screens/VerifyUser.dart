@@ -506,14 +506,15 @@ class _VerifyUserState extends State<VerifyUser> {
                           widget.price,
                           widget.eventDate.toDate())
                       .then((value) async {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                    Navigator.pop(context);
                     await Navigator.popAndPushNamed(context, "/homescreen");
                   });
-                  Fluttertoast.showToast(
-                      msg: "Payment Success",
-                      toastLength: Toast.LENGTH_LONG,
-                      gravity: ToastGravity.BOTTOM,
-                      backgroundColor: Colors.white,
-                      textColor: Colors.black);
+                  showToast("Payment successful.");
                   Navigation(context, HomeScreen());
                 },
                 onError: (error) {
@@ -526,12 +527,17 @@ class _VerifyUserState extends State<VerifyUser> {
         print('User is null');
       }
     } catch (e) {
-      if (e.toString() ==
-          '[firebase_auth/too-many-requests] We have blocked all requests from this device due to unusual activity. Try again later.') {
+      if (e.toString().contains('firebase_auth/too-many-requests')) {
+        showToast("Toomany Attempts");
+
         showInformation(context,
             'We have blocked all requests from this device due to too many attempts. Try again later.');
       } else if (e.toString() ==
           '[firebase_auth/session-expired] The sms code has expired. Please re-send the verification code to try again.') {
+        showInformation(context,
+            'The sms code has expired. Please re-send the verification code to try again.');
+      } else if (e.toString().contains("Timed out waiting for SMS")) {
+        showToast("Time out ");
         showInformation(context,
             'The sms code has expired. Please re-send the verification code to try again.');
       }
