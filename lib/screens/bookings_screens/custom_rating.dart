@@ -1,3 +1,4 @@
+import 'package:campbelldecor/reusable/reusable_methods.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emojis/emoji.dart';
 import 'package:flutter/material.dart';
@@ -118,13 +119,7 @@ class _CustomRatingBarState extends State<CustomRatingBar> {
             if (!_ratingSubmitted)
               ElevatedButton(
                 onPressed: () async {
-                  Fluttertoast.showToast(
-                      msg: "Thank you for feedback",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      backgroundColor: Colors.white,
-                      textColor: Colors.black);
-
+                  showToast("Thank you for the feedback.");
                   setState(() async {
                     await updateRating(widget.pid);
                     _ratingSubmitted = true;

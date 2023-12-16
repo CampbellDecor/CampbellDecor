@@ -1,6 +1,7 @@
 import 'package:campbelldecor/screens/events_screen/servicesscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../reusable/reusable_methods.dart';
@@ -52,6 +53,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
     DateTime _lastDay = DateTime.now().add(Duration(days: 90));
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () async {
+            await resetSharedPreferences(context);
+          },
+        ),
         title: Text('Event Calendar'),
         flexibleSpace: Container(
           decoration: BoxDecoration(

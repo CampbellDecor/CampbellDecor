@@ -218,13 +218,8 @@ class _MyDrawerState extends State<MyDrawer> {
                               await FirebaseAuth.instance.signOut();
                               Navigator.of(context).pop();
                               Navigation(context, SignInScreen()).then((value) {
-                                Fluttertoast.showToast(
-                                    msg:
-                                        "Account has been successfully deleted.",
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                    backgroundColor: Colors.white,
-                                    textColor: Colors.black);
+                                showToast(
+                                    "Your account has been successfully deleted.");
                               });
                             },
                           ),

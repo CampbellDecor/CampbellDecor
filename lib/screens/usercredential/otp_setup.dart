@@ -1,3 +1,4 @@
+import 'package:campbelldecor/reusable/reusable_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -59,23 +60,13 @@ class _OTPScreenState extends State<OTPScreen> {
       final User? user = userCredential.user;
 
       if (user != null) {
-        Fluttertoast.showToast(
-            msg: 'Welcome',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: Colors.white,
-            textColor: Colors.black);
+        showToast("Welcome");
       } else {
         print('User is null');
       }
     } catch (e) {
       print('OTP verification failed: $e');
-      Fluttertoast.showToast(
-          msg: '$e',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.white,
-          textColor: Colors.black);
+      showToast("$e");
     }
   }
 

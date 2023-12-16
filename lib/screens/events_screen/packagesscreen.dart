@@ -23,6 +23,12 @@ class _PackageScreenState extends State<PackageScreen> {
     return Scaffold(
       extendBodyBehindAppBar: false,
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () async {
+            await resetSharedPreferences(context);
+          },
+        ),
         title: const Text(
           "Packages",
         ),

@@ -228,12 +228,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                     });
                                     Navigator.of(context).pop();
                                   } else {
-                                    Fluttertoast.showToast(
-                                        msg: "Enter your Shipping Address",
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.BOTTOM,
-                                        backgroundColor: Colors.white,
-                                        textColor: Colors.black);
+                                    showToast(
+                                        "Please enter your shipping address.");
                                   }
                                 },
                               ),

@@ -780,12 +780,7 @@ class _BookingScreenState extends State<BookingScreen> {
                             child: const Text('FeedBack',
                                 style: TextStyle(fontSize: 16)),
                             onPressed: () {
-                              Fluttertoast.showToast(
-                                  msg: "Already feedback",
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.BOTTOM,
-                                  backgroundColor: Colors.white,
-                                  textColor: Colors.black);
+                              showToast("Already received feedback.");
                             },
                           ),
                         TextButton(
