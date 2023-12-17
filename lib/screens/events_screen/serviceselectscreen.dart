@@ -241,7 +241,7 @@ class _ServiceSelectScreenState extends State<ServiceSelectScreen> {
                           borderRadius: BorderRadius.circular(15),
                           child: Container(
                             height: 50,
-                            width: MediaQuery.of(context).size.width * 0.35,
+                            width: MediaQuery.of(context).size.width * 0.34,
                             decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                     colors: [
@@ -254,25 +254,32 @@ class _ServiceSelectScreenState extends State<ServiceSelectScreen> {
                                 borderRadius: BorderRadius.circular(15)),
                             child: ElevatedButton(
                                 onPressed: () async {
-                                  amount = totalPrice!;
                                   //---------------------------------------
-                                  if (amount > 0) {
-                                    SharedPreferences preferences =
-                                        await SharedPreferences.getInstance();
-                                    widget.map.addAll({
-                                      '${widget.data} service': _selectedItem,
-                                      '${_selectedItem} count': count,
-                                      '${_selectedItem} total price': totalPrice
-                                    });
+                                  try {
+                                    amount = totalPrice!;
+                                    if (amount > 0) {
+                                      SharedPreferences preferences =
+                                          await SharedPreferences.getInstance();
+                                      widget.map.addAll({
+                                        '${widget.data} service': _selectedItem,
+                                        '${_selectedItem} count': count,
+                                        '${_selectedItem} total price':
+                                            totalPrice
+                                      });
 
-                                    String jsonData = json.encode(widget.map);
-                                    preferences.setString('service', jsonData);
-                                    preferences.setDouble('amount', amount);
+                                      String jsonData = json.encode(widget.map);
+                                      preferences.setString(
+                                          'service', jsonData);
+                                      preferences.setDouble('amount', amount);
 //---------------------------------------------------------------------------------------------
-                                    Navigator.pop(context);
-                                  } else {
+                                      Navigator.pop(context);
+                                    } else {
+                                      showInformation(
+                                          context, 'Please Provide Count');
+                                    }
+                                  } catch (e) {
                                     showInformation(
-                                        context, 'Please Select Service');
+                                        context, 'Please Select Services');
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(

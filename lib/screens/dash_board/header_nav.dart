@@ -216,7 +216,10 @@ class _MyDrawerState extends State<MyDrawer> {
                             onPressed: () async {
                               await _deleteAccount();
                               await FirebaseAuth.instance.signOut();
-                              Navigator.of(context).pop();
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                              Navigator.pop(context);
                               Navigation(context, SignInScreen()).then((value) {
                                 showToast(
                                     "Your account has been successfully deleted.");

@@ -137,15 +137,18 @@ class _UserChatScreenState extends State<UserChatScreen> {
                       color: Colors.blue.shade700.withOpacity(0.9),
                     ),
                     child: Center(
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.send,
-                          color: Colors.white,
-                          size: 28,
+                      child: Transform.rotate(
+                        angle: -20 * 3.1416 / 180,
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.send,
+                            color: Colors.white,
+                            size: 28,
+                          ),
+                          onPressed: () {
+                            _sendMessage(_messageController.text);
+                          },
                         ),
-                        onPressed: () {
-                          _sendMessage(_messageController.text);
-                        },
                       ),
                     ),
                   ),

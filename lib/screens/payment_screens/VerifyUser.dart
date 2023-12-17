@@ -447,12 +447,12 @@ class _VerifyUserState extends State<VerifyUser> {
   }
 
   Future<void> _verifyOTP() async {
-    final AuthCredential credential = PhoneAuthProvider.credential(
-      verificationId: verificationId,
-      smsCode: otp,
-    );
-
     try {
+      final AuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: verificationId,
+        smsCode: otp,
+      );
+
       final UserCredential userCredential =
           await _auth.signInWithCredential(credential);
       final User? user = userCredential.user;
