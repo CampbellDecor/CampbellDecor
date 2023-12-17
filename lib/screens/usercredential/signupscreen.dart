@@ -186,11 +186,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                                   )),
                                               onPressed: () async {
                                                 Navigator.of(context).pop();
-                                                try {
-                                                  await _verifyOTP();
-                                                } catch (e) {
-                                                  print("Erorr: $e");
-                                                }
+
+                                                await _verifyOTP();
                                               },
                                               child: Text(
                                                 "VERIFY OTP",
@@ -252,6 +249,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     verificationFailed(authException) {
       print('Verification failed: $authException');
+      if (authException.toString() ==
+          "[firebase_auth/too-many-requests] We have blocked all requests from this device due to unusual activity. Try again later.") {
+        showInformation(context,
+            "Looks like you've made several attempts. Take a short break and try again later. Thank you!");
+      } else {
+        showInformation(context,
+            "Apologies for the inconvenience. Please attempt again later.");
+      }
     }
 
     codeSent(String verificationId, [int? forceResendingToken]) {
@@ -263,6 +268,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     codeAutoRetrievalTimeout(String verificationId) {
       print('Verification timeout: $verificationId');
+      showToast("Verification timeout,try again.");
     }
 
     await _auth.verifyPhoneNumber(
@@ -276,12 +282,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Future<void> _verifyOTP() async {
-    final AuthCredential phoneCredential = PhoneAuthProvider.credential(
-      verificationId: verificationId,
-      smsCode: otp,
-    );
-
     try {
+      final AuthCredential phoneCredential = PhoneAuthProvider.credential(
+        verificationId: verificationId,
+        smsCode: otp,
+      );
+
       final UserCredential userCredential =
           await _auth.signInWithCredential(phoneCredential);
       final User? user = userCredential.user;
@@ -305,7 +311,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
               _phoneNoTextController.text,
               _addressTextController.text,
               FirebaseAuth.instance.currentUser!.uid);
-
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => HomeScreen()),
@@ -324,14 +329,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
         print('User is null');
       }
     } catch (e) {
-      if (e is FirebaseAuthException) {
-        if (e.code == 'too-many-requests') {
-          showInformation(context,
-              'We have blocked all requests from this device due to too many attempts. Try again later.');
-        } else if (e.code == 'session-expired') {
-          showInformation(context,
-              'The sms code has expired. Please re-send the verification code to try again.');
-        } else {}
+      print("Error: $e");
+      if (e is FirebaseAuthException && e.code == 'provider-already-linked') {
+        showInformation(
+            context, "The email address is already in use by another account.");
+      } else {
+        showInformation(context, "An error occurred: $e");
       }
     }
   }

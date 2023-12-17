@@ -61,9 +61,15 @@ class _SignInScreenState extends State<SignInScreen> {
                         .then((value) {
                       Navigation(context, HomeScreen());
                     }).onError((error, stackTrace) {
-                      showErrorAlert(context,
-                          'Username or Password is incorrect please try again.');
-                      print("Error ${error.toString()}");
+                      if (error.toString() ==
+                          "[firebase_auth/user-disabled] The user account has been disabled by an administrator.") {
+                        showToast("Your account has been blocked.");
+                      } else {
+                        showErrorAlert(context,
+                            'Username or Password is incorrect please try again.');
+                      }
+
+                      print("Error ${error}");
                     });
                   } else {
                     showErrorAlert(context, 'Please Fill the All fields ');
