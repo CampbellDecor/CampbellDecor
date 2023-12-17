@@ -103,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () async {
               await FirebaseAuth.instance.signOut();
               Navigator.of(context).pop();
-              Navigation(context, SignInScreen());
+              // Navigation(context, SignInScreen());
             },
           ),
         ],
