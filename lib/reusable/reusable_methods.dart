@@ -320,15 +320,17 @@ Future<Map<String, dynamic>> getMapData(String service) async {
 Future<void> clearAllSharedPreferenceData() async {
   final prefs = await SharedPreferences.getInstance();
   await prefs.clear();
+  print("clear All Shared preferences");
 }
 
 Future<void> resetSharedPreferences(BuildContext context) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
+  final prefs = await SharedPreferences.getInstance();
   await prefs.remove('amount');
   await prefs.remove('packageAmount');
   await prefs.remove('events');
   await prefs.remove('package');
   Navigator.of(context).pop();
+  print("Successfully  shared preference Deleted");
 }
 /**--------------------- Shared references end-----------------------**/
 

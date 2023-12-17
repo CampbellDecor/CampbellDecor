@@ -149,6 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       builder: (context,
                           AsyncSnapshot<QuerySnapshot> streamSnapshot) {
                         if (streamSnapshot.hasData) {
+                          clearAllSharedPreferenceData();
                           return LimitedBox(
                             maxHeight: 240,
                             maxWidth: 900,

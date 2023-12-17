@@ -348,7 +348,7 @@ class _BookingScreenState extends State<BookingScreen> {
                       child: ElevatedButton(
                         onPressed: () async {
                           if (documentSnapshot['eventDate'].toDate().isAfter(
-                              DateTime.now().add(const Duration(days: 7)))) {
+                              DateTime.now().add(const Duration(days: 14)))) {
                             String bookingId = documentSnapshot.id;
 
                             try {
@@ -359,6 +359,7 @@ class _BookingScreenState extends State<BookingScreen> {
                             }
                           } else {
                             String bookingId = documentSnapshot.id;
+
                             cancelInformationAlert(
                                 context,
                                 'You are not eligible to get a full refund',
@@ -665,132 +666,238 @@ class _BookingScreenState extends State<BookingScreen> {
                 context: context,
                 builder: (BuildContext context) {
                   try {
-                    return AlertDialog(
-                      shadowColor: Colors.black,
-                      elevation: 8,
-                      icon: const Icon(
-                        Icons.event,
-                        color: Colors.blue,
-                        size: 60,
-                      ),
-                      title: Padding(
-                        padding: EdgeInsets.all(4.0),
-                        child: Padding(
-                          padding: EdgeInsets.all(4.0),
-                          child: Text(
-                            "${documentSnapshot['name']}",
-                          ),
+                    if (documentSnapshot['status'] == "expired") {
+                      return AlertDialog(
+                        shadowColor: Colors.black,
+                        elevation: 8,
+                        icon: const Icon(
+                          Icons.event,
+                          color: Colors.blue,
+                          size: 60,
                         ),
-                      ),
-                      content: SingleChildScrollView(
-                        child: Container(
-                          constraints: BoxConstraints(
-                              minHeight: 100,
-                              minWidth: 400,
-                              maxHeight: 550,
-                              maxWidth: 500),
-                          height: 300,
-                          width: 450,
-                          child: SingleChildScrollView(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                if (documentSnapshot['pdf'] != null)
-                                  Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        generateQRCode(documentSnapshot['pdf']),
-                                      ]),
-                                Text(
-                                  "Event Date : ${DateFormat.yMd().format(documentSnapshot['eventDate'].toDate())}",
-                                  style: const TextStyle(
-                                      color: Colors.black, fontSize: 18),
-                                ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                Text(
-                                  "Booking Date : ${DateFormat.yMd().format(documentSnapshot['date'].toDate())}",
-                                  style: const TextStyle(
-                                      color: Colors.black, fontSize: 18),
-                                ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                Text(
-                                  "Total Amount : ${documentSnapshot['paymentAmount']}",
-                                  style: const TextStyle(
-                                      color: Colors.black, fontSize: 18),
-                                ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                if (service.length > 0)
-                                  Text(
-                                    "Services : ",
-                                    style: const TextStyle(
-                                        color: Colors.black, fontSize: 18),
-                                  ),
-                                if (service.length > 0)
-                                  Padding(
-                                    padding: const EdgeInsets.all(28.0),
-                                    child: Container(
-                                      color: Colors.black12.withOpacity(0.2),
-                                      child: LimitedBox(
-                                        maxHeight: 200,
-                                        child: ListView(
-                                          children: listItems,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                              ],
+                        title: Padding(
+                          padding: EdgeInsets.all(4.0),
+                          child: Padding(
+                            padding: EdgeInsets.all(4.0),
+                            child: Text(
+                              "${documentSnapshot['name']}",
                             ),
                           ),
                         ),
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      actions: [
-                        if (documentSnapshot['isRated'] == false)
-                          TextButton(
-                            child: const Text('FeedBack',
-                                style: TextStyle(fontSize: 16)),
-                            onPressed: () async {
-                              await getPackage(documentSnapshot['name'],
-                                  documentSnapshot.id);
-                              Navigation(
-                                  context,
-                                  CustomRatingBar(
-                                    onRatingChanged: (double) {},
-                                    pid: packageId,
-                                    bid: bookingId,
-                                  ));
-                            },
+                        content: SingleChildScrollView(
+                          child: Container(
+                            constraints: BoxConstraints(
+                                minHeight: 100,
+                                minWidth: 400,
+                                maxHeight: 550,
+                                maxWidth: 500),
+                            height: 300,
+                            width: 450,
+                            child: SingleChildScrollView(
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  if (documentSnapshot['pdf'] != null)
+                                    Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          generateQRCode(
+                                              documentSnapshot['pdf']),
+                                        ]),
+                                  Text(
+                                    "Event Date : ${DateFormat.yMd().format(documentSnapshot['eventDate'].toDate())}",
+                                    style: const TextStyle(
+                                        color: Colors.black, fontSize: 18),
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Text(
+                                    "Booking Date : ${DateFormat.yMd().format(documentSnapshot['date'].toDate())}",
+                                    style: const TextStyle(
+                                        color: Colors.black, fontSize: 18),
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Text(
+                                    "Total Amount : ${documentSnapshot['paymentAmount']}",
+                                    style: const TextStyle(
+                                        color: Colors.black, fontSize: 18),
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  if (service.length > 0)
+                                    Text(
+                                      "Services : ",
+                                      style: const TextStyle(
+                                          color: Colors.black, fontSize: 18),
+                                    ),
+                                  if (service.length > 0)
+                                    Padding(
+                                      padding: const EdgeInsets.all(28.0),
+                                      child: Container(
+                                        color: Colors.black12.withOpacity(0.2),
+                                        child: LimitedBox(
+                                          maxHeight: 200,
+                                          child: ListView(
+                                            children: listItems,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
                           ),
-                        if (documentSnapshot['isRated'] == true)
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        actions: [
+                          if (documentSnapshot['isRated'] == false)
+                            TextButton(
+                              child: const Text('FeedBack',
+                                  style: TextStyle(fontSize: 16)),
+                              onPressed: () async {
+                                try {
+                                  await getPackage(documentSnapshot['name'],
+                                      documentSnapshot.id);
+                                  Navigation(
+                                      context,
+                                      CustomRatingBar(
+                                        onRatingChanged: (double) {},
+                                        pid: packageId,
+                                        bid: bookingId,
+                                      ));
+                                } catch (e) {
+                                  showInformation(
+                                      context, "Unable to provide feedback");
+                                }
+                              },
+                            ),
+                          if (documentSnapshot['isRated'] == true)
+                            TextButton(
+                              child: const Text('FeedBack',
+                                  style: TextStyle(fontSize: 16)),
+                              onPressed: () {
+                                showToast("Already received feedback.");
+                              },
+                            ),
                           TextButton(
-                            child: const Text('FeedBack',
+                            child: const Text('OK',
                                 style: TextStyle(fontSize: 16)),
                             onPressed: () {
-                              showToast("Already received feedback.");
+                              Navigator.of(context).pop();
                             },
                           ),
-                        TextButton(
-                          child:
-                              const Text('OK', style: TextStyle(fontSize: 16)),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
+                        ],
+                      );
+                    } else {
+                      return AlertDialog(
+                        shadowColor: Colors.black,
+                        elevation: 8,
+                        icon: const Icon(
+                          Icons.event,
+                          color: Colors.blue,
+                          size: 60,
                         ),
-                      ],
-                    );
+                        title: Padding(
+                          padding: EdgeInsets.all(4.0),
+                          child: Padding(
+                            padding: EdgeInsets.all(4.0),
+                            child: Text(
+                              "${documentSnapshot['name']}",
+                            ),
+                          ),
+                        ),
+                        content: SingleChildScrollView(
+                          child: Container(
+                            constraints: BoxConstraints(
+                                minHeight: 100,
+                                minWidth: 400,
+                                maxHeight: 550,
+                                maxWidth: 500),
+                            height: 300,
+                            width: 450,
+                            child: SingleChildScrollView(
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  if (documentSnapshot['pdf'] != null)
+                                    Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          generateQRCode(
+                                              documentSnapshot['pdf']),
+                                        ]),
+                                  Text(
+                                    "Booking Date : ${DateFormat.yMd().format(documentSnapshot['date'].toDate())}",
+                                    style: const TextStyle(
+                                        color: Colors.black, fontSize: 18),
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Text(
+                                    "Total Amount : ${documentSnapshot['paymentAmount']}",
+                                    style: const TextStyle(
+                                        color: Colors.black, fontSize: 18),
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  if (service.length > 0)
+                                    Text(
+                                      "Services : ",
+                                      style: const TextStyle(
+                                          color: Colors.black, fontSize: 18),
+                                    ),
+                                  if (service.length > 0)
+                                    Padding(
+                                      padding: const EdgeInsets.all(28.0),
+                                      child: Container(
+                                        color: Colors.black12.withOpacity(0.2),
+                                        child: LimitedBox(
+                                          maxHeight: 200,
+                                          child: ListView(
+                                            children: listItems,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        actions: [
+                          TextButton(
+                            child: const Text('OK',
+                                style: TextStyle(fontSize: 16)),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    }
                   } catch (e) {
                     return AlertDialog(
                       shadowColor: Colors.black,
