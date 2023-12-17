@@ -220,8 +220,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                               myMap)
                                           .then((value) async {
                                         Navigation(context, AddToCartScreen())
-                                            .then((value) {
-                                          clearAllSharedPreferenceData();
+                                            .then((value) async {
+                                          await clearAllSharedPreferenceData();
                                         });
                                       });
                                     } else if (package != null) {
@@ -237,8 +237,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                               myMap)
                                           .then((value) async {
                                         Navigation(context, AddToCartScreen())
-                                            .then((value) {
-                                          clearAllSharedPreferenceData();
+                                            .then((value) async {
+                                          await clearAllSharedPreferenceData();
                                         });
                                       });
                                     } else {
@@ -254,8 +254,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                               myMap)
                                           .then((value) async {
                                         Navigation(context, AddToCartScreen())
-                                            .then((value) {
-                                          clearAllSharedPreferenceData();
+                                            .then((value) async {
+                                          await clearAllSharedPreferenceData();
                                         });
                                       });
                                     }
