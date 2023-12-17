@@ -287,11 +287,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
       final User? user = userCredential.user;
 
       if (user != null) {
-        final AuthCredential emailCredential = EmailAuthProvider.credential(
+        final AuthCredential emailCredential =
+            await EmailAuthProvider.credential(
           email: _emailTextController.text,
           password: _passwordTextController.text,
         );
-
         await user.linkWithCredential(emailCredential);
 
         await FirebaseAuth.instance
@@ -309,19 +309,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => HomeScreen()),
-          ).then((_) {
-            // CreationNotificationService notificationService =
-            //     CreationNotificationService();
-            // notificationService.showNotification(
-            //     title: 'Create Account',
-            //     body: 'Welcome ${_userTextController.text}');
-          });
+          );
         }).catchError((error) {
           if (error is FirebaseAuthException) {
             if (error.code == 'email-already-in-use') {
               showInformation(context,
                   'The email address is already in use by another account.');
-            } else {}
+            } else {
+              print("Try again");
+            }
           }
         });
       } else {

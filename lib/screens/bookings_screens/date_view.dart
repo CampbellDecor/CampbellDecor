@@ -14,7 +14,7 @@ class CalendarScreen extends StatefulWidget {
 
 class _CalendarScreenState extends State<CalendarScreen> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
-  DateTime _focusedDay = DateTime.now().add(Duration(days: 7));
+  DateTime _focusedDay = DateTime.now().add(Duration(days: 10));
   Set<DateTime> _disabledDates = Set();
   DateTime? _selectedDay;
 
@@ -49,7 +49,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    DateTime _firstDay = DateTime.now().add(Duration(days: 7));
+    DateTime _firstDay = DateTime.now().add(Duration(days: 10));
     DateTime _lastDay = DateTime.now().add(Duration(days: 90));
     return Scaffold(
       appBar: AppBar(

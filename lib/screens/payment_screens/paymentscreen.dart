@@ -90,7 +90,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     Map<String, dynamic> event =
         ({'name': widget.name, 'price': widget.price, 'date': DateTime.now()});
     return Scaffold(
-      backgroundColor: Colors.white.withOpacity(0.9),
+      // backgroundColor: Colors.white.withOpacity(0.9),
       appBar: AppBar(
         title: Text('Pay'),
         flexibleSpace: Container(
@@ -571,7 +571,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             sendNotificationForAdmin(
                                 widget.id,
                                 'Booking request',
-                                'Your booking request has been received. We will notify you shortly with our response.',
+                                'Your booking request has been received.'
+                                    '\nNote : You have to pay full amount within 7 days from today',
                                 data['name'],
                                 widget.price,
                                 data['eventDate'].toDate());

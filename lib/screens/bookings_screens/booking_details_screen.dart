@@ -348,7 +348,7 @@ class _BookingScreenState extends State<BookingScreen> {
                       child: ElevatedButton(
                         onPressed: () async {
                           if (documentSnapshot['eventDate'].toDate().isAfter(
-                              DateTime.now().add(const Duration(days: 14)))) {
+                              DateTime.now().add(const Duration(days: 7)))) {
                             String bookingId = documentSnapshot.id;
 
                             try {
@@ -359,7 +359,6 @@ class _BookingScreenState extends State<BookingScreen> {
                             }
                           } else {
                             String bookingId = documentSnapshot.id;
-
                             cancelInformationAlert(
                                 context,
                                 'You are not eligible to get a full refund',

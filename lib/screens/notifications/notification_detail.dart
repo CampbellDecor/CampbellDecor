@@ -101,7 +101,7 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                         padding: const EdgeInsets.fromLTRB(
                                             8.0, 0, 8, 0),
                                         child: Container(
-                                          width: 320,
+                                          width: 300,
                                           child: Padding(
                                             padding: const EdgeInsets.fromLTRB(
                                                 18.0, 0, 0, 0),
