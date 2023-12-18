@@ -75,34 +75,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
       _isEditing = false;
     });
 
-    _showFeedbackMessage('Changes saved successfully!');
-  }
-
-  void _showFeedbackMessage(String message) {
-    final snackBar = SnackBar(
-      padding: EdgeInsets.all(8.0),
-      backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(40.0),
-      ),
-      content: Center(
-          child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text(
-          message,
-          style: TextStyle(
-              color: Colors.black, fontSize: 14, fontWeight: FontWeight.bold),
-        ),
-      )),
-      duration: Duration(seconds: 3),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    showToast('Changes saved successfully!');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
+      // key: _scaffoldKey,
       appBar: AppBar(
         title: const Text('Profile'),
         flexibleSpace: Container(
@@ -124,7 +103,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               if (_isEditing) {
               } else {
                 _updateUserData();
-                _showFeedbackMessage('Changes saved successfully!');
+                showToast('Changes saved successfully!');
               }
             },
           ),
@@ -277,20 +256,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   size: 30,
                                                 ),
                                                 onPressed: () {
-                                                  userImagePicker(context)
-                                                      .then((_) {
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                ProfileScreen()));
-                                                    _showFeedbackMessage(
-                                                        'Profile image updated successfully!');
-                                                  }).catchError((error) {
-                                                    print(
-                                                        'Error updating profile image: $error');
-                                                    _showFeedbackMessage(
-                                                        'Failed to update profile image');
+                                                  setState(() {
+                                                    userImagePicker(context)
+                                                        .then((_) {
+                                                      Future.delayed(
+                                                          const Duration(
+                                                              milliseconds:
+                                                                  1500), () {
+                                                        Navigator.pushReplacement(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        ProfileScreen()));
+                                                      }).then((_) {
+                                                        showToast(
+                                                            'Profile image updated successfully!');
+                                                      }).catchError((error) {
+                                                        print(
+                                                            'Error updating profile image: $error');
+                                                        showToast(
+                                                            'Failed to update profile image');
+                                                      });
+                                                    });
                                                   });
                                                 },
                                               ),
@@ -298,12 +286,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           ],
                                         ),
                                         const SizedBox(height: 15.0),
-
-                                        // CircleAvatar(
-                                        //   radius: 60.0,
-                                        //   backgroundImage:
-                                        //       AssetImage('assets/images/user.png'),
-                                        // ),
                                         const Text(
                                           'Name:',
                                           style: TextStyle(

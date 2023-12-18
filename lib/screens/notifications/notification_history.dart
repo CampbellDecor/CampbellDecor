@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import '../../reusable/reusable_methods.dart';
 import '../../utils/color_util.dart';
@@ -180,9 +179,12 @@ class _NotificationHistoryState extends State<NotificationHistory> {
             .collection('notification')
             .doc(selectedItems.elementAt(i))
             .delete();
-        setState(() {
-          selectedItems.remove(i);
-        });
+        await selectedItems.remove(i);
+        showToast("Successfully deleted.");
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) => NotificationHistory()));
       }
     }
   }
