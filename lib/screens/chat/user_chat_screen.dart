@@ -183,15 +183,17 @@ class MessageWidget extends StatelessWidget {
         child: Material(
             elevation: 3,
             color: isSentByUser
-                ? Colors.blue.withOpacity(0.5)
-                : Colors.blue.withOpacity(0.9),
+                ? Colors.blue.withOpacity(0.9)
+                : Colors.white10.withOpacity(0.9),
             borderRadius: BorderRadius.circular(12),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
               child: Text(
                 text,
                 style: TextStyle(
-                    fontSize: 18, fontFamily: 'OpenSans', color: Colors.white),
+                    fontSize: 18,
+                    fontFamily: 'OpenSans',
+                    color: Colors.black87),
               ),
             )),
       ),

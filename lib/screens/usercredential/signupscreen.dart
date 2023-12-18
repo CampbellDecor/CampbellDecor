@@ -154,7 +154,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                           },
                                           cursorColor: Colors.white,
                                           style: TextStyle(
-                                              color: Colors.white
+                                              color: Colors.black87
                                                   .withOpacity(0.9)),
                                         ),
                                         SizedBox(height: 20),
